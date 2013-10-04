@@ -1,6 +1,17 @@
+#include "MutlipleKinectsPlatformServer.h"
 
-using namespace std;
+/**
+ *  Constructors & Destructors
+ */
+MultipleKinectsPlatformServer::Core::Core(){
 
-int main(int argc,char *argv[]){
+}
 
+MultipleKinectsPlatformServer::Core::~Core(){
+
+}
+
+int main( int argc, const char* argv[] )
+{
+  return 0;
 }
