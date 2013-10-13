@@ -23,3 +23,10 @@ MultipleKinectsPlatformServer.vcxproj.filters
 MultipleKinectsPlatformServer.rc
 MultipleKinectsPlatformServer.aps
 MultipleKinectsPlatformServer.sln
+
+# Eclipse Files
+.cproject
+.project
+
+# GNU Make Files
+/Build (GNU)
