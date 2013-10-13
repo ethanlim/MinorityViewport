@@ -2,22 +2,18 @@
 
 namespace MultipleKinectsPlatformServer{
 
-	Core::Core(){
+	Core::Core(string address,string port){
 	  try
 	  {
-		string address = "127.0.0.1"; //localhost
-		string port = "1626";
 		string docRoot = "C:\\Users\\ethanlim\\Documents\\Projects\\School\\MultipleKinectsPlatformServer";
-		MultipleKinectsPlatformServer::JobsQueue *jobQueue;
 
-		// Initialise the server.
-		jobQueue = new MultipleKinectsPlatformServer::JobsQueue();
+		// Initialise the Job Queue
+		this->jobQueue = new MultipleKinectsPlatformServer::JobsQueue();
+
 		std::size_t num_threads = boost::lexical_cast<std::size_t>(2);
 
-		http::server::server s(address, port, docRoot, jobQueue, num_threads);
-
-		// Run the server until stopped.
-		s.run();
+		//Initialise the Server
+		this->server = new http::server::server(address, port, docRoot, this->jobQueue, num_threads);
 	  }
 	  catch (std::exception& e)
 	  {
@@ -27,14 +23,24 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	Core::~Core(){
-
+		delete this->jobQueue;
 	}
 
+	void Core::BeginListen(){
+		try{
+			this->server->run();
+		}
+		catch(std::exception& e){
+			std::cerr << "exception: " << e.what() << "\n";
+		}
+	}
 }
 
 int main( int argc, const char* argv[] )
 {
-	MultipleKinectsPlatformServer::Core platform;
+	MultipleKinectsPlatformServer::Core platform("127.0.0.1","1626");
+
+	platform.BeginListen();
 
 	return 0;
 }

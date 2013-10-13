@@ -16,9 +16,12 @@ namespace MultipleKinectsPlatformServer{
 
 	class Core{
 		public :
-			Core();
+			Core(string address,string port);
 			~Core();
+			void BeginListen();
 		private:
+			MultipleKinectsPlatformServer::JobsQueue *jobQueue;
+			http::server::server *server;
 	};
 
 }
