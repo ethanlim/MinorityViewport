@@ -14,6 +14,7 @@ namespace MultipleKinectsPlatformServer{
 
 		//Initialise the Server
 		this->server = new http::server::server(address, port, docRoot, this->jobQueue, num_threads);
+
 	  }
 	  catch (std::exception& e)
 	  {
@@ -24,6 +25,9 @@ namespace MultipleKinectsPlatformServer{
 
 	Core::~Core(){
 		delete this->jobQueue;
+		for (int i = 0; i < threadNum;i++) {
+			this->runners[i].join();
+        }
 	}
 
 	void Core::BeginListen(){
@@ -33,6 +37,10 @@ namespace MultipleKinectsPlatformServer{
 		catch(std::exception& e){
 			std::cerr << "exception: " << e.what() << "\n";
 		}
+	}
+
+	void Core::ProcessJobQueue(u_int threadId){
+		cout << threadId << endl;
 	}
 }
 

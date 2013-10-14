@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <string>
+#include <thread>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
@@ -20,10 +21,12 @@ namespace MultipleKinectsPlatformServer{
 			~Core();
 			void BeginListen();
 		private:
+			void ProcessJobQueue(u_int threadId);
+			static const u_int threadNum = 5;
+			thread runners[threadNum];
 			MultipleKinectsPlatformServer::JobsQueue *jobQueue;
 			http::server::server *server;
 	};
-
 }
 
 #endif
