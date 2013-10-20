@@ -22,4 +22,9 @@ namespace MultipleKinectsPlatformServer{
 
 		return recvJson;
 	}
+
+	unsigned int JobsQueue::get_size(){
+
+		return this->json_queue->size();
+	}
 }

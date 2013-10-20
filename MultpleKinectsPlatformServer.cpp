@@ -10,10 +10,13 @@ namespace MultipleKinectsPlatformServer{
 		// Initialise the Job Queue
 		this->jobQueue = new MultipleKinectsPlatformServer::JobsQueue();
 
-		std::size_t num_threads = boost::lexical_cast<std::size_t>(2);
+		std::size_t num_threads = boost::lexical_cast<std::size_t>(5);
 
 		//Initialise the Server
 		this->server = new http::server::server(address, port, docRoot, this->jobQueue, num_threads);
+
+		//Initialise view window
+		this->visualisationWindow = new Visualisation();
 
 	  }
 	  catch (std::exception& e)
@@ -24,10 +27,7 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	Core::~Core(){
-		delete this->jobQueue;
-		for (int i = 0; i < threadNum;i++) {
-			this->runners[i].join();
-        }
+		//delete this->jobQueue;
 	}
 
 	void Core::BeginListen(){
@@ -39,8 +39,24 @@ namespace MultipleKinectsPlatformServer{
 		}
 	}
 
-	void Core::ProcessJobQueue(u_int threadId){
-		cout << threadId << endl;
+	void Core::ProcessJobs(){
+		while(1){
+			if(this->jobQueue->get_size()>0){
+				Json::Value root;   
+				Json::Reader reader;
+
+				string rawJSON = this->jobQueue->pop();
+
+				bool parsingSuccessful = reader.parse(rawJSON,root);
+
+				if (parsingSuccessful)
+				{
+					for(unsigned short numOfSkeletons=0;root.size();numOfSkeletons++){
+
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -48,7 +64,14 @@ int main( int argc, const char* argv[] )
 {
 	MultipleKinectsPlatformServer::Core platform("127.0.0.1","1626");
 
-	platform.BeginListen();
+	// Start Server on a separate thread
+	thread server_thread(&MultipleKinectsPlatformServer::Core::BeginListen,platform);
+
+	// Process Job on a separate thread
+	thread job_thread(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+
+	server_thread.join();
+	job_thread.join();
 
 	return 0;
 }

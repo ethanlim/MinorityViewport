@@ -16,6 +16,7 @@ namespace MultipleKinectsPlatformServer{
 			~JobsQueue();
 			void push(string raw_json);
 			string pop();
+			unsigned int get_size();
 		private:
 			queue<string> *json_queue;
 	};

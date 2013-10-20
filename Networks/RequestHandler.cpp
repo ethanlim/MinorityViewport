@@ -31,7 +31,7 @@ namespace http {
 	{
 	  // Get JSON in the header
 	  std::string json = this->request_header_val(req,"JSON");
-	  
+
 	  /* Insert it into the Job Queue */
 	  job_queue_->push(json);
 

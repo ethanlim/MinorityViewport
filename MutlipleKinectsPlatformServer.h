@@ -10,6 +10,9 @@
 #include <boost/lexical_cast.hpp>
 #include "Networks/Server.h"
 #include "Data/JobsQueue.h"
+#include "Graphics/Visualisation.h"
+#include "Data/JSON/json.h"
+#include "Data/Skeleton.h"
 
 using namespace std;
 
@@ -19,13 +22,12 @@ namespace MultipleKinectsPlatformServer{
 		public :
 			Core(string address,string port);
 			~Core();
-			void BeginListen();
+			void BeginListen();			
+			void ProcessJobs();
 		private:
-			void ProcessJobQueue(u_int threadId);
-			static const u_int threadNum = 5;
-			thread runners[threadNum];
 			MultipleKinectsPlatformServer::JobsQueue *jobQueue;
 			http::server::server *server;
+			MultipleKinectsPlatformServer::Visualisation *visualisationWindow;
 	};
 }
 
