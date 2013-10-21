@@ -51,8 +51,11 @@ namespace MultipleKinectsPlatformServer{
 
 				if (parsingSuccessful)
 				{
-					for(unsigned short numOfSkeletons=0;root.size();numOfSkeletons++){
+					for(unsigned short skeletons=0;skeletons<root.size();skeletons++){
+					    
+						Json::Value skeletonData =  root.get(skeletons,NULL);
 
+						Skeleton newSkeleton(skeletonData);
 					}
 				}
 			}
