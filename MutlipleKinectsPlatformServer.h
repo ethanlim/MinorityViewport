@@ -24,6 +24,7 @@ namespace MultipleKinectsPlatformServer{
 			~Core();
 			void BeginListen();			
 			void ProcessJobs();
+			void BeginVisualisation();
 		private:
 			MultipleKinectsPlatformServer::JobsQueue *jobQueue;
 			http::server::server *server;

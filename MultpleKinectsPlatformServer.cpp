@@ -27,7 +27,6 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	Core::~Core(){
-		//delete this->jobQueue;
 	}
 
 	void Core::BeginListen(){
@@ -61,6 +60,11 @@ namespace MultipleKinectsPlatformServer{
 			}
 		}
 	}
+
+	void Core::BeginVisualisation(){
+
+
+	}
 }
 
 int main( int argc, const char* argv[] )
@@ -73,8 +77,12 @@ int main( int argc, const char* argv[] )
 	// Process Job on a separate thread
 	thread job_thread(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
 
+	// Begin Visual
+	thread ui_thread(&MultipleKinectsPlatformServer::Core::BeginVisualisation,platform);
+
 	server_thread.join();
 	job_thread.join();
+	ui_thread.join();
 
 	return 0;
 }

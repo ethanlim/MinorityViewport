@@ -20,7 +20,9 @@ namespace MultipleKinectsPlatformServer{
 
 		for(unsigned short joint=0;joint<joints_json.size();joint++){
 
-			Joint newJoint(joints_json[joint].get("X",NULL).asDouble(),joints_json[joint].get("Y",NULL).asDouble() ,joints_json[joint].get("Z",NULL).asDouble());
+			Joint::JointType type = (Joint::JointType)joint;
+
+			Joint newJoint(type,joints_json[joint].get("X",NULL).asDouble(),joints_json[joint].get("Y",NULL).asDouble() ,joints_json[joint].get("Z",NULL).asDouble());
 
 			this->joints.push_back(newJoint);
 		}
@@ -36,6 +38,5 @@ namespace MultipleKinectsPlatformServer{
 	Skeleton::~Skeleton(){
 
 	}
-
 
 }
