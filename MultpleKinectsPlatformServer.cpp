@@ -14,10 +14,6 @@ namespace MultipleKinectsPlatformServer{
 
 		//Initialise the Server
 		this->server = new http::server::server(address, port, docRoot, this->jobQueue, num_threads);
-
-		//Initialise view window
-		this->visualisationWindow = new Visualisation();
-
 	  }
 	  catch (std::exception& e)
 	  {
@@ -54,20 +50,22 @@ namespace MultipleKinectsPlatformServer{
 					    
 						Json::Value skeletonData =  root.get(skeletons,NULL);
 
-						Skeleton newSkeleton(skeletonData);
+						MultipleKinectsPlatformServer::Skeleton newSkeleton(skeletonData);
+
+						global_skeleton = &newSkeleton;
 					}
 				}
 			}
 		}
 	}
 
-	void Core::BeginVisualisation(){
+	void Core::BeginVisualisation(int *argc, char **argv){
 
-
+		this->visualisation = new Visualisation(argc,argv);
 	}
 }
 
-int main( int argc, const char* argv[] )
+int main( int argc, char **argv)
 {
 	MultipleKinectsPlatformServer::Core platform("127.0.0.1","1626");
 
@@ -78,7 +76,7 @@ int main( int argc, const char* argv[] )
 	thread job_thread(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
 
 	// Begin Visual
-	thread ui_thread(&MultipleKinectsPlatformServer::Core::BeginVisualisation,platform);
+	thread ui_thread(&MultipleKinectsPlatformServer::Core::BeginVisualisation,platform,&argc,argv);
 
 	server_thread.join();
 	job_thread.join();

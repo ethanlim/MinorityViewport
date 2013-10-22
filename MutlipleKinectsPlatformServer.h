@@ -18,17 +18,19 @@ using namespace std;
 
 namespace MultipleKinectsPlatformServer{
 
+	Skeleton *global_skeleton = NULL;
+
 	class Core{
 		public :
 			Core(string address,string port);
 			~Core();
 			void BeginListen();			
 			void ProcessJobs();
-			void BeginVisualisation();
+			void BeginVisualisation(int *argcp, char **argv);
 		private:
 			MultipleKinectsPlatformServer::JobsQueue *jobQueue;
 			http::server::server *server;
-			MultipleKinectsPlatformServer::Visualisation *visualisationWindow;
+			MultipleKinectsPlatformServer::Visualisation *visualisation;
 	};
 }
 
