@@ -23,6 +23,7 @@ MultipleKinectsPlatformServer.vcxproj.filters
 MultipleKinectsPlatformServer.rc
 MultipleKinectsPlatformServer.aps
 MultipleKinectsPlatformServer.sln
+MultipleKinectsPlatformServer.vcxproj.user
 
 # Eclipse Files
 .cproject
