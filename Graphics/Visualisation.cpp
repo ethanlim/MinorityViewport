@@ -50,7 +50,80 @@ namespace MultipleKinectsPlatformServer{
 		
 		if(global_skeleton!=NULL){
 			// Live Drawing
-			Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::Head).X,global_skeleton->GetJoint(Joint::Head).Y,global_skeleton->GetJoint(Joint::Head).Z,CIRCLE_RAD);		
+			
+			if(global_skeleton->Tracked == Skeleton::PositionOnly){
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->pos_x,global_skeleton->pos_y,global_skeleton->pos_z))
+					Visualisation::Draw3DCircle(global_skeleton->pos_x,global_skeleton->pos_y,global_skeleton->pos_z,CIRCLE_RAD);	
+
+			}else if(global_skeleton->joints.size()!=0){
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->pos_x,global_skeleton->pos_y,global_skeleton->pos_z))
+					Visualisation::Draw3DCircle(global_skeleton->pos_x,global_skeleton->pos_y,global_skeleton->pos_z,CIRCLE_RAD);	
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::Head).X, global_skeleton->GetJoint(Joint::Head).Y, global_skeleton->GetJoint(Joint::Head).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::Head).X,global_skeleton->GetJoint(Joint::Head).Y,global_skeleton->GetJoint(Joint::Head).Z,CIRCLE_RAD);	
+
+
+			/*
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::AnkleLeft).X,global_skeleton->GetJoint(Joint::AnkleLeft).Y,global_skeleton->GetJoint(Joint::AnkleLeft).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::AnkleLeft).X,global_skeleton->GetJoint(Joint::AnkleLeft).Y,global_skeleton->GetJoint(Joint::AnkleLeft).Z,CIRCLE_RAD);
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::AnkleRight).X, global_skeleton->GetJoint(Joint::AnkleRight).Y, global_skeleton->GetJoint(Joint::AnkleRight).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::AnkleRight).X,global_skeleton->GetJoint(Joint::AnkleRight).Y,global_skeleton->GetJoint(Joint::AnkleRight).Z,CIRCLE_RAD);
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::ElbowLeft).X, global_skeleton->GetJoint(Joint::ElbowLeft).Y, global_skeleton->GetJoint(Joint::ElbowLeft).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::ElbowLeft).X,global_skeleton->GetJoint(Joint::ElbowLeft).Y,global_skeleton->GetJoint(Joint::ElbowLeft).Z,CIRCLE_RAD);
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::ElbowRight).X, global_skeleton->GetJoint(Joint::ElbowRight).Y, global_skeleton->GetJoint(Joint::ElbowRight).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::ElbowRight).X,global_skeleton->GetJoint(Joint::ElbowRight).Y,global_skeleton->GetJoint(Joint::ElbowRight).Z,CIRCLE_RAD);
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::FootLeft).X, global_skeleton->GetJoint(Joint::FootLeft).Y, global_skeleton->GetJoint(Joint::FootLeft).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::FootLeft).X,global_skeleton->GetJoint(Joint::FootLeft).Y,global_skeleton->GetJoint(Joint::FootLeft).Z,CIRCLE_RAD);
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::FootRight).X, global_skeleton->GetJoint(Joint::FootRight).Y, global_skeleton->GetJoint(Joint::FootRight).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::FootRight).X,global_skeleton->GetJoint(Joint::FootRight).Y,global_skeleton->GetJoint(Joint::FootRight).Z,CIRCLE_RAD);
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::HandLeft).X, global_skeleton->GetJoint(Joint::HandLeft).Y, global_skeleton->GetJoint(Joint::HandLeft).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::HandLeft).X,global_skeleton->GetJoint(Joint::HandLeft).Y,global_skeleton->GetJoint(Joint::HandLeft).Z,CIRCLE_RAD);
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::HandRight).X, global_skeleton->GetJoint(Joint::HandRight).Y, global_skeleton->GetJoint(Joint::HandRight).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::HandRight).X,global_skeleton->GetJoint(Joint::HandRight).Y,global_skeleton->GetJoint(Joint::HandRight).Z,CIRCLE_RAD);
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::HipCenter).X, global_skeleton->GetJoint(Joint::HipCenter).Y, global_skeleton->GetJoint(Joint::HipCenter).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::HipCenter).X,global_skeleton->GetJoint(Joint::HipCenter).Y,global_skeleton->GetJoint(Joint::HipCenter).Z,CIRCLE_RAD);
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::HipLeft).X, global_skeleton->GetJoint(Joint::HipLeft).Y, global_skeleton->GetJoint(Joint::HipLeft).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::HipLeft).X,global_skeleton->GetJoint(Joint::HipLeft).Y,global_skeleton->GetJoint(Joint::HipLeft).Z,CIRCLE_RAD);
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::HipRight).X, global_skeleton->GetJoint(Joint::HipRight).Y, global_skeleton->GetJoint(Joint::HipRight).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::HipRight).X,global_skeleton->GetJoint(Joint::HipRight).Y,global_skeleton->GetJoint(Joint::HipRight).Z,CIRCLE_RAD);
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::KneeLeft).X, global_skeleton->GetJoint(Joint::KneeLeft).Y, global_skeleton->GetJoint(Joint::KneeLeft).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::KneeLeft).X,global_skeleton->GetJoint(Joint::KneeLeft).Y,global_skeleton->GetJoint(Joint::KneeLeft).Z,CIRCLE_RAD);
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::KneeRight).X, global_skeleton->GetJoint(Joint::KneeRight).Y, global_skeleton->GetJoint(Joint::KneeRight).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::KneeRight).X,global_skeleton->GetJoint(Joint::KneeRight).Y,global_skeleton->GetJoint(Joint::KneeRight).Z,CIRCLE_RAD);
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::ShoulderCenter).X, global_skeleton->GetJoint(Joint::ShoulderCenter).Y, global_skeleton->GetJoint(Joint::ShoulderCenter).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::ShoulderCenter).X,global_skeleton->GetJoint(Joint::ShoulderCenter).Y,global_skeleton->GetJoint(Joint::ShoulderCenter).Z,CIRCLE_RAD);
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::ShoulderLeft).X, global_skeleton->GetJoint(Joint::ShoulderLeft).Y, global_skeleton->GetJoint(Joint::ShoulderLeft).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::ShoulderLeft).X,global_skeleton->GetJoint(Joint::ShoulderLeft).Y,global_skeleton->GetJoint(Joint::ShoulderLeft).Z,CIRCLE_RAD);
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::ShoulderRight).X, global_skeleton->GetJoint(Joint::ShoulderRight).Y, global_skeleton->GetJoint(Joint::ShoulderRight).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::ShoulderRight).X,global_skeleton->GetJoint(Joint::ShoulderRight).Y,global_skeleton->GetJoint(Joint::ShoulderRight).Z,CIRCLE_RAD);
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::Spine).X, global_skeleton->GetJoint(Joint::Spine).Y, global_skeleton->GetJoint(Joint::Spine).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::Spine).X,global_skeleton->GetJoint(Joint::Spine).Y,global_skeleton->GetJoint(Joint::Spine).Z,CIRCLE_RAD);
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::WristLeft).X, global_skeleton->GetJoint(Joint::WristLeft).Y, global_skeleton->GetJoint(Joint::WristLeft).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::WristLeft).X,global_skeleton->GetJoint(Joint::WristLeft).Y,global_skeleton->GetJoint(Joint::WristLeft).Z,CIRCLE_RAD);
+
+				if(Visualisation::CheckPositionNotEmpty(global_skeleton->GetJoint(Joint::WristRight).X, global_skeleton->GetJoint(Joint::WristRight).Y, global_skeleton->GetJoint(Joint::WristRight).Z))
+					Visualisation::Draw3DCircle(global_skeleton->GetJoint(Joint::WristRight).X,global_skeleton->GetJoint(Joint::WristRight).Y,global_skeleton->GetJoint(Joint::WristRight).Z,CIRCLE_RAD);*/
+
+			}
 		}
 
 		glutSwapBuffers();
@@ -73,9 +146,7 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	void Visualisation::Draw3DCircle(float x_pos, float y_pos,float z_pos, float radius){
-
 		glBegin(GL_LINE_LOOP); 
-
 			int num_seg = 200;
 			for(int ii = 0; ii < num_seg; ii++) 
 			{ 
@@ -85,9 +156,13 @@ namespace MultipleKinectsPlatformServer{
 				float y = radius * sinf(theta);//calculate the y component 
 
 				glVertex3f(x + x_pos, y + y_pos,z_pos);//output vertex 
-
 			} 
 		glEnd();
+	}
+
+	bool Visualisation::CheckPositionNotEmpty(double x_joint,double y_joint, double z_joint){
+		if(x_joint!=0 && y_joint!=0 && z_joint!=0)
+			return true;
 	}
 
 }

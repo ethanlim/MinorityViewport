@@ -42,7 +42,6 @@ namespace MultipleKinectsPlatformServer{
 			Joint();
 			Joint(JointType type, double x_pos,double y_pos,double z_pos);
 			~Joint();
-			
 		private:
 	};
 
