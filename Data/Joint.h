@@ -34,13 +34,21 @@ namespace MultipleKinectsPlatformServer{
 				None
 			};
 
+			enum Mode
+			{
+				Tracked,
+				NotTracked,
+				Inferred
+			} TrackingMode;
+
 			double X;
 			double Y;
 			double Z;
 			JointType Type;
+			
 
 			Joint();
-			Joint(JointType type, double x_pos,double y_pos,double z_pos);
+			Joint(JointType type, double x_pos,double y_pos,double z_pos,Mode mode);
 			~Joint();
 		private:
 	};

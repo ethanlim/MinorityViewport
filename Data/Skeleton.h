@@ -4,19 +4,22 @@
 #include "JSON\json.h"
 
 #include <vector>
+#include <mutex>
 #include "Joint.h"
 
 using namespace std;
 
 namespace MultipleKinectsPlatformServer{
 
+	extern mutex vector_mutex;
+
 	class Skeleton{
 		public:
 			enum Tracked
 			{
 				PositionOnly,
-				Joints
-			} Tracked;
+				Tracked
+			} TrackingMode;
 
 			Skeleton(Json::Value raw_skeleton_json);
 			~Skeleton();

@@ -5,38 +5,50 @@ namespace MultipleKinectsPlatformServer{
 	Skeleton::Skeleton(Json::Value raw_skeleton_json){
 
 		Json::Value joints_json = raw_skeleton_json.get("Joints",NULL);
-
 		Json::Value client_id = raw_skeleton_json.get("clientId",NULL);
-
 		Json::Value pos_x = raw_skeleton_json.get("pos_x",NULL);
-
 		Json::Value pos_y = raw_skeleton_json.get("pos_y",NULL);
-
 		Json::Value pos_z = raw_skeleton_json.get("pos_z",NULL);
-
 		Json::Value sensor_id = raw_skeleton_json.get("sensorId",NULL);
-
 		Json::Value skeleton_id = raw_skeleton_json.get("skeleton",NULL);
+		Json::Value tracking_mode = raw_skeleton_json.get("trackingMode",NULL);
 
-		if(joints_json.size()!=0){
+		vector<Joint> newJoints;
 
-			this->Tracked = Skeleton::Joints;
+		for(unsigned short joint=0;joint<joints_json.size();joint++){
 
-			for(unsigned short joint=0;joint<joints_json.size();joint++){
+			Joint::JointType type = (Joint::JointType)joint;
 
-				Joint::JointType type = (Joint::JointType)joint;
+			string trackingMode = joints_json[joint].get("trackedMode",NULL).asString();
+			Joint::Mode trackingType;
 
-				Joint newJoint( type,
-								joints_json[joint].get("X",NULL).asDouble(),
-								joints_json[joint].get("Y",NULL).asDouble() ,
-								joints_json[joint].get("Z",NULL).asDouble()
-				);
-
-				this->joints.push_back(newJoint);
+			if(trackingMode=="Tracked"){
+				trackingType = Joint::Mode::Tracked;
+			}else if(trackingMode=="NotTracked"){
+				trackingType = Joint::Mode::NotTracked;
+			}else if(trackingMode=="Inferred"){
+				trackingType = Joint::Mode::Inferred;
 			}
 
+			Joint newJoint( type,
+							joints_json[joint].get("X",NULL).asDouble(),
+							joints_json[joint].get("Y",NULL).asDouble(),
+							joints_json[joint].get("Z",NULL).asDouble(),
+							trackingType
+			);
+
+			newJoints.push_back(newJoint);
+		}
+
+		vector_mutex.lock();
+		this->joints.clear();
+		this->joints = newJoints;
+		vector_mutex.unlock();
+
+		if(tracking_mode.asString()=="Tracked"){
+			this->TrackingMode = Skeleton::Tracked;
 		}else{
-			this->Tracked = Skeleton::PositionOnly;
+			this->TrackingMode = Skeleton::PositionOnly;
 		}
 
 		this->client_id = client_id.asUInt();
@@ -53,22 +65,16 @@ namespace MultipleKinectsPlatformServer{
 
 	Joint Skeleton::GetJoint(Joint::JointType type){
 
-		try{
-
-		for(unsigned short joint=0;joint<this->joints.size();joint++){
-
-			if(joints[joint].Type == type){
-				return joints[joint];
-			}
-
+		Joint requestedJoint;
+		
+		vector_mutex.lock();
+		if(this->joints.size()>0){
+			requestedJoint = this->joints[(short)type];
 		}
+		vector_mutex.unlock();
+	
 
-		}catch(exception ex){
-
-			cout << ex.what();
-		}
-
-		return Joint();
+		return requestedJoint;
 	}
 
 }

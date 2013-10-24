@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include <mutex>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
@@ -19,6 +20,7 @@ using namespace std;
 namespace MultipleKinectsPlatformServer{
 
 	Skeleton *global_skeleton = NULL;
+	mutex vector_mutex;
 
 	class Core{
 		public :
