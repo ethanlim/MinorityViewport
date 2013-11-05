@@ -12,7 +12,6 @@
 *.la
 *.a
 
-
 # Visual Studio Files
 /Debug
 MultipleKinectsPlatformServer.sdf
@@ -31,3 +30,6 @@ MultipleKinectsPlatformServer.vcxproj.user
 
 # GNU Make Files
 /Build (GNU)
+
+.project
+.cproject
