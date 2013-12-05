@@ -1,7 +1,7 @@
 #ifndef SKELETON_H
 #define SKELETON_H
 
-#include "JSON\json.h"
+#include "JSON/json.h"
 
 #include <vector>
 #include <mutex>

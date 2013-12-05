@@ -1,7 +1,7 @@
 #ifndef JOBSQUEUE_H
 #define JOBSQUEUE_H
 
-#include "JSON\json.h"
+#include "JSON/json.h"
 #include <queue>
 #include <string>
 

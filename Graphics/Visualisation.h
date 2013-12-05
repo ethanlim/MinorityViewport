@@ -1,10 +1,13 @@
 #ifndef VISUALISATION_H
 #define VISUALISATION_H
 
+#ifdef WINDOWS
 #include <Windows.h>
+#else
+#endif
 #include <string>
 #include <gl/GL.h>
-#include "glut\glut.h"
+#include "glut/glut.h"
 #include "../Data/Skeleton.h"
 
 using namespace std;
@@ -12,7 +15,6 @@ using namespace std;
 #define KEY_ESCAPE 27
 #define PI 3.14159265f
 #define CIRCLE_RAD 0.02f
-
 
 namespace MultipleKinectsPlatformServer{
 
@@ -37,7 +39,6 @@ namespace MultipleKinectsPlatformServer{
 			float field_of_view_angle;
 			float z_near;
 			float z_far;
-
 	};
 }
 #endif

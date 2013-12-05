@@ -15,6 +15,12 @@
 #include "Data/JSON/json.h"
 #include "Data/Skeleton.h"
 
+#ifdef __GNUC__
+  #define LINUX
+#else
+  #define WINDOWS
+#endif
+
 using namespace std;
 
 namespace MultipleKinectsPlatformServer{
