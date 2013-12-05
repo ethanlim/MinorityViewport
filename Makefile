@@ -13,7 +13,6 @@ HEADERS				= $(shell echo include/*.h)
 OBJECTS 			= $(SOURCES:.c=.o)
 
 all: $(TARGET)
-	echo Done
 
 $(TARGET): $(OBJECTS) $(COMMON)
 	$(CC) $(FLAGS) $(CFLAGS) $(DEBUGFLAGS) -o $(TARGET) $(OBJECTS)
