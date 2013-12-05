@@ -27,6 +27,7 @@ MultipleKinectsPlatformServer.vcxproj.user
 # Eclipse Files
 .cproject
 .project
+.settings/
 
 # GNU Make Files
 /Build (GNU)
