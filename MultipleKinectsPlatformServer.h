@@ -1,6 +1,7 @@
-
 #ifndef MULTIPLEKINECTSPLATFORMSERVER_H
 #define MULTIPLEKINECTSPLATFORMSERVER_H
+
+#define _WIN32_WINNT 0x0501
 
 #include <iostream>
 #include <string>
@@ -14,12 +15,6 @@
 #include "Graphics/Visualisation.h"
 #include "Data/JSON/json.h"
 #include "Data/Skeleton.h"
-
-#ifdef __GNUC__
-  #define LINUX
-#else
-  #define WINDOWS
-#endif
 
 using namespace std;
 

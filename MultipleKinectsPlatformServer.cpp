@@ -1,4 +1,4 @@
-#include "MutlipleKinectsPlatformServer.h"
+#include "MultipleKinectsPlatformServer.h"
 
 namespace MultipleKinectsPlatformServer{
 

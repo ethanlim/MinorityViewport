@@ -1,10 +1,7 @@
 #ifndef VISUALISATION_H
 #define VISUALISATION_H
 
-#ifdef WINDOWS
 #include <Windows.h>
-#else
-#endif
 #include <string>
 #include <gl/GL.h>
 #include "glut/glut.h"
