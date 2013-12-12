@@ -35,7 +35,6 @@ namespace MultipleKinectsPlatformServer{
 			
 			vector<Joint> joints;
 			void SetJoints(vector<Joint> new_joints);
-
 	};
 }
 #endif
