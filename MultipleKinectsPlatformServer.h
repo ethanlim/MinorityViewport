@@ -21,7 +21,8 @@ using namespace std;
 namespace MultipleKinectsPlatformServer{
 
 	Skeleton *global_skeleton = NULL;
-	mutex vector_mutex;
+	
+	std::mutex joints_mutex;
 
 	class Core{
 		public :

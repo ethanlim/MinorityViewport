@@ -112,7 +112,7 @@ namespace MultipleKinectsPlatformServer{
 				if(Visualisation::CheckPositionNotEmpty(draw_skeleton->pos_x,draw_skeleton->pos_y,draw_skeleton->pos_z))
 					Visualisation::Draw3DCircle(draw_skeleton->pos_x,draw_skeleton->pos_y,draw_skeleton->pos_z,CIRCLE_RAD);	
 
-			}else if(draw_skeleton->TrackingMode == Skeleton::Tracked && draw_skeleton->joints.size()!=0){
+			}else if(draw_skeleton->TrackingMode == Skeleton::Tracked){
 
 				if(Visualisation::CheckPositionNotEmpty(draw_skeleton->pos_x,draw_skeleton->pos_y,draw_skeleton->pos_z))
 					Visualisation::Draw3DCircle(draw_skeleton->pos_x,draw_skeleton->pos_y,draw_skeleton->pos_z,CIRCLE_RAD);	
@@ -238,5 +238,7 @@ namespace MultipleKinectsPlatformServer{
 	bool Visualisation::CheckPositionNotEmpty(double x_joint,double y_joint, double z_joint){
 		if(x_joint!=0 && y_joint!=0 && z_joint!=0)
 			return true;
+		else
+			return false;
 	}
 }

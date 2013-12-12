@@ -11,10 +11,18 @@ using namespace std;
 
 namespace MultipleKinectsPlatformServer{
 
-	extern mutex vector_mutex;
+	extern std::mutex joints_mutex;
 
 	class Skeleton{
+		private:
+			unsigned int client_id;
+			unsigned int skeleton_id;
+			string sensor_id;
 		public:
+			double pos_x;
+			double pos_y;
+			double pos_z;
+
 			enum Tracked
 			{
 				PositionOnly,
@@ -24,14 +32,10 @@ namespace MultipleKinectsPlatformServer{
 			Skeleton(Json::Value raw_skeleton_json);
 			~Skeleton();
 			Joint GetJoint(Joint::JointType type);
-			double pos_x;
-			double pos_y;
-			double pos_z;
+			
 			vector<Joint> joints;
-		private:
-			unsigned int client_id;
-			unsigned int skeleton_id;
-			string sensor_id;
+			void SetJoints(vector<Joint> new_joints);
+
 	};
 }
 #endif

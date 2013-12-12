@@ -40,10 +40,7 @@ namespace MultipleKinectsPlatformServer{
 			newJoints.push_back(newJoint);
 		}
 
-		vector_mutex.lock();
-		this->joints.clear();
-		this->joints = newJoints;
-		vector_mutex.unlock();
+		this->SetJoints(newJoints);
 
 		if(tracking_mode.asString()=="Tracked"){
 			this->TrackingMode = Skeleton::Tracked;
@@ -63,18 +60,29 @@ namespace MultipleKinectsPlatformServer{
 
 	}
 
+	void Skeleton::SetJoints(vector<Joint> new_joints){
+
+		//Protected from race conditions - clear joints while reading
+
+		std::lock_guard<std::mutex> lock(joints_mutex);
+
+		joints.clear();
+		joints = new_joints;
+	}
+
 	Joint Skeleton::GetJoint(Joint::JointType type){
 
-		Joint requestedJoint;
-		
-		vector_mutex.lock();
-		if(this->joints.size()>0){
-			requestedJoint = this->joints[(short)type];
-		}
-		vector_mutex.unlock();
-	
+		// Protected by mutex that ensure joints is not empty when reading
 
-		return requestedJoint;
+		std::lock_guard<std::mutex> lock(joints_mutex);
+
+		Joint bodyJoint;
+
+		if(joints.size()>0){
+			bodyJoint = joints[(short)type];
+		}
+
+		return bodyJoint;
 	}
 
 }
