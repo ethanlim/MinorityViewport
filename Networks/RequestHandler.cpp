@@ -29,11 +29,11 @@ namespace http {
 
 	void request_handler::handle_request(const request& req, reply& rep)
 	{
-	  // Get JSON in the header
-	  std::string json = this->request_header_val(req,"JSON");
+	  // Get Sensor JSON in the header
+	  std::string sensor_json = this->request_header_val(req,"SENSOR_JSON");
 
 	  /* Insert it into the Job Queue */
-	  job_queue_->push(json);
+	  job_queue_->push(sensor_json);
 
 	  // Decode url to path.
 	  std::string request_path;
