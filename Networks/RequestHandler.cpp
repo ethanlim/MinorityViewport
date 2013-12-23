@@ -8,30 +8,25 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
+
 #include "RequestHandler.h"
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <boost/lexical_cast.hpp>
-#include "MimeTypes.h"
-#include "Reply.h"
-#include "Request.h"
-#include "../Data/Skeleton.h"
-#include "../Data/JSON/json.h"
-#include <boost/property_tree/json_parser.hpp>
-#include <boost/property_tree/ptree.hpp>
 
 namespace http {
 	namespace server {
 
-	request_handler::request_handler(const std::string& doc_root, MultipleKinectsPlatformServer::JobsQueue* cur_jobs_queue)
-					:doc_root_(doc_root),
-					job_queue_(cur_jobs_queue)
-	{
-	}
+	request_handler::request_handler(const std::string& doc_root, 
+									 MultipleKinectsPlatformServer::JobsQueue *cur_jobs_queue, 
+									 MultipleKinectsPlatformServer::ClientsList *client_list)
+				:_doc_root(doc_root),
+				 _job_queue(cur_jobs_queue),
+				 _client_list(client_list)
+	{}
 
 	void request_handler::handle_request(const request& req, reply& rep)
 	{
+
+	  rep.headers.resize(3);
+
 	  // Decode url to path.
 	  std::string request_path;
 	  if (!url_decode(req.uri, request_path))
@@ -53,19 +48,37 @@ namespace http {
 		request_path += "index.html";
 	  }
 
-	  if(request_path == "/sensors/data")
+	  if(request_path == "//web/api/sensors/data.json")
 	  {
 		  // Get Sensor JSON in the header
 		  string sensor_json = this->request_header_val(req,"SENSOR_JSON");
 
 		  /* Insert it into the Job Queue */
-		  job_queue_->push(sensor_json);
+		  _job_queue->push(sensor_json);
 	  }
 
-	  if (request_path == "/visualisation/data.json")
+	  if(request_path == "//web/api/clients/register.json")
 	  {
-		  //Construct the visualisation data to send back
-		  request_path = "/data.json";
+		  string physical_location = this->request_header_val(req,"PHYSICAL_LOC");
+		  string ip_addr = this->request_header_val(req,"IP_ADDR");
+		  
+		  unsigned int client_id = this->_client_list->AddClient(physical_location,ip_addr);
+
+		  /* Return the assigned client in the header */
+		   rep.headers[2].name = "ASSIGNED_CLIENT_ID";
+		   rep.headers[2].value = std::to_string(client_id);
+	  }
+
+	  if(request_path == "//web/api/clients/deregister.json")
+	  {
+		  string deregisterClientId = this->request_header_val(req,"CLIENT_ID");
+
+		  this->_client_list->RemClient(std::stoi(deregisterClientId));
+	  }
+
+	  if (request_path == "//web/api/visualisations/data.json")
+	  {
+
 	  }
 
 	  // Determine the file extension.
@@ -78,7 +91,7 @@ namespace http {
 	  }
 
 	  // Open the file to send back.
-	  std::string full_path = doc_root_ + request_path;
+	  std::string full_path = _doc_root + request_path;
 	  std::ifstream is(full_path.c_str(), std::ios::in | std::ios::binary);
 	  if (!is)
 	  {
@@ -91,7 +104,6 @@ namespace http {
 	  char buf[512];
 	  while (is.read(buf, sizeof(buf)).gcount() > 0)
 	  rep.content.append(buf, is.gcount());
-	  rep.headers.resize(2);
 	  rep.headers[0].name = "Content-Length";
 	  rep.headers[0].value = boost::lexical_cast<std::string>(rep.content.size());
 	  rep.headers[1].name = "Content-Type";

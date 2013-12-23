@@ -15,6 +15,7 @@
 #include "Graphics/Visualisation.h"
 #include "Data/JSON/json.h"
 #include "Data/Skeleton.h"
+#include "Data/ClientsList.h"
 
 using namespace std;
 
@@ -32,6 +33,7 @@ namespace MultipleKinectsPlatformServer{
 			void ProcessJobs();
 			void BeginVisualisation(int *argcp, char **argv);
 		private:
+			MultipleKinectsPlatformServer::ClientsList *clientList;
 			MultipleKinectsPlatformServer::JobsQueue *jobQueue;
 			http::server::server *server;
 			MultipleKinectsPlatformServer::Visualisation *visualisation;

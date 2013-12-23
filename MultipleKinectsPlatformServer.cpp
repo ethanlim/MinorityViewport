@@ -5,15 +5,16 @@ namespace MultipleKinectsPlatformServer{
 	Core::Core(string address,string port){
 	  try
 	  {
-		string docRoot = "C:\\Users\\ethanlim\\Documents\\Projects\\School\\MultipleKinectsPlatformServer";
+		// Initialise the Client Machine List
+		this->clientList = new MultipleKinectsPlatformServer::ClientsList();
 
-		// Initialise the Job Queue
+		// Create the jobs queue that process each incoming data from client machines
 		this->jobQueue = new MultipleKinectsPlatformServer::JobsQueue();
 
-		std::size_t num_threads = boost::lexical_cast<std::size_t>(5);
-
-		//Initialise the Server
-		this->server = new http::server::server(address, port, docRoot, this->jobQueue, num_threads);
+		//Initialise the Server with the number of threads
+		string docRoot = "C:\\Users\\ethanlim\\Documents\\Projects\\School\\MultipleKinectsPlatformServer";
+		std::size_t num_threads = boost::lexical_cast<std::size_t>(20);
+		this->server = new http::server::server(address, port, docRoot, this->jobQueue, num_threads,this->clientList);
 	  }
 	  catch (std::exception& e)
 	  {

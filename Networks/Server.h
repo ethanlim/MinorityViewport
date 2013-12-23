@@ -16,10 +16,12 @@
 #include <vector>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/bind.hpp>
 #include "Connection.h"
 #include "IOServicePool.h"
 #include "RequestHandler.h"
 #include "../Data/JobsQueue.h"
+#include "../Data/ClientsList.h"
 
 namespace http {
 	namespace server {
@@ -30,7 +32,12 @@ namespace http {
 			public:
 			  /// Construct the server to listen on the specified TCP address and port, and
 			  /// serve up files from the given directory.
-			  explicit server(const std::string& address, const std::string& port, const std::string& doc_root, MultipleKinectsPlatformServer::JobsQueue* cur_jobs_queue, std::size_t io_service_pool_size);
+			  explicit server(const std::string& address, 
+							  const std::string& port, 
+							  const std::string& doc_root, 
+							  MultipleKinectsPlatformServer::JobsQueue *cur_jobs_queue, 
+							  std::size_t io_service_pool_size,
+							  MultipleKinectsPlatformServer::ClientsList *client_list);
 
 			  /// Run the server's io_service loop.
 			  void run();
