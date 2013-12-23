@@ -16,7 +16,10 @@
 #include "MimeTypes.h"
 #include "Reply.h"
 #include "Request.h"
+#include "../Data/Skeleton.h"
 #include "../Data/JSON/json.h"
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
 
 namespace http {
 	namespace server {
@@ -29,12 +32,6 @@ namespace http {
 
 	void request_handler::handle_request(const request& req, reply& rep)
 	{
-	  // Get Sensor JSON in the header
-	  std::string sensor_json = this->request_header_val(req,"SENSOR_JSON");
-
-	  /* Insert it into the Job Queue */
-	  job_queue_->push(sensor_json);
-
 	  // Decode url to path.
 	  std::string request_path;
 	  if (!url_decode(req.uri, request_path))
@@ -54,6 +51,21 @@ namespace http {
 	  if (request_path[request_path.size() - 1] == '/')
 	  {
 		request_path += "index.html";
+	  }
+
+	  if(request_path == "/sensors/data")
+	  {
+		  // Get Sensor JSON in the header
+		  string sensor_json = this->request_header_val(req,"SENSOR_JSON");
+
+		  /* Insert it into the Job Queue */
+		  job_queue_->push(sensor_json);
+	  }
+
+	  if (request_path == "/visualisation/data.json")
+	  {
+		  //Construct the visualisation data to send back
+		  request_path = "/data.json";
 	  }
 
 	  // Determine the file extension.
