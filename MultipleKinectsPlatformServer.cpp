@@ -43,15 +43,11 @@ namespace MultipleKinectsPlatformServer{
 
 				string rawJSON = this->jobQueue->pop();
 
-				bool parsingSuccessful = reader.parse(rawJSON,root);
-
-				if (parsingSuccessful)
+				if (reader.parse(rawJSON,root))
 				{
 					for(unsigned short skeletons=0;skeletons<root.size();skeletons++){
 					    
-						Json::Value skeletonData =  root.get(skeletons,NULL);
-
-						MultipleKinectsPlatformServer::Skeleton newSkeleton(skeletonData);
+						MultipleKinectsPlatformServer::Skeleton newSkeleton(root.get(skeletons,NULL));
 
 						global_skeleton = &newSkeleton;
 					}
