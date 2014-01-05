@@ -11,6 +11,8 @@ namespace MultipleKinectsPlatformServer{
 		// Create the jobs queue that process each incoming data from client machines
 		this->jobQueue = new MultipleKinectsPlatformServer::JobsQueue();
 
+		this->minorityViewport = new MinorityViewport();
+
 		//Initialise the Server with the number of threads
 		string docRoot = "C:\\Users\\ethanlim\\Documents\\Projects\\School\\MultipleKinectsPlatformServer";
 		std::size_t num_threads = boost::lexical_cast<std::size_t>(20);
@@ -49,7 +51,6 @@ namespace MultipleKinectsPlatformServer{
 					    
 						MultipleKinectsPlatformServer::Skeleton newSkeleton(root.get(skeletons,NULL));
 
-						global_skeleton = &newSkeleton;
 					}
 				}
 			}

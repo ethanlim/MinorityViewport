@@ -10,33 +10,35 @@
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
+
 #include "Networks/Server.h"
 #include "Data/JobsQueue.h"
 #include "Graphics/Visualisation.h"
 #include "Data/JSON/json.h"
 #include "Data/Skeleton.h"
 #include "Data/ClientsList.h"
+#include "Algorithms/MinorityViewport.h"
 
 using namespace std;
 
 namespace MultipleKinectsPlatformServer{
-
-	Skeleton *global_skeleton = NULL;
 	
+	/* Global Variables */
 	std::mutex joints_mutex;
 
 	class Core{
+		private:
+			MultipleKinectsPlatformServer::ClientsList *clientList;
+			MultipleKinectsPlatformServer::JobsQueue *jobQueue;
+			http::server::server *server;
+			MultipleKinectsPlatformServer::Visualisation *visualisation;
+			MinorityViewport *minorityViewport;
 		public :
 			Core(string address,string port);
 			~Core();
 			void BeginListen();			
 			void ProcessJobs();
 			void BeginVisualisation(int *argcp, char **argv);
-		private:
-			MultipleKinectsPlatformServer::ClientsList *clientList;
-			MultipleKinectsPlatformServer::JobsQueue *jobQueue;
-			http::server::server *server;
-			MultipleKinectsPlatformServer::Visualisation *visualisation;
 	};
 }
 
