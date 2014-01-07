@@ -49,12 +49,7 @@ namespace MultipleKinectsPlatformServer{
 		glTranslatef(0.0f,0.0f,-3.0f);			
 		
 		try{
-
-			if(global_skeleton!=NULL){
-
-				Visualisation::DrawSkeleton(global_skeleton);
-
-			}
+			//TODO: draw list of skeletons
 
 		}catch(exception drawException){
 
