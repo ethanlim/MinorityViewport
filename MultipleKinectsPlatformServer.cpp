@@ -2,7 +2,7 @@
 
 namespace MultipleKinectsPlatformServer{
 
-	Core::Core(string address,string port){
+	Core::Core(/*Server Address*/string address,/*Server Port*/string port){
 	  try
 	  {
 		// Initialise the Client Machine List
@@ -38,7 +38,7 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	void Core::ProcessJobs(){
-		while(1){
+		while(true){
 			if(this->jobQueue->get_size()>0){
 				Json::Value root;   
 				Json::Reader reader;
@@ -59,13 +59,14 @@ namespace MultipleKinectsPlatformServer{
 
 	void Core::BeginVisualisation(int *argc, char **argv){
 
-		this->visualisation = new Visualisation(argc,argv);
+		/* TODO: Restore the visualisation soon */
+		//this->visualisation = new Visualisation(argc,argv);
 	}
 }
 
-int main( int argc, char **argv)
+int main(int argc, char **argv)
 {
-	MultipleKinectsPlatformServer::Core platform("127.0.0.1","1626");
+	MultipleKinectsPlatformServer::Core platform(argv[1],argv[2]);
 
 	// Start Server on a separate thread
 	thread server_thread(&MultipleKinectsPlatformServer::Core::BeginListen,platform);

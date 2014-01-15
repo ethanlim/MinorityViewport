@@ -33,6 +33,7 @@ namespace MultipleKinectsPlatformServer{
 			http::server::server *server;
 			MultipleKinectsPlatformServer::Visualisation *visualisation;
 			MinorityViewport *minorityViewport;
+			
 		public :
 			Core(string address,string port);
 			~Core();
