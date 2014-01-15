@@ -14,9 +14,15 @@ namespace MultipleKinectsPlatformServer{
 		this->minorityViewport = new MinorityViewport();
 
 		//Initialise the Server with the number of threads
+
+		this->ReportStatus("Server Starting");
+
 		string docRoot = "C:\\Users\\ethanlim\\Documents\\Projects\\School\\MultipleKinectsPlatformServer";
 		std::size_t num_threads = boost::lexical_cast<std::size_t>(20);
 		this->server = new http::server::server(address, port, docRoot, this->jobQueue, num_threads,this->clientList);
+		
+		this->ReportStatus("Server Started");
+
 	  }
 	  catch (std::exception& e)
 	  {
@@ -43,7 +49,10 @@ namespace MultipleKinectsPlatformServer{
 				Json::Value root;   
 				Json::Reader reader;
 
-				string rawJSON = this->jobQueue->pop();
+				Job recvJob =  this->jobQueue->pop();
+
+				string rawJSON = recvJob.GetJobJSON();
+				string timeStamp = recvJob.GetTimeStamp();
 
 				if (reader.parse(rawJSON,root))
 				{
@@ -61,6 +70,10 @@ namespace MultipleKinectsPlatformServer{
 
 		/* TODO: Restore the visualisation soon */
 		//this->visualisation = new Visualisation(argc,argv);
+	}
+
+	void Core::ReportStatus(string msg){
+		cout << "Status : " << msg << endl;
 	}
 }
 

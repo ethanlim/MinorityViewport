@@ -52,9 +52,10 @@ namespace http {
 	  {
 		  // Get Sensor JSON in the header
 		  string sensor_json = this->request_header_val(req,"SENSOR_JSON");
+		  string time_stamp = this->request_header_val(req,"TIME_STAMP");
 
 		  /* Insert it into the Job Queue */
-		  _job_queue->push(sensor_json);
+		  _job_queue->push(sensor_json,time_stamp);
 	  }
 
 	  if(request_path == "//web/api/clients/register.json")

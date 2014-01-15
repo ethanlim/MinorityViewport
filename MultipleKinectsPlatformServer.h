@@ -14,6 +14,7 @@
 #include "Networks/Server.h"
 #include "Data/JobsQueue.h"
 #include "Graphics/Visualisation.h"
+#include "Data/Job.h"
 #include "Data/JSON/json.h"
 #include "Data/Skeleton.h"
 #include "Data/ClientsList.h"
@@ -34,6 +35,8 @@ namespace MultipleKinectsPlatformServer{
 			MultipleKinectsPlatformServer::Visualisation *visualisation;
 			MinorityViewport *minorityViewport;
 			
+			void ReportStatus(string message);
+
 		public :
 			Core(string address,string port);
 			~Core();
