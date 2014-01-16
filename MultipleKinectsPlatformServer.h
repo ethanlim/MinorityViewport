@@ -1,8 +1,6 @@
 #ifndef MULTIPLEKINECTSPLATFORMSERVER_H
 #define MULTIPLEKINECTSPLATFORMSERVER_H
 
-#define _WIN32_WINNT 0x0501
-
 #include <iostream>
 #include <string>
 #include <thread>
@@ -38,7 +36,6 @@ namespace MultipleKinectsPlatformServer{
 			MinorityViewport *minorityViewport;
 			Timer *time;
 			void ReportStatus(string message);
-
 		public :
 			Core(string address,string port);
 			~Core();

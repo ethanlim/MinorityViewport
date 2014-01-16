@@ -1,14 +1,3 @@
-//
-// request_handler.cpp
-// ~~~~~~~~~~~~~~~~~~~
-//
-// Copyright (c) 2003-2013 Christopher M. Kohlhoff (chris at kohlhoff dot com)
-//
-// Distributed under the Boost Software License, Version 1.0. (See accompanying
-// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-//
-
-
 #include "RequestHandler.h"
 
 namespace http {
@@ -17,14 +6,14 @@ namespace http {
 	request_handler::request_handler(const std::string& doc_root, 
 									 MultipleKinectsPlatformServer::JobsQueue *cur_jobs_queue, 
 									 MultipleKinectsPlatformServer::ClientsList *client_list)
-				:_doc_root(doc_root),
-				 _job_queue(cur_jobs_queue),
-				 _client_list(client_list)
-	{}
+									:_doc_root(doc_root),
+									 _job_queue(cur_jobs_queue),
+									 _client_list(client_list)
+	{
+	}
 
 	void request_handler::handle_request(const request& req, reply& rep)
 	{
-
 	  rep.headers.resize(3);
 
 	  // Decode url to path.
@@ -35,7 +24,7 @@ namespace http {
 		return;
 	  }
 
-	  // Request path must be absolute and not contain "..".
+	  // Bad Request
 	  if (request_path.empty() || request_path[0] != '/' || request_path.find("..") != std::string::npos)
 	  {
 		rep = reply::stock_reply(reply::bad_request);
@@ -48,7 +37,7 @@ namespace http {
 		request_path += "index.html";
 	  }
 
-	  if(request_path == "//web/api/sensors/data.json")
+	  if(request_path == "//web/api/sensors/data")
 	  {
 		  // Get Sensor JSON in the header
 		  string sensor_json = this->request_header_val(req,"SENSOR_JSON");
@@ -58,7 +47,7 @@ namespace http {
 		  _job_queue->push(sensor_json,time_stamp);
 	  }
 
-	  if(request_path == "//web/api/clients/register.json")
+	  if(request_path == "//web/api/clients/register")
 	  {
 		  string physical_location = this->request_header_val(req,"PHYSICAL_LOC");
 		  string ip_addr = this->request_header_val(req,"IP_ADDR");
@@ -70,14 +59,19 @@ namespace http {
 		   rep.headers[2].value = std::to_string(client_id);
 	  }
 
-	  if(request_path == "//web/api/clients/deregister.json")
+	  if(request_path == "//web/api/clients/deregister")
 	  {
 		  string deregisterClientId = this->request_header_val(req,"CLIENT_ID");
 
 		  this->_client_list->RemClient(std::stoi(deregisterClientId));
 	  }
 
-	  if (request_path == "//web/api/visualisations/data.json")
+	  if(request_path == "//web/api/clients/listing")
+	  {
+
+	  }
+
+	  if (request_path == "//web/api/visualisations/data")
 	  {
 
 	  }

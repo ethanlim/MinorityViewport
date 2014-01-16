@@ -1,13 +1,3 @@
-//
-// request_handler.hpp
-// ~~~~~~~~~~~~~~~~~~~
-//
-// Copyright (c) 2003-2013 Christopher M. Kohlhoff (chris at kohlhoff dot com)
-//
-// Distributed under the Boost Software License, Version 1.0. (See accompanying
-// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-//
-
 #ifndef HTTP_SERVER_REQUEST_HANDLER_HPP
 #define HTTP_SERVER_REQUEST_HANDLER_HPP
 
@@ -43,7 +33,7 @@ namespace http {
 	{
 	public:
 	  /// Construct with a directory containing files to be served.
-	  explicit request_handler(const std::string& doc_root, 
+	  explicit request_handler(const std::string& doc_root,
 							   MultipleKinectsPlatformServer::JobsQueue *cur_jobs_queue,
 							   MultipleKinectsPlatformServer::ClientsList *client_list);
 
@@ -53,7 +43,7 @@ namespace http {
 	private:
 	  /// The directory containing the files to be served.
 	  std::string _doc_root;
-
+	  
 	  /// Pointer to current job queue
 	  MultipleKinectsPlatformServer::JobsQueue *_job_queue;
 

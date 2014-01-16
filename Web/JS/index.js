@@ -8,5 +8,7 @@ $(document).ready(function () {
         console.log("Libraries Initialisation Successful");
     }
 
+    $("#sensor-info-count")
+
 
 });
