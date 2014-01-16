@@ -1,5 +1,5 @@
 
-jQuery(document).ready(function () {
+$(document).ready(function () {
 
     var networkLib = Network.init("localhost",1626),
         visualLib = Visualisation.init("canvas-stage-1");

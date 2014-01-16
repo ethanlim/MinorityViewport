@@ -14,6 +14,13 @@ var Visualisation = {
 
         this.html5CanvasObj = document.getElementById(canvas_dom_id);
 
+        // Make it visually fill the positioned parent
+        this.html5CanvasObj.style.width = '100%';
+        this.html5CanvasObj.style.height = "600px";
+        // ...then set the internal size to match
+        this.html5CanvasObj.width = this.html5CanvasObj.offsetWidth;
+        this.html5CanvasObj.height = this.html5CanvasObj.offsetHeight;
+
         if (this.html5CanvasObj == null) {
             alert("there is no canvas on this page");
             return;
@@ -34,7 +41,7 @@ var Visualisation = {
 
         this.context2d = canvas_obj.getContext('2d');
 
-        this.context2d.fillStyle = "rgb(0,0,0)";
+        this.context2d.fillStyle = "rgb(84,84,84)";
 
         this.context2d.fillRect(0, 0, this.html5CanvasObj.width, this.html5CanvasObj.height);
 

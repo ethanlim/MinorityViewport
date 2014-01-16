@@ -1,11 +1,8 @@
 body {
-  padding-top: 50px;
+    padding-top: 50px;
 }
 
-.container {
-    border:double 5px;
-}
-
-.canvas-stage-1 {
-
+.starter-template {
+    padding: 40px 15px;
+    text-align: center;
 }
