@@ -27,6 +27,8 @@ namespace MultipleKinectsPlatformServer{
 			~ClientsList();
 			unsigned int AddClient(string physical_loc, string ip_addr);
 			void RemoveClient(unsigned int client_id);
+			unsigned int Size();
+			Client At(unsigned int index);
 	};
 }
 

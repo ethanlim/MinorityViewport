@@ -3,7 +3,7 @@
 namespace http {
 	namespace server {
 
-	request_handler::request_handler(const std::string& doc_root, 
+	request_handler::request_handler(const std::string& doc_root,
 									 MultipleKinectsPlatformServer::JobsQueue *cur_jobs_queue, 
 									 MultipleKinectsPlatformServer::ClientsList *client_list)
 									:_doc_root(doc_root),
@@ -14,15 +14,19 @@ namespace http {
 
 	void request_handler::handle_request(const request& req, reply& rep)
 	{
+
 	  rep.headers.resize(3);
 
 	  // Decode url to path.
 	  std::string request_path;
+	 
 	  if (!url_decode(req.uri, request_path))
 	  {
 		rep = reply::stock_reply(reply::bad_request);
 		return;
 	  }
+
+	   std::string full_path = _doc_root + request_path;
 
 	  // Bad Request
 	  if (request_path.empty() || request_path[0] != '/' || request_path.find("..") != std::string::npos)
@@ -37,7 +41,7 @@ namespace http {
 		request_path += "index.html";
 	  }
 
-	  if(request_path == "//web/api/sensors/data")
+	  if(request_path == "//web/api/sensors/data.json")
 	  {
 		  // Get Sensor JSON in the header
 		  string sensor_json = this->request_header_val(req,"SENSOR_JSON");
@@ -47,7 +51,7 @@ namespace http {
 		  _job_queue->push(sensor_json,time_stamp);
 	  }
 
-	  if(request_path == "//web/api/clients/register")
+	  if(request_path == "//web/api/clients/register.json")
 	  {
 		  string physical_location = this->request_header_val(req,"PHYSICAL_LOC");
 		  string ip_addr = this->request_header_val(req,"IP_ADDR");
@@ -55,23 +59,37 @@ namespace http {
 		  unsigned int client_id = this->_client_list->AddClient(physical_location,ip_addr);
 
 		  /* Return the assigned client in the header */
-		   rep.headers[2].name = "ASSIGNED_CLIENT_ID";
-		   rep.headers[2].value = std::to_string(client_id);
+		  rep.headers[2].name = "ASSIGNED_CLIENT_ID";
+		  rep.headers[2].value = std::to_string(client_id);
 	  }
 
-	  if(request_path == "//web/api/clients/deregister")
+	  if(request_path == "//web/api/clients/deregister.json")
 	  {
 		  string deregisterClientId = this->request_header_val(req,"CLIENT_ID");
 
 		  this->_client_list->RemoveClient(std::stoi(deregisterClientId));
 	  }
 
-	  if(request_path == "//web/api/clients/listing")
+	  if(request_path == "/web/api/clients/listing.json")
 	  {
+		  ofstream outputFile(full_path);
 
+		  outputFile << "{";
+
+		  for(unsigned int client_id=0;client_id<this->_client_list->Size();client_id++){
+
+			  MultipleKinectsPlatformServer::Client extractedClient = this->_client_list->At(client_id);
+			  
+			  outputFile << extractedClient.ToJSON();
+
+		  }
+
+		  outputFile << "}";
+
+		  outputFile.close();
 	  }
 
-	  if (request_path == "//web/api/visualisations/data")
+	  if (request_path == "/web/api/visualisations/data.json")
 	  {
 
 	  }
@@ -86,7 +104,7 @@ namespace http {
 	  }
 
 	  // Open the file to send back.
-	  std::string full_path = _doc_root + request_path;
+	  
 	  std::ifstream is(full_path.c_str(), std::ios::in | std::ios::binary);
 	  if (!is)
 	  {
@@ -103,6 +121,10 @@ namespace http {
 	  rep.headers[0].value = boost::lexical_cast<std::string>(rep.content.size());
 	  rep.headers[1].name = "Content-Type";
 	  rep.headers[1].value = mime_types::extension_to_type(extension);
+
+	  //Remove content of request path file after return
+	  ofstream erasingFile(full_path);
+	  erasingFile.close();
 	}
 
 	std::string request_handler::request_header_val(const request& req, std::string request_header){

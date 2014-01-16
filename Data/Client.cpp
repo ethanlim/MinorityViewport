@@ -15,4 +15,26 @@ namespace MultipleKinectsPlatformServer{
 	unsigned int Client::GetId(){
 		return this->_id;
 	}
+
+	string Client::ToJSON(){
+		string json;
+
+		json += "{";
+
+		json += "\"id\":";
+		json += to_string(this->_id);
+		json += ",";
+
+		json += "\"location\":";
+		json += "\"" + this->_location + "\"";
+		json += ",";
+
+		json += "\"address\":";
+		json += this->_ip_addr;
+		json += "";
+
+		json += "}";
+
+		return json;
+	}
 }

@@ -13,6 +13,10 @@ namespace MultipleKinectsPlatformServer{
 
 	}
 
+	unsigned int ClientsList::Size(){
+		return this->raw_client_list.size();
+	}
+
 	unsigned int ClientsList::AddClient(string physical_loc, string ip_addr){
 
 		unsigned int newClientId = this->GenerateNextClientId();
@@ -70,5 +74,13 @@ namespace MultipleKinectsPlatformServer{
 		}
 
 		return false;
+	}
+
+	Client ClientsList::At(unsigned int index){
+		
+		list<Client>::iterator itr = this->raw_client_list.begin();
+		std::advance(itr,index);
+
+		return *itr;
 	}
 }
