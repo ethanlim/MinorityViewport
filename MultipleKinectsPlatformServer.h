@@ -19,6 +19,8 @@
 #include "Data/Skeleton.h"
 #include "Data/ClientsList.h"
 #include "Algorithms/MinorityViewport.h"
+#include "Networks/NTPClient.h"
+#include "Misc/Timer.h"
 
 using namespace std;
 
@@ -34,7 +36,7 @@ namespace MultipleKinectsPlatformServer{
 			http::server::server *server;
 			MultipleKinectsPlatformServer::Visualisation *visualisation;
 			MinorityViewport *minorityViewport;
-			
+			Timer *time;
 			void ReportStatus(string message);
 
 		public :

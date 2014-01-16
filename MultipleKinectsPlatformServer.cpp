@@ -5,6 +5,12 @@ namespace MultipleKinectsPlatformServer{
 	Core::Core(/*Server Address*/string address,/*Server Port*/string port){
 	  try
 	  {
+
+		NTPClient timeClient("0.nettime.pool.ntp.org");
+		long timeFromServer = timeClient.RequestDatetime_UNIX();
+		this->time = new Timer(timeFromServer);
+		this->time->Start();
+		
 		// Initialise the Client Machine List
 		this->clientList = new MultipleKinectsPlatformServer::ClientsList();
 
@@ -57,9 +63,7 @@ namespace MultipleKinectsPlatformServer{
 				if (reader.parse(rawJSON,root))
 				{
 					for(unsigned short skeletons=0;skeletons<root.size();skeletons++){
-					    
 						MultipleKinectsPlatformServer::Skeleton newSkeleton(root.get(skeletons,NULL));
-
 					}
 				}
 			}
