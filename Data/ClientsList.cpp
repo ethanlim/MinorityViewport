@@ -24,7 +24,7 @@ namespace MultipleKinectsPlatformServer{
 		return newClientId;
 	}
 
-	void ClientsList::RemClient(unsigned int id){
+	void ClientsList::RemoveClient(unsigned int id){
 
 		this->avaliableIDs.push(id);
 

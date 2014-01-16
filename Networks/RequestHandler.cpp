@@ -63,7 +63,7 @@ namespace http {
 	  {
 		  string deregisterClientId = this->request_header_val(req,"CLIENT_ID");
 
-		  this->_client_list->RemClient(std::stoi(deregisterClientId));
+		  this->_client_list->RemoveClient(std::stoi(deregisterClientId));
 	  }
 
 	  if(request_path == "//web/api/clients/listing")
