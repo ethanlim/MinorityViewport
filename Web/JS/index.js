@@ -11,9 +11,7 @@ jQuery(document).ready(function () {
     var clients = networkLib.fetchedConnectedClients();
 
     if (clients.length==0) {
-
         $("#sensor-info-count").text("0");
     }
-
 
 });
