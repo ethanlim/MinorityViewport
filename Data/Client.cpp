@@ -30,7 +30,7 @@ namespace MultipleKinectsPlatformServer{
 		json += ",";
 
 		json += "\"address\":";
-		json += this->_ip_addr;
+		json += "\"" + this->_ip_addr + "\"" ;
 		json += "";
 
 		json += "}";

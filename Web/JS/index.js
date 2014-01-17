@@ -1,5 +1,5 @@
 
-$(document).ready(function () {
+jQuery(document).ready(function () {
 
     var networkLib = Network.init("localhost",1626),
         visualLib = Visualisation.init("canvas-stage-1");
@@ -8,7 +8,12 @@ $(document).ready(function () {
         console.log("Libraries Initialisation Successful");
     }
 
-    $("#sensor-info-count")
+    var clients = networkLib.fetchedConnectedClients();
+
+    if (clients.length==0) {
+
+        $("#sensor-info-count").text("0");
+    }
 
 
 });

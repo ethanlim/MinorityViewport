@@ -6,16 +6,15 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-         <!-- Utility Libraries -->
-        <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+        
+        <!-- Core Stylesheet -->
+        
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
-        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 
-        <script src="/Web/JS/Libraries/libNetwork.js"></script>
-        <script src="/Web/JS/Libraries/libVisualisation.js"></script>
-        <script src="/Web/JS/index.js"></script>
-        <link rel="stylesheet" href="/Web/CSS/index.css">
+        <!-- Page Level Stylesheet -->
+        
+        <link rel="stylesheet" href="/CSS/index.css">
     </head>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -44,7 +43,7 @@
             </canvas>
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    Sensor Info (Count=<span id="sensor-info-count">0</span>)
+                    Sensor Info (Count=<span id="sensor-info-count"></span>)
                 </div>
                 <table id="sensor-info" class="table table-striped">
                     <thead>
@@ -59,5 +58,12 @@
                 </table>
             </div>
         </div>
+        <!-- Core JS Libraries -->
+        <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+        <!-- Page Level JS Libraries -->
+        <script src="/JS/Libraries/libNetwork.js"></script>
+        <script src="/JS/Libraries/libVisualisation.js"></script>
+        <script src="/JS/index.js"></script>
     </body>
 </html>

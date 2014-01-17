@@ -23,7 +23,7 @@ namespace MultipleKinectsPlatformServer{
 
 		this->ReportStatus("Server Starting");
 
-		string docRoot = "C:\\Users\\ethanlim\\Documents\\Projects\\School\\MultipleKinectsPlatformServer";
+		string docRoot = "C:\\Users\\ethanlim\\Documents\\Projects\\School\\MultipleKinectsPlatformServer\\Web";
 		std::size_t num_threads = boost::lexical_cast<std::size_t>(20);
 		this->server = new http::server::server(address, port, docRoot, this->jobQueue, num_threads,this->clientList);
 		
