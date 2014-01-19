@@ -81,7 +81,6 @@ namespace http {
 			  MultipleKinectsPlatformServer::Client extractedClient = this->_client_list->At(client_id);
 			  
 			  outputFile << extractedClient.ToJSON();
-
 		  }
 
 		  outputFile << "]";
