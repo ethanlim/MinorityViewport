@@ -5,7 +5,6 @@ namespace MultipleKinectsPlatformServer{
 	Core::Core(/*Server Address*/string address,/*Server Port*/string port){
 	  try
 	  {
-
 		NTPClient timeClient("0.nettime.pool.ntp.org");
 		long timeFromServer = timeClient.RequestDatetime_UNIX();
 		this->time = new Timer(timeFromServer);
@@ -17,7 +16,7 @@ namespace MultipleKinectsPlatformServer{
 		// Create the jobs queue that process each incoming data from client machines
 		this->jobQueue = new MultipleKinectsPlatformServer::JobsQueue();
 
-		this->minorityViewport = new MinorityViewport();
+		this->minorityViewport = new MinorityViewport(this->clientList);
 
 		//Initialise the Server with the number of threads
 

@@ -89,6 +89,11 @@ namespace http {
 		  outputFile.close();
 	  }
 
+	  if(request_path == "/api/visualisations/calibrate.json")
+	  {
+
+	  }
+
 	  if (request_path == "/api/visualisations/data.json")
 	  {
 

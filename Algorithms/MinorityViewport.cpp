@@ -4,11 +4,17 @@ using namespace std;
 
 namespace MultipleKinectsPlatformServer{
 
-	MinorityViewport::MinorityViewport(){
+	MinorityViewport::MinorityViewport(ClientsList *clients){
 
 	}
 
 	MinorityViewport::~MinorityViewport(){
+
+	}
+
+	void MinorityViewport::Calibrate(){
+
+		
 
 	}
 

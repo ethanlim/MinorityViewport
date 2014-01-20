@@ -3,6 +3,7 @@
 
 #include <list>
 
+#include "../Data/ClientsList.h"
 #include "../Data/Skeleton.h"
 #include "../Data/Scene.h"
 
@@ -12,9 +13,12 @@ namespace MultipleKinectsPlatformServer{
 
 	class MinorityViewport{
 		private:
+			ClientsList *activeClients;
+
 		public:
-			MinorityViewport();
+			MinorityViewport(ClientsList *clients);
 			~MinorityViewport();
+			void Calibrate();
 			void LoadSkeleton(const Skeleton newSkeleton);
 			void MergeScenes();
 			list<Scene> GetScenes();
