@@ -12,6 +12,7 @@ namespace MultipleKinectsPlatformServer{
 			unsigned int _id;
 			string _location;
 			string _ip_addr;
+			bool _calibrated;
 		public:
 			Client(unsigned int id, string loc,string ip_addr);
 			~Client();

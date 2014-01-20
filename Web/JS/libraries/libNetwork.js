@@ -2,7 +2,8 @@
 var Network = {
 
     serverEndpt: null,
-    port:0,
+    port: 0,
+    clientListing_URL:"/api/clients/listing.json",
 
     /**
     * Construct all network components
@@ -34,6 +35,21 @@ var Network = {
         .fail(function () {
             return false;
         })
+    },
+
+    /**
+    *  Fetch Connected Client Listing
+    *  @return client_listing_JSON
+    */
+    fetchedConnectedClients : function(){
+        var raw_json = jQuery.ajax({
+                                    url: this.serverEndpt + ":" + this.port + this.clientListing_URL,
+                                    async:false
+        }).responseText;
+
+        var clientObj = JSON.parse(raw_json);
+
+        return clientObj['clients']
     }
 
 }
