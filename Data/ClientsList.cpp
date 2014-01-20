@@ -76,11 +76,13 @@ namespace MultipleKinectsPlatformServer{
 		return false;
 	}
 
-	Client ClientsList::At(unsigned int index){
+	Client ClientsList::At(unsigned int id){
 		
-		list<Client>::iterator itr = this->raw_client_list.begin();
-		std::advance(itr,index);
+		for(list<Client>::iterator itr = this->raw_client_list.begin();itr!=this->raw_client_list.end();itr++){
+			if(itr->GetId()==id){
+				return *itr;
+			}
+		}
 
-		return *itr;
 	}
 }

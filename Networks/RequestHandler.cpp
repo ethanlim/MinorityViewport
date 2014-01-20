@@ -42,11 +42,11 @@ namespace http {
 	  if(request_path == "/api/sensors/data.json")
 	  {
 		  // Get Sensor JSON in the header
-		  string sensor_json = this->request_header_val(req,"SENSOR_JSON");
+		  string sensorData_JSON = this->request_header_val(req,"SENSOR_JSON");
 		  string time_stamp = this->request_header_val(req,"TIME_STAMP");
 
 		  /* Insert it into the Job Queue */
-		  _job_queue->push(sensor_json,time_stamp);
+		  _job_queue->push(sensorData_JSON,time_stamp);
 	  }
 
 	  if(request_path == "/api/clients/register.json")
@@ -89,6 +89,17 @@ namespace http {
 		  outputFile.close();
 	  }
 
+	  if(request_path == "/api/sensors/register.json")
+	  {
+		  // Get Sensor Listing 
+		  string sensorsList_JSON = this->request_header_val(req,"SENSOR_LIST");
+		  unsigned int clientId = std::stoi(this->request_header_val(req,"CLIENT_ID"));
+
+		  MultipleKinectsPlatformServer::Client extractedClient = this->_client_list->At(clientId);
+
+		  extractedClient.InitialSensorsList(sensorsList_JSON);
+	  }
+	  
 	  if(request_path == "/api/visualisations/calibrate.json")
 	  {
 
