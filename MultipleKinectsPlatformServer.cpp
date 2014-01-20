@@ -83,6 +83,11 @@ namespace MultipleKinectsPlatformServer{
 
 int main(int argc, char **argv)
 {
+	if(argc==1){
+		cout << "Program arguments are empty" << endl;
+		return 0;
+	}
+
 	MultipleKinectsPlatformServer::Core platform(argv[1],argv[2]);
 
 	// Start Server on a separate thread

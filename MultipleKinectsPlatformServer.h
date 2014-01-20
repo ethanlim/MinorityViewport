@@ -11,7 +11,6 @@
 
 #include "Networks/Server.h"
 #include "Data/JobsQueue.h"
-#include "Graphics/Visualisation.h"
 #include "Data/Job.h"
 #include "Data/JSON/json.h"
 #include "Data/Skeleton.h"
@@ -32,7 +31,6 @@ namespace MultipleKinectsPlatformServer{
 			MultipleKinectsPlatformServer::ClientsList *clientList;
 			MultipleKinectsPlatformServer::JobsQueue *jobQueue;
 			http::server::server *server;
-			MultipleKinectsPlatformServer::Visualisation *visualisation;
 			MinorityViewport *minorityViewport;
 			Timer *time;
 			void ReportStatus(string message);
