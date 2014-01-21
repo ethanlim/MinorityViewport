@@ -41,63 +41,63 @@ namespace http {
 
 	  if(request_path == "/api/sensors/data.json")
 	  {
-		  // Get Sensor JSON in the header
-		  string sensorData_JSON = this->request_header_val(req,"SENSOR_JSON");
-		  string time_stamp = this->request_header_val(req,"TIME_STAMP");
+		// Get Sensor JSON in the header
+		string sensorData_JSON = this->request_header_val(req,"SENSOR_JSON");
+		string time_stamp = this->request_header_val(req,"TIME_STAMP");
 
-		  /* Insert it into the Job Queue */
-		  _job_queue->push(sensorData_JSON,time_stamp);
+		/* Insert it into the Job Queue */
+		_job_queue->push(sensorData_JSON,time_stamp);
 	  }
 
 	  if(request_path == "/api/clients/register.json")
 	  {
-		  string physical_location = this->request_header_val(req,"PHYSICAL_LOC");
-		  string ip_addr = this->request_header_val(req,"IP_ADDR");
+		string physical_location = this->request_header_val(req,"PHYSICAL_LOC");
+		string ip_addr = this->request_header_val(req,"IP_ADDR");
 		  
-		  unsigned int client_id = this->_client_list->AddClient(physical_location,ip_addr);
+		unsigned int client_id = this->_client_list->AddClient(physical_location,ip_addr);
 
-		  /* Return the assigned client in the header */
-		  rep.headers[2].name = "ASSIGNED_CLIENT_ID";
-		  rep.headers[2].value = std::to_string(client_id);
+		/* Return the assigned client in the header */
+		rep.headers[2].name = "ASSIGNED_CLIENT_ID";
+		rep.headers[2].value = std::to_string(client_id);
 	  }
 
 	  if(request_path == "/api/clients/deregister.json")
 	  {
-		  string deregisterClientId = this->request_header_val(req,"CLIENT_ID");
+		string deregisterClientId = this->request_header_val(req,"CLIENT_ID");
 
-		  this->_client_list->RemoveClient(std::stoi(deregisterClientId));
+		this->_client_list->RemoveClient(std::stoi(deregisterClientId));
 	  }
 
 	  if(request_path == "/api/clients/listing.json")
 	  {
-		  ofstream outputFile(_doc_root+request_path);
+		ofstream outputFile(_doc_root+request_path);
 
-		  outputFile << "{";
-		  outputFile << "\"clients\":";
-		  outputFile << "[";
+		outputFile << "{";
+		outputFile << "\"clients\":";
+		outputFile << "[";
 
-		  for(unsigned int client_id=0;client_id<this->_client_list->Size();client_id++){
+		for(unsigned int client_id=0;client_id<this->_client_list->Size();client_id++){
 
-			  MultipleKinectsPlatformServer::Client extractedClient = this->_client_list->At(client_id);
+			MultipleKinectsPlatformServer::Client extractedClient = this->_client_list->At(client_id);
 			  
-			  outputFile << extractedClient.ToJSON();
-		  }
+			outputFile << extractedClient.ToJSON();
+		}
 
-		  outputFile << "]";
-		  outputFile << "}";
+		outputFile << "]";
+		outputFile << "}";
 
-		  outputFile.close();
+		outputFile.close();
 	  }
 
 	  if(request_path == "/api/sensors/register.json")
 	  {
-		  // Get Sensor Listing 
-		  string sensorsList_JSON = this->request_header_val(req,"SENSOR_LIST");
-		  unsigned int clientId = std::stoi(this->request_header_val(req,"CLIENT_ID"));
+		// Get Sensor Listing 
+		string sensorsList_JSON = this->request_header_val(req,"SENSOR_LIST");
+		unsigned int clientId = std::stoi(this->request_header_val(req,"CLIENT_ID"));
 
-		  MultipleKinectsPlatformServer::Client extractedClient = this->_client_list->At(clientId);
+		MultipleKinectsPlatformServer::Client extractedClient = this->_client_list->At(clientId);
 
-		  extractedClient.InitialSensorsList(sensorsList_JSON);
+		extractedClient.InitialSensorsList(sensorsList_JSON);
 	  }
 	  
 	  if(request_path == "/api/visualisations/calibrate.json")

@@ -25,9 +25,8 @@ namespace MultipleKinectsPlatformServer{
 		string docRoot = "C:\\Users\\ethanlim\\Documents\\Projects\\School\\MultipleKinectsPlatformServer\\Web";
 		std::size_t num_threads = boost::lexical_cast<std::size_t>(20);
 		this->server = new http::server::server(address, port, docRoot, this->jobQueue, num_threads,this->clientList);
-		
-		this->ReportStatus("Server Started");
 
+		this->ReportStatus("Server Started");
 	  }
 	  catch (std::exception& e)
 	  {
@@ -41,7 +40,7 @@ namespace MultipleKinectsPlatformServer{
 
 	void Core::BeginListen(){
 		try{
-			this->server->run();
+			this->server->run();			
 		}
 		catch(std::exception& e){
 			std::cerr << "exception: " << e.what() << "\n";

@@ -3,7 +3,7 @@
 namespace MultipleKinectsPlatformServer{
 
 	Client::Client(unsigned int id, string loc,string ip_addr)
-		:_id(id),_location(loc),_ip_addr(ip_addr),_calibrated(false)
+		:_id(id),_location(loc),_ip_addr(ip_addr)
 	{}
 
 	Client::~Client(){
@@ -31,13 +31,39 @@ namespace MultipleKinectsPlatformServer{
 		json += "\"" + this->_ip_addr + "\"" ;
 		json += ",";
 
-		json += "\"calibrated\":";
-		if(this->_calibrated){
-			json += "\"true\"" ;
-		}else{
-			json += "\"false\"";
+		json += "\"sensors\":";
+		json += "[";
+		for(unsigned int sensor=0;sensor<this->_sensors.size();sensor+=1)
+		{
+			json += "{";
+
+			json += "\"id\":";
+
+			string find = "\\";
+			string replace = "\\\\";
+			std::string escapedId  = this->_sensors[sensor].GetId();
+			std::tr1::regex rx(find);
+			std::string newId = std::tr1::regex_replace(escapedId, rx,replace);
+
+			json += "\"" + newId + "\"";
+			json += ",";
+
+			json += "\"calibrated\":";
+			if(this->_sensors[sensor].CheckCalibration()){
+				json += "\"true\"" ;
+			}else{
+				json += "\"false\"";
+			}
+
+			json += "}";
+
+			if(sensor!=this->_sensors.size()-1)
+			{
+				json += ",";
+			}
 		}
-		json += "";
+		json += "]";
+
 
 		json += "}";
 

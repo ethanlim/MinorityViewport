@@ -18,7 +18,6 @@ namespace MultipleKinectsPlatformServer{
 			unsigned int _id;
 			string _location;
 			string _ip_addr;
-			bool _calibrated;
 			vector<Sensor> _sensors;
 		public:
 			Client(unsigned int id, string loc,string ip_addr);

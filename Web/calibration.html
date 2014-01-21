@@ -39,22 +39,41 @@
             </div>
         </div>
         <div class="container">
-            <div class="panel panel-primary">
+            
+
+            <div id="sensors" class="panel panel-primary">
                 <div class="panel-heading">
                     Sensor Info (Count=<span id="sensor-info-count"></span>)
                 </div>
                 <table id="sensor-info" class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Id</th>
+                            <th>Client ID</th>
                             <th>Location</th>
                             <th>Address</th>
+                            <th>Sensor ID</th>
                             <th>Calibrated</th>
+                            <th>Ordering</th>
                         </tr>
                     </thead>
                     <tbody>
                     </tbody>
                 </table>
+            </div>
+            <div id="menu" class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Calibration</h3>
+              </div>
+              <div class="panel-body">
+                <div class="btn-group col-md-offset-11">
+                    <button id="calibrate-btn" type="button" class="btn btn-default">Calibrate</button>
+                </div>
+                <span id="calibration-status">Calibration Status</span>
+                <div id="calibration-progressbar" class="progress progress-striped active">
+                  <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+                  </div>
+                </div>
+              </div>
             </div>
         </div>
         <!-- Core JS Libraries -->

@@ -12,9 +12,13 @@ namespace MultipleKinectsPlatformServer{
 	class Sensor{
 		private:
 			string _id;
+			bool _calibrated;
 		public:
 			Sensor(string id);
 			~Sensor();
+			bool CheckCalibration();
+			void Calibrate();
+			string GetId();
 	};
 }
 

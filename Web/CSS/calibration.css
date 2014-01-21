@@ -6,3 +6,19 @@ body {
     padding: 40px 15px;
     text-align: center;
 }
+
+#sensors {
+    margin-top:20px;
+}
+
+#menu > .panel-body > .btn-group {
+    margin-bottom:15px;
+}
+
+#calibration-progressbar {
+    display:none;
+}
+
+#calibration-status {
+    display:none;
+}
