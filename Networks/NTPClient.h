@@ -3,6 +3,8 @@
 
 #include <string>
 #include <iostream>
+
+//Components of the Boost Library
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 
