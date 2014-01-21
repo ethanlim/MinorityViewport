@@ -3,7 +3,7 @@
 namespace MultipleKinectsPlatformServer{
 	
 	Sensor::Sensor(string id)
-		:_id(id),_calibrated(false)
+		:_id(id),_calibrated(false),_ordering(0)
 	{
 	}
 
@@ -22,6 +22,10 @@ namespace MultipleKinectsPlatformServer{
 
 	string Sensor::GetId(){
 		return this->_id;
+	}
+
+	unsigned int Sensor::GetOrdering(){
+		return this->_ordering;
 	}
 
 }

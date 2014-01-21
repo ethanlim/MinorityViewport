@@ -76,11 +76,11 @@ namespace http {
 		outputFile << "\"clients\":";
 		outputFile << "[";
 
-		for(unsigned int client_id=0;client_id<this->_client_list->Size();client_id++){
+		for(unsigned int clientIdx=0;clientIdx<this->_client_list->Size();clientIdx++){
 
-			MultipleKinectsPlatformServer::Client extractedClient = this->_client_list->At(client_id);
+			MultipleKinectsPlatformServer::Client *extractedClient = this->_client_list->AtIdx(clientIdx);
 			  
-			outputFile << extractedClient.ToJSON();
+			outputFile << extractedClient->ToJSON();
 		}
 
 		outputFile << "]";
@@ -95,14 +95,20 @@ namespace http {
 		string sensorsList_JSON = this->request_header_val(req,"SENSOR_LIST");
 		unsigned int clientId = std::stoi(this->request_header_val(req,"CLIENT_ID"));
 
-		MultipleKinectsPlatformServer::Client extractedClient = this->_client_list->At(clientId);
+		MultipleKinectsPlatformServer::Client *extractedClient = this->_client_list->At(clientId);
 
-		extractedClient.InitialSensorsList(sensorsList_JSON);
+		extractedClient->InitialSensorsList(sensorsList_JSON);
 	  }
 	  
 	  if(request_path == "/api/visualisations/calibrate.json")
 	  {
+		  string calibrateType = this->request_header_val(req,"TYPE");
 
+		  if(calibrateType=="new"){
+
+		  }else if(calibrateType=="check"){
+
+		  }
 	  }
 
 	  if (request_path == "/api/visualisations/data.json")

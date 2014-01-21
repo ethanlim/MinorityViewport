@@ -16,19 +16,20 @@ namespace MultipleKinectsPlatformServer{
 		private:
 			queue<unsigned int> avaliableIDs;
 
-			list<Client> raw_client_list;
+			vector<Client> _raw_client_list;
 			unsigned int GenerateNextClientId();
 			bool ClientIdIsPrevAssigned(unsigned int id);
 
-			unsigned int min_id_num;
-			unsigned int max_id_num;
+			unsigned int _min_id_num;
+			unsigned int _max_id_num;
 		public:
 			ClientsList();
 			~ClientsList();
 			unsigned int AddClient(string physical_loc, string ip_addr);
-			void RemoveClient(unsigned int client_id);
+			void RemoveClient(unsigned int id);
 			unsigned int Size();
-			Client At(unsigned int id);
+			Client* At(unsigned int id);
+			Client* AtIdx(unsigned int idx); 
 	};
 }
 

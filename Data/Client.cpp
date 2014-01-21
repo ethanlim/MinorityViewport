@@ -39,13 +39,17 @@ namespace MultipleKinectsPlatformServer{
 
 			json += "\"id\":";
 
-			string find = "\\";
-			string replace = "\\\\";
-			std::string escapedId  = this->_sensors[sensor].GetId();
-			std::tr1::regex rx(find);
-			std::string newId = std::tr1::regex_replace(escapedId, rx,replace);
+			string sensorId = this->_sensors[sensor].GetId();
+			size_t i = sensorId.find('\\');
+			while (i != string::npos)
+			{
+				string part1 = sensorId.substr(0, i);
+				string part2 = sensorId.substr(i + 1);
+				sensorId = part1 + "\\\\" + part2;
+				i = sensorId.find('\\', i + 4);
+			}
 
-			json += "\"" + newId + "\"";
+			json += "\"" + sensorId + "\"";
 			json += ",";
 
 			json += "\"calibrated\":";
@@ -54,6 +58,11 @@ namespace MultipleKinectsPlatformServer{
 			}else{
 				json += "\"false\"";
 			}
+			json += ",";
+
+			json += "\"ordering\":";
+			json += "\"" + std::to_string(this->_sensors[sensor].GetOrdering()) + "\"";
+
 
 			json += "}";
 
@@ -86,14 +95,7 @@ namespace MultipleKinectsPlatformServer{
 				
 				Json::Value id = sensor_JSON.get("id",NULL);
 
-				string find = "\\";
-				string replace = "\\";
-
-				std::string escapedId  = id.asString();
-				std::tr1::regex rx(find);
-				std::string newId = std::tr1::regex_replace(escapedId, rx,replace);
-
-				Sensor newSensor(newId);
+				Sensor newSensor(id.asString());
 
 				this->_sensors.push_back(newSensor);
 			}

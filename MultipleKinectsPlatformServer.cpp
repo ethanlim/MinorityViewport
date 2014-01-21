@@ -5,7 +5,7 @@ namespace MultipleKinectsPlatformServer{
 	Core::Core(/*Server Address*/string address,/*Server Port*/string port){
 	  try
 	  {
-		NTPClient timeClient("0.nettime.pool.ntp.org");
+		NTPClient timeClient("sg.pool.ntp.org");
 		long timeFromServer = timeClient.RequestDatetime_UNIX();
 		this->time = new Timer(timeFromServer);
 		this->time->Start();
