@@ -86,6 +86,11 @@ var CalibrationPage = {
 
     CalibrateBtnOnClick : function(){
         $("#calibration-progressbar").css("display", "block");
+        $("#calibration-progressbar > div.progress-bar").attr("aria-valuenow", 0);
+        $("#calibration-progressbar > div.progress-bar").css("width", 0+"%");
         $("#calibration-status").css("display", "block");
+        $("#calibration-status").text("Calibrating...");
+
+
     }
 };
