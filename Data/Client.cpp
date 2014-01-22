@@ -2,9 +2,10 @@
 
 namespace MultipleKinectsPlatformServer{
 
-	Client::Client(unsigned int id, string loc,string ip_addr)
-		:_id(id),_location(loc),_ip_addr(ip_addr)
-	{}
+	Client::Client(Timer *time, unsigned int id, string loc,string ip_addr)
+	:_id(id),_location(loc),_ip_addr(ip_addr),_curTime(time)
+	{
+	}
 
 	Client::~Client(){
 
@@ -33,15 +34,15 @@ namespace MultipleKinectsPlatformServer{
 
 		json += "\"sensors\":";
 		json += "[";
-		map<string,Sensor>::iterator lastElem = this->_sensors.end();
+		map<string,Sensor*>::iterator lastElem = this->_sensors.end();
 		std::advance(lastElem,-1);
-		for(map<string,Sensor>::iterator itr = this->_sensors.begin();itr!=this->_sensors.end();itr++)
+		for(map<string,Sensor*>::iterator itr = this->_sensors.begin();itr!=this->_sensors.end();itr++)
 		{
 			json += "{";
 
 			json += "\"id\":";
 
-			string sensorId = itr->second.GetId();
+			string sensorId = itr->second->GetId();
 			size_t i = sensorId.find('\\');
 			while (i != string::npos)
 			{
@@ -55,7 +56,7 @@ namespace MultipleKinectsPlatformServer{
 			json += ",";
 
 			json += "\"calibrated\":";
-			if(itr->second.CheckCalibration()){
+			if(itr->second->CheckCalibration()){
 				json += "\"true\"" ;
 			}else{
 				json += "\"false\"";
@@ -63,7 +64,7 @@ namespace MultipleKinectsPlatformServer{
 			json += ",";
 
 			json += "\"ordering\":";
-			json += "\"" + std::to_string(itr->second.GetOrdering()) + "\"";
+			json += "\"" + std::to_string(itr->second->GetScene()->GetOrdering()) + "\"";
 
 
 			json += "}";
@@ -97,14 +98,26 @@ namespace MultipleKinectsPlatformServer{
 				
 				Json::Value id = sensor_JSON.get("id",NULL);
 
-				Sensor newSensor(id.asString());
+				Sensor *newSensor = new Sensor(this->_curTime,id.asString());
 
-				this->_sensors.insert(std::pair<string,Sensor>(id.asString(),newSensor));
+				this->_sensors.insert(std::pair<string,Sensor*>(id.asString(),newSensor));
 			}
 		}
 	}
 
 	Sensor* Client::ExtractSensor(string sensorId){
-		return &this->_sensors.at(sensorId);
+		if(this->_sensors.size()!=0){
+			return this->_sensors.at(sensorId);
+		}
 	}
+
+	unsigned int Client::GetNumOfSensors(){
+		return this->_sensors.size();
+	}
+
+	map<string,Sensor*> Client::GetSensorsList(){
+		return this->_sensors;
+	}
+
+
 }

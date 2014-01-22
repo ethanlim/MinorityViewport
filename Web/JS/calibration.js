@@ -8,6 +8,7 @@ var CalibrationPage = {
 
     clients: null,
     networkClient:null,
+    calibrationProgress:0,
 
     Init:function(){
         
@@ -29,6 +30,11 @@ var CalibrationPage = {
     UpdateSensorTable: function (clients) {
         if (clients.length == 0) {
             $("#sensor-info-count").text("0");
+
+            $("#calibrate-btn").css("display", "none");
+            $("#calibration-progressbar").css("display", "none");
+            $("#calibration-status").css("display", "block");
+            $("#calibration-status").text("No Client Detected - Please check client connection to server");
         } else {
             var numOfClients = clients.length;
 
@@ -107,24 +113,40 @@ var CalibrationPage = {
         var callingObj = event.data.callingObj;
 
         if (callingObj.clients.length!=0) {
-
+            this.calibrationProgress = 0;
             $("#calibration-progressbar").css("display", "block");
             $("#calibration-progressbar > div.progress-bar").attr("aria-valuenow", 0);
             $("#calibration-progressbar > div.progress-bar").css("width", 0 + "%");
             $("#calibration-status").css("display", "block");
             $("#calibration-status").text("Calibrating...");
 
-            var amtOfDelay_s = callingObj.clients.length * 5;
+            if (!callingObj.networkClient.calibrateClients()) {
 
-            callingObj.networkClient.calibrateClients({cmd:"new"});
+                $("#calibration-status").text("Calibration Failed - Skeletons not detected");
 
-            setTimeout(callingObj.networkClient.calibrateClients, amtOfDelay_s, { cmd: "check" });
+                return;
+            }
+
+            callingObj.calibrationProgress = 10;
+
+            var timerId  = setInterval(function () {
+                if (callingObj.calibrationProgress > 100)
+                {
+                    $("#calibration-status").text("Calibration Completed");
+                    clearInterval(timerId);
+                    window.location.reload();
+                }
+
+                $("#calibration-progressbar > div.progress-bar").attr("aria-valuenow", callingObj.calibrationProgress);
+                $("#calibration-progressbar > div.progress-bar").css("width", callingObj.calibrationProgress + "%");
+
+                callingObj.calibrationProgress += 20;
+            }, 200);
 
         } else {
             $("#calibration-progressbar").css("display", "none");
             $("#calibration-status").css("display", "block");
             $("#calibration-status").text("No Client Detected - Please check client connection to server");
         }
-
-    }
+    },
 };

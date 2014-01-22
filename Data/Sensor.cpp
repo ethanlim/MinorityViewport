@@ -2,10 +2,10 @@
 
 namespace MultipleKinectsPlatformServer{
 	
-	Sensor::Sensor(string id)
-		:_id(id),_calibrated(false),_ordering(0)
+	Sensor::Sensor(Timer *time, string id)
+	:_id(id),_calibrated(false),_curTime(time)
 	{
-		this->_scene = new Scene();
+		this->_scene = new Scene(time);
 	}
 
 	Sensor::~Sensor()
@@ -17,20 +17,19 @@ namespace MultipleKinectsPlatformServer{
 		return this->_calibrated;
 	}
 
-	void Sensor::Calibrate(){
-
+	void Sensor::SetCalibrate(bool calibrated){
+		this->_calibrated = calibrated;
 	}
 
 	string Sensor::GetId(){
 		return this->_id;
 	}
 
-	unsigned int Sensor::GetOrdering(){
-		return this->_ordering;
-	}
-
 	void Sensor::UpdateScene(Skeleton person, long timeStamp){
 		this->_scene->Update(person,timeStamp);
 	}
 
+	Scene* Sensor::GetScene(){
+		return this->_scene;
+	}
 }

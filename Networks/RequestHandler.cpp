@@ -5,17 +5,18 @@ namespace http {
 
 	request_handler::request_handler(const std::string& doc_root,
 									 MultipleKinectsPlatformServer::JobsQueue *cur_jobs_queue, 
-									 MultipleKinectsPlatformServer::ClientsList *client_list)
+									 MultipleKinectsPlatformServer::ClientsList *client_list,
+									 MultipleKinectsPlatformServer::MinorityViewport *viewport)
 									:_doc_root(doc_root),
 									 _job_queue(cur_jobs_queue),
-									 _client_list(client_list)
+									 _client_list(client_list),
+									 _viewport(viewport)
 	{
 	}
 
 	void request_handler::handle_request(const request& req, reply& rep)
 	{
-
-	  rep.headers.resize(3);
+	  rep.headers.resize(2);
 
 	  // Decode url to path.
 	  std::string request_path;
@@ -51,14 +52,19 @@ namespace http {
 
 	  if(request_path == "/api/clients/register.json")
 	  {
+		ofstream outputFile(_doc_root+request_path);
+
 		string physical_location = this->request_header_val(req,"PHYSICAL_LOC");
 		string ip_addr = this->request_header_val(req,"IP_ADDR");
 		  
 		unsigned int client_id = this->_client_list->AddClient(physical_location,ip_addr);
 
-		/* Return the assigned client in the header */
-		rep.headers[2].name = "ASSIGNED_CLIENT_ID";
-		rep.headers[2].value = std::to_string(client_id);
+		outputFile << "{";
+		outputFile << "\"client_id\":";
+		outputFile <<  std::to_string(client_id);
+		outputFile << "}";
+
+		outputFile.close();
 	  }
 
 	  if(request_path == "/api/clients/deregister.json")
@@ -110,14 +116,14 @@ namespace http {
 		  outputFile << "\"result\":";
 		  outputFile << "[";
 
-		  if(calibrateType=="new"){
-
-		  }else if(calibrateType=="check"){
-
-		  }
-
+		  if(this->_viewport->Calibrate()){
+				outputFile << "true";
+	      }else{
+				outputFile << "false";
+	      }
+		 
 		  outputFile << "]";
-		  outputFile << "}";
+ 		  outputFile << "}";
 	  }
 
 	  if (request_path == "/api/visualisations/data.json")

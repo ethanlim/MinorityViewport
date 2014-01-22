@@ -15,6 +15,7 @@
 #include "../Data/Client.h"
 #include "../Data/ClientsList.h"
 #include "../Data/JobsQueue.h"
+#include "../Algorithms/MinorityViewport.h"
 
 /* Do not move the ordering of boost library*/
 #include <boost/noncopyable.hpp>
@@ -39,6 +40,8 @@ namespace http {
 			  /// Pointer to all clients connecting to server
 			  MultipleKinectsPlatformServer::ClientsList *_client_list;
 
+			  MultipleKinectsPlatformServer::MinorityViewport *_viewport;
+
 			  /// Perform URL-decoding on a string. Returns false if the encoding was invalid.
 			  static bool url_decode(const std::string& in, std::string& out);
 
@@ -48,7 +51,8 @@ namespace http {
 			  /// Construct with a directory containing files to be served.
 			  explicit request_handler(const std::string& doc_root,
 									   MultipleKinectsPlatformServer::JobsQueue *cur_jobs_queue,
-									   MultipleKinectsPlatformServer::ClientsList *client_list);
+									   MultipleKinectsPlatformServer::ClientsList *client_list,
+									   MultipleKinectsPlatformServer::MinorityViewport *viewport);
 
 			  /// Handle a request and produce a reply.
 			  void handle_request(const request& req, reply& rep);

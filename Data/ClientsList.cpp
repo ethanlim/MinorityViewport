@@ -2,10 +2,10 @@
 
 namespace MultipleKinectsPlatformServer{
 
-	ClientsList::ClientsList(){
+	ClientsList::ClientsList(Timer *time)
+	:_min_id_num(1),_max_id_num(1000),_curTime(time)
+	{
 		this->_raw_client_list.clear();
-		this->_min_id_num = 1;
-		this->_max_id_num = 1000;
 	}
 
 	ClientsList::~ClientsList(){
@@ -20,7 +20,7 @@ namespace MultipleKinectsPlatformServer{
 
 		unsigned int newClientId = this->GenerateNextClientId();
 
-		Client newClient(newClientId,physical_loc,ip_addr);
+		Client *newClient = new Client(this->_curTime,newClientId,physical_loc,ip_addr);
 
 		this->_raw_client_list.push_back(newClient);
 
@@ -32,7 +32,7 @@ namespace MultipleKinectsPlatformServer{
 		this->avaliableIDs.push(id);
 
 		for(unsigned int client=0; client<this->_raw_client_list.size(); client+=1){
-			if(this->_raw_client_list.at(client).GetId()==id){
+			if(this->_raw_client_list.at(client)->GetId()==id){
 				this->_raw_client_list.erase(this->_raw_client_list.begin()+client);
 			}
 		}
@@ -56,7 +56,7 @@ namespace MultipleKinectsPlatformServer{
 
 	bool ClientsList::ClientIdIsPrevAssigned(unsigned int id){
 		for(unsigned int client=0;client<this->_raw_client_list.size();client+=1){
-			if(this->_raw_client_list.at(client).GetId()==id){
+			if(this->_raw_client_list.at(client)->GetId()==id){
 				return true;
 			}
 		}
@@ -65,13 +65,13 @@ namespace MultipleKinectsPlatformServer{
 
 	Client* ClientsList::At(unsigned int id){
 		for(unsigned int client=0;client<this->_raw_client_list.size();client+=1){
-			if(this->_raw_client_list.at(client).GetId()==id){
-				return &this->_raw_client_list.at(client);
+			if(this->_raw_client_list.at(client)->GetId()==id){
+				return this->_raw_client_list.at(client);
 			}
 		}
 	}
 
 	Client* ClientsList::AtIdx(unsigned int idx){
-		return &this->_raw_client_list[idx];
+		return this->_raw_client_list[idx];
 	}
 }

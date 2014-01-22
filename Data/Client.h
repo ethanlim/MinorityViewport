@@ -4,10 +4,10 @@
 #include <string>
 #include <map>
 #include <algorithm>
-#include <regex>
 
 #include "Sensor.h"
 #include "JSON/json.h"
+#include "../Misc/Timer.h"
 
 using namespace std;
 
@@ -18,14 +18,17 @@ namespace MultipleKinectsPlatformServer{
 			unsigned int _id;
 			string _location;
 			string _ip_addr;
-			map<string,Sensor> _sensors;
+			map<string,Sensor*> _sensors;
+			Timer *_curTime;
 		public:
-			Client(unsigned int id, string loc,string ip_addr);
+			Client(Timer *time,unsigned int id, string loc,string ip_addr);
 			~Client();
 			unsigned int GetId();
+			unsigned int GetNumOfSensors();
 			string ToJSON();
 			void InitialSensorsList(string rawSensors_JSON);
 			Sensor* ExtractSensor(string sensorId);
+			map<string,Sensor*> GetSensorsList();
 	};
 }
 

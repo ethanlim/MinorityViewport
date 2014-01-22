@@ -27,7 +27,7 @@ namespace MultipleKinectsPlatformServer{
 		this->_startedAt = clock();
 	}
 
-	clock_t Timer::GetTicks()
+	clock_t Timer::GetTicks_ms()
 	{
 		if( !this->_started ){
 			return 0;
@@ -39,7 +39,7 @@ namespace MultipleKinectsPlatformServer{
 
 		double seconds_passed = clock() - this->_internal_counter;
 
-		return this->_startedAt+seconds_passed;
+		return this->_startedAt+seconds_passed*1000;
 	}
 
 }

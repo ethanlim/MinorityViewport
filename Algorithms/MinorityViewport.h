@@ -1,12 +1,16 @@
 #ifndef MINORITYVIEWPORT_H
 #define MINORITYVIEWPORT_H
 
-#include <list>
+#include <set>
+#include <map>
+#include <vector>
+#include <algorithm>
 
 #include "../Data/Client.h"
 #include "../Data/ClientsList.h"
 #include "../Data/Skeleton.h"
 #include "../Data/Scene.h"
+#include "../Misc/Timer.h"
 
 using namespace std;
 
@@ -15,15 +19,19 @@ namespace MultipleKinectsPlatformServer{
 	class MinorityViewport{
 		private:
 			ClientsList *_clients;
+			vector<Scene*> _orderedScenes;
+			set<Scene*> _scenesSet;
+
+			Timer *_curTime;
 		public:
-			MinorityViewport(ClientsList *clients);
+			MinorityViewport(Timer *curTime, ClientsList *clients);
 			~MinorityViewport();
-			void Calibrate();
-			bool CheckCalibration();
+			bool Calibrate();
 			string GetClientOrdering();
 			void LoadSkeleton(Skeleton newSkeleton,long timeStamp);
 			void MergeScenes();
-			list<Scene> GetScenes();
+			void RefreshScenesSet();
+			set<Scene*> GetScenesSet();
 	};
 
 }

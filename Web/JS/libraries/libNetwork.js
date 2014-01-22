@@ -53,11 +53,10 @@ var Network = {
         return clientObj['clients']
     },
 
-    calibrateClients:function(cmdObj){
+    calibrateClients:function(){
         var raw_json = jQuery.ajax({
             url: this.serverEndpt + ":" + this.port + this.clientCalibration_URL,
-            async: false,
-            headers:{TYPE:cmdObj.cmd}
+            async: false
         }).responseText;
 
         var resultObj = JSON.parse(raw_json);

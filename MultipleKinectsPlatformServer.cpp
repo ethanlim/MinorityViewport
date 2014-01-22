@@ -11,12 +11,12 @@ namespace MultipleKinectsPlatformServer{
 		this->time->Start();
 		
 		// Initialise the Client Machine List
-		this->clientList = new MultipleKinectsPlatformServer::ClientsList();
+		this->clientList = new MultipleKinectsPlatformServer::ClientsList(this->time);
 
 		// Create the jobs queue that process each incoming data from client machines
 		this->jobQueue = new MultipleKinectsPlatformServer::JobsQueue();
 
-		this->minorityViewport = new MinorityViewport(this->clientList);
+		this->minorityViewport = new MinorityViewport(this->time,this->clientList);
 
 		//Initialise the Server with the number of threads
 
@@ -24,7 +24,13 @@ namespace MultipleKinectsPlatformServer{
 
 		string docRoot = "C:\\Users\\ethanlim\\Documents\\Projects\\School\\MultipleKinectsPlatformServer\\Web";
 		std::size_t num_threads = boost::lexical_cast<std::size_t>(20);
-		this->server = new http::server::server(address, port, docRoot, this->jobQueue, num_threads,this->clientList);
+		this->server = new http::server::server(address, 
+												port, 
+												docRoot, 
+												this->jobQueue, 
+												num_threads,
+												this->clientList,
+												this->minorityViewport);
 
 		this->ReportStatus("Server Started");
 	  }
@@ -32,7 +38,6 @@ namespace MultipleKinectsPlatformServer{
 	  {
 		std::cerr << "exception: " << e.what() << "\n";
 	  }
-
 	}
 
 	Core::~Core(){

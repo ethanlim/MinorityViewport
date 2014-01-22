@@ -21,7 +21,7 @@ namespace MultipleKinectsPlatformServer{
 			/* Operations */
 			void Start();
 			void Reset();
-			clock_t GetTicks();
+			clock_t GetTicks_ms();
 	};
 }
 
