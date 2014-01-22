@@ -3,7 +3,8 @@ var Network = {
 
     serverEndpt: null,
     port: 0,
-    clientListing_URL:"/api/clients/listing.json",
+    clientListing_URL: "/api/clients/listing.json",
+    clientCalibration_URL: "/api/visualisations/calibrate.json",
 
     /**
     * Construct all network components
@@ -11,7 +12,7 @@ var Network = {
     * @param port
     * @return bool
     */
-    init: function (server_endpoint,port) {
+    initClient: function (server_endpoint,port) {
         this.serverEndpt = "http://"+server_endpoint;
         this.port = port;
 
@@ -50,6 +51,17 @@ var Network = {
         var clientObj = JSON.parse(raw_json);
 
         return clientObj['clients']
-    }
+    },
 
+    calibrateClients:function(cmdObj){
+        var raw_json = jQuery.ajax({
+            url: this.serverEndpt + ":" + this.port + this.clientCalibration_URL,
+            async: false,
+            headers:{TYPE:cmdObj.cmd}
+        }).responseText;
+
+        var resultObj = JSON.parse(raw_json);
+
+        return resultObj["result"];
+    }
 }

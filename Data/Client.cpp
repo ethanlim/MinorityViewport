@@ -33,13 +33,15 @@ namespace MultipleKinectsPlatformServer{
 
 		json += "\"sensors\":";
 		json += "[";
-		for(unsigned int sensor=0;sensor<this->_sensors.size();sensor+=1)
+		map<string,Sensor>::iterator lastElem = this->_sensors.end();
+		std::advance(lastElem,-1);
+		for(map<string,Sensor>::iterator itr = this->_sensors.begin();itr!=this->_sensors.end();itr++)
 		{
 			json += "{";
 
 			json += "\"id\":";
 
-			string sensorId = this->_sensors[sensor].GetId();
+			string sensorId = itr->second.GetId();
 			size_t i = sensorId.find('\\');
 			while (i != string::npos)
 			{
@@ -53,7 +55,7 @@ namespace MultipleKinectsPlatformServer{
 			json += ",";
 
 			json += "\"calibrated\":";
-			if(this->_sensors[sensor].CheckCalibration()){
+			if(itr->second.CheckCalibration()){
 				json += "\"true\"" ;
 			}else{
 				json += "\"false\"";
@@ -61,12 +63,12 @@ namespace MultipleKinectsPlatformServer{
 			json += ",";
 
 			json += "\"ordering\":";
-			json += "\"" + std::to_string(this->_sensors[sensor].GetOrdering()) + "\"";
+			json += "\"" + std::to_string(itr->second.GetOrdering()) + "\"";
 
 
 			json += "}";
 
-			if(sensor!=this->_sensors.size()-1)
+			if(itr!=lastElem)
 			{
 				json += ",";
 			}
@@ -97,8 +99,12 @@ namespace MultipleKinectsPlatformServer{
 
 				Sensor newSensor(id.asString());
 
-				this->_sensors.push_back(newSensor);
+				this->_sensors.insert(std::pair<string,Sensor>(id.asString(),newSensor));
 			}
 		}
+	}
+
+	Sensor* Client::ExtractSensor(string sensorId){
+		return &this->_sensors.at(sensorId);
 	}
 }

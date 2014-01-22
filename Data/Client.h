@@ -2,7 +2,7 @@
 #define CLIENT_H
 
 #include <string>
-#include <vector>
+#include <map>
 #include <algorithm>
 #include <regex>
 
@@ -18,13 +18,14 @@ namespace MultipleKinectsPlatformServer{
 			unsigned int _id;
 			string _location;
 			string _ip_addr;
-			vector<Sensor> _sensors;
+			map<string,Sensor> _sensors;
 		public:
 			Client(unsigned int id, string loc,string ip_addr);
 			~Client();
 			unsigned int GetId();
 			string ToJSON();
 			void InitialSensorsList(string rawSensors_JSON);
+			Sensor* ExtractSensor(string sensorId);
 	};
 }
 

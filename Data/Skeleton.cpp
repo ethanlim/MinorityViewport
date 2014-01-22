@@ -85,4 +85,15 @@ namespace MultipleKinectsPlatformServer{
 		return bodyJoint;
 	}
 
+	string Skeleton::GetSensorId(){
+		return this->sensor_id;
+	}
+
+	unsigned int Skeleton::GetClientId(){
+		return this->client_id;
+	}
+
+	unsigned short Skeleton::GetSkeletonId(){
+		return this->skeleton_id;
+	}
 }

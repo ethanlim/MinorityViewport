@@ -5,6 +5,7 @@ namespace MultipleKinectsPlatformServer{
 	Sensor::Sensor(string id)
 		:_id(id),_calibrated(false),_ordering(0)
 	{
+		this->_scene = new Scene();
 	}
 
 	Sensor::~Sensor()
@@ -26,6 +27,10 @@ namespace MultipleKinectsPlatformServer{
 
 	unsigned int Sensor::GetOrdering(){
 		return this->_ordering;
+	}
+
+	void Sensor::UpdateScene(Skeleton person, long timeStamp){
+		this->_scene->Update(person,timeStamp);
 	}
 
 }

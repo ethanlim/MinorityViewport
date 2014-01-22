@@ -104,11 +104,20 @@ namespace http {
 	  {
 		  string calibrateType = this->request_header_val(req,"TYPE");
 
+		  ofstream outputFile(_doc_root+request_path);
+
+		  outputFile << "{";
+		  outputFile << "\"result\":";
+		  outputFile << "[";
+
 		  if(calibrateType=="new"){
 
 		  }else if(calibrateType=="check"){
 
 		  }
+
+		  outputFile << "]";
+		  outputFile << "}";
 	  }
 
 	  if (request_path == "/api/visualisations/data.json")

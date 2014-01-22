@@ -7,15 +7,17 @@ jQuery(document).ready(function () {
 var CalibrationPage = {
 
     clients: null,
+    networkClient:null,
 
     Init:function(){
-        var networkLib = Network.init("localhost", 1626);
+        
+        this.networkClient = Network.initClient("localhost", 1626);
 
-        if (networkLib) {
+        if (this.networkClient) {
             console.log("Libraries Initialisation Successful");
         }
 
-        this.clients = networkLib.fetchedConnectedClients();
+        this.clients = this.networkClient.fetchedConnectedClients();
 
         this.UpdateSensorTable(this.clients);
 
@@ -112,7 +114,11 @@ var CalibrationPage = {
             $("#calibration-status").css("display", "block");
             $("#calibration-status").text("Calibrating...");
 
+            var amtOfDelay_s = callingObj.clients.length * 5;
 
+            callingObj.networkClient.calibrateClients({cmd:"new"});
+
+            setTimeout(callingObj.networkClient.calibrateClients, amtOfDelay_s, { cmd: "check" });
 
         } else {
             $("#calibration-progressbar").css("display", "none");

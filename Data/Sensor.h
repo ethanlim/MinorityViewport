@@ -2,8 +2,10 @@
 #define SENSOR_H
 
 #include <string>
-#include <algorithm>
+#include <map>
 
+#include "Scene.h"
+#include "Skeleton.h"
 #include "JSON/json.h"
 
 using namespace std;
@@ -14,6 +16,8 @@ namespace MultipleKinectsPlatformServer{
 			string _id;
 			unsigned int _ordering;
 			bool _calibrated;
+			Scene *_scene;
+			
 		public:
 			Sensor(string id);
 			~Sensor();
@@ -21,6 +25,8 @@ namespace MultipleKinectsPlatformServer{
 			void Calibrate();
 			string GetId();
 			unsigned int GetOrdering();
+
+			void UpdateScene(Skeleton person,long timeStamp);
 	};
 }
 
