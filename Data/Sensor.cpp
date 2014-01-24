@@ -3,7 +3,7 @@
 namespace MultipleKinectsPlatformServer{
 	
 	Sensor::Sensor(Timer *time, string id)
-	:_id(id),_calibrated(false),_curTime(time)
+	:_id(id),_curTime(time)
 	{
 		this->_scene = new Scene(time);
 	}
@@ -11,14 +11,6 @@ namespace MultipleKinectsPlatformServer{
 	Sensor::~Sensor()
 	{
 
-	}
-
-	bool Sensor::CheckCalibration(){
-		return this->_calibrated;
-	}
-
-	void Sensor::SetCalibrate(bool calibrated){
-		this->_calibrated = calibrated;
 	}
 
 	string Sensor::GetId(){

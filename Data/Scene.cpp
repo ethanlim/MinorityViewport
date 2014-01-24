@@ -3,7 +3,7 @@
 namespace MultipleKinectsPlatformServer{
 
 	Scene::Scene(Timer *time)
-		:_curTime(time),_refreshRate_ms(1000),_firstSkeletonObservedTime_ms(0),_ordering(0)
+		:_curTime(time),_refreshRate_ms(1000),_firstSkeletonObservedTime_ms(0),_ordering(0),_calibrated(false)
 	{
 		this->refreshThread = new thread(&MultipleKinectsPlatformServer::Scene::Clear,this);
 	}
@@ -59,5 +59,13 @@ namespace MultipleKinectsPlatformServer{
 
 	void Scene::SetOrdering(unsigned int order){
 		this->_ordering = order;
+	}
+
+	bool Scene::GetCalibration(){
+		return this->_calibrated;
+	}
+
+	void Scene::SetCalibration(bool calibrated){
+		this->_calibrated = calibrated;
 	}
 }

@@ -56,7 +56,7 @@ namespace MultipleKinectsPlatformServer{
 			json += ",";
 
 			json += "\"calibrated\":";
-			if(itr->second->CheckCalibration()){
+			if(itr->second->GetScene()->GetCalibration()){
 				json += "\"true\"" ;
 			}else{
 				json += "\"false\"";

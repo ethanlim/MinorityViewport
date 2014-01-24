@@ -18,6 +18,7 @@ namespace MultipleKinectsPlatformServer{
 			map<unsigned short,long> _timeStamps;
 			
 			unsigned int _ordering;
+			bool _calibrated;
 
 			Timer *_curTime;
 			
@@ -32,6 +33,8 @@ namespace MultipleKinectsPlatformServer{
 
 			unsigned int GetOrdering();
 			void SetOrdering(unsigned int order);
+			bool GetCalibration();
+			void SetCalibration(bool calibrated);
 
 			void Update(Skeleton newPerson,long timeStamp);
 			void Clear();

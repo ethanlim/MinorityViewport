@@ -61,6 +61,6 @@ var Network = {
 
         var resultObj = JSON.parse(raw_json);
 
-        return resultObj["result"];
+        return resultObj["result"][0];
     }
 }

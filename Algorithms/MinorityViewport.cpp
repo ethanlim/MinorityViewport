@@ -26,7 +26,9 @@ namespace MultipleKinectsPlatformServer{
 					
 			Scene *scenePtr = *itr;
 
-			if(scenePtr->GetFirstSkeletonObservedTime_ms()>0){
+			long lastSkeletonObserved = scenePtr->GetFirstSkeletonObservedTime_ms();
+			
+			if(lastSkeletonObserved>0){
 				numOfCalibratedScene+=1;
 			}
 		}
@@ -41,6 +43,9 @@ namespace MultipleKinectsPlatformServer{
 					
 			Scene *scenePtr = *itr;
 
+			scenePtr->SetCalibration(false);
+			scenePtr->SetOrdering(0);
+
 			sortedTimeStamp.push_back(scenePtr->GetFirstSkeletonObservedTime_ms());
 		}
 
@@ -54,6 +59,7 @@ namespace MultipleKinectsPlatformServer{
 
 				if(scenePtr->GetFirstSkeletonObservedTime_ms()==*sortedTimeStampItr){
 
+					scenePtr->SetCalibration(true);
 					scenePtr->SetOrdering(order);
 					order+=1;
 
