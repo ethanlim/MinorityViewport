@@ -7,14 +7,16 @@ jQuery(document).ready(function () {
 var CalibrationPage = {
 
     clients: null,
-    networkClient:null,
-    calibrationProgress:0,
+    networkClient: null,
+    visualisationClient: null,
+    calibrationProgress: 0,
 
     Init:function(){
         
         this.networkClient = Network.initClient("localhost", 1626);
+        this.visualisation = Visualisation.init("canvas-stage-1");
 
-        if (this.networkClient) {
+        if (this.networkClient && this.visualisation) {
             console.log("Libraries Initialisation Successful");
         }
 
@@ -43,7 +45,6 @@ var CalibrationPage = {
             for (var client = 0; client < numOfClients; client += 1) {
 
                 var newClientRow = document.createElement("tr");
-                newClientRow.id = clients[client]["id"];
 
                 var clientIdCell = document.createElement("td");
                 clientIdCell.innerHTML = clients[client]["id"];
@@ -60,8 +61,13 @@ var CalibrationPage = {
 
                 var sensors = clients[client]["sensors"];
                 var numOfSensors = sensors.length;
+                var sensorIdList = [];
 
                 for (var sensor = 0; sensor < numOfSensors; sensor += 1) {
+
+                    // Add to the sensor list    
+                    sensorIdList.push(sensors[sensor]["id"]);
+                    jQuery.data(document.body,"sensorIdList", sensorIdList);
 
                     var sensorId = document.createElement("td");
                     sensorId.innerHTML = sensors[sensor]["id"];
@@ -73,13 +79,17 @@ var CalibrationPage = {
                     sensorCalibrated.innerHTML = sensors[sensor]["calibrated"];
 
                     if (sensor == 0) {
+
+                        newClientRow.id = sensors[sensor]["id"];
+
                         newClientRow.appendChild(sensorId);
                         newClientRow.appendChild(sensorCalibrated);
                         newClientRow.appendChild(sensorOrdering);
                         
-                        $("#sensor-info tr:last").after(newClientRow.outerHTML);
+                        $("#sensor-info > tbody").append(newClientRow.outerHTML);
                     } else {
                         var additionalClientRow = document.createElement("tr");
+                        additionalClientRow.id = sensors[sensor]["id"];
 
                         var blankCell = document.createElement("td");
                         blankCell.innerHTML = "";
@@ -96,7 +106,7 @@ var CalibrationPage = {
                         additionalClientRow.appendChild(sensorCalibrated);
                         additionalClientRow.appendChild(sensorOrdering);
 
-                        $("#sensor-info tr:last").after(additionalClientRow.outerHTML);
+                        $("#sensor-info > tbody").append(additionalClientRow.outerHTML);
                     }
                 }
 
@@ -105,7 +115,13 @@ var CalibrationPage = {
     },
 
     SetupEventHandlers: function () {
-        $("#calibrate-btn").on('click', {callingObj:this},this.CalibrateBtnOnClick);
+        $("#calibrate-btn").on('click', { callingObj: this }, this.CalibrateBtnOnClick);
+
+        var sensorsId = jQuery.data(document.body, "sensorIdList");
+        for (var sensor = 0; sensor < sensorsId.length; sensor += 1) {
+            var sensorRow = document.getElementById(sensorsId[sensor]);
+            $(sensorRow).on('click', { callingObj: this }, this.SensorRowOnClick);
+        }
     },
 
     CalibrateBtnOnClick: function (event) {
@@ -149,4 +165,14 @@ var CalibrationPage = {
             $("#calibration-status").text("No Client Detected - Please check client connection to server");
         }
     },
+
+    SensorRowOnClick: function (event) {
+
+        var row = event.currentTarget;
+
+        var toggleClass = "success";
+
+        jQuery(row).parent().children().removeClass(toggleClass);
+        jQuery(row).addClass(toggleClass);
+    }
 };
