@@ -69,6 +69,7 @@ namespace MultipleKinectsPlatformServer{
 				return this->_raw_client_list.at(client);
 			}
 		}
+		return NULL;
 	}
 
 	Client* ClientsList::AtIdx(unsigned int idx){
