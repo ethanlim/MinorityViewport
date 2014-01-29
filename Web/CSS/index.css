@@ -2,6 +2,14 @@ body {
     padding-top: 50px;
 }
 
+#canvas-container > canvas {
+    border:1px solid black;
+}
+
+#sensors {
+    margin-top:20px;
+}
+
 .starter-template {
     padding: 40px 15px;
     text-align: center;

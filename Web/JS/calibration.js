@@ -22,6 +22,7 @@ var CalibrationPage = {
 
         this.clients = this.networkClient.fetchedConnectedClients();
         this.visualisation.render();
+        this.networkClient.startCommWorker();
 
         this.UpdateSensorTable(this.clients);
 

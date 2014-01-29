@@ -7,6 +7,11 @@ body {
     text-align: center;
 }
 
+#canvas-container > canvas {
+    border:1px solid black;
+}
+
+
 #sensors {
     margin-top:20px;
 }
