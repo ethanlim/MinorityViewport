@@ -1,79 +1,103 @@
-
-
 var Visualisation = {
     
-    html5CanvasObj: null,
-    context2d:null,
-    glContext:null,
+    canvasContainer: null,
+
+    scene: null,
+    backgroundColor:0xB6B6B4,
+    axes:null,
+    camera: null,
+    renderer: null,
+
+    controls:null,
 
     /**
     *  Begin constructing key elements for graphics
     *
     */ 
-    init: function (canvas_dom_id) {
+    init: function (canvas_container_dom_id) {
 
-        this.html5CanvasObj = document.getElementById(canvas_dom_id);
+        this.canvasContainer = document.getElementById(canvas_container_dom_id);
 
-        // Make it visually fill the positioned parent
-        this.html5CanvasObj.style.width = '100%';
-        this.html5CanvasObj.style.height = "600px";
-        // ...then set the internal size to match
-        this.html5CanvasObj.width = this.html5CanvasObj.offsetWidth;
-        this.html5CanvasObj.height = this.html5CanvasObj.offsetHeight;
+        // Div hack to set the dimension
+        this.canvasContainer.style.width = '100%';
+        this.canvasContainer.style.height = "600px";
+        this.canvasContainer.width = this.canvasContainer.offsetWidth;
+        this.canvasContainer.height = this.canvasContainer.offsetHeight;
 
-        if (this.html5CanvasObj == null) {
-            alert("there is no canvas on this page");
-            return;
-        }
-
-        this.initCanvasObj(this.html5CanvasObj);
-
-        this.glContext = this.getGLContext(this.html5CanvasObj);
+        this.initCanvasObj(this.canvasContainer);
 
         return this;
     },
 
     /**
-    * Draw the canvas object first
+    *  Initialise the 3d Canvas
     *
     */
-    initCanvasObj:function(canvas_obj){
+    initCanvasObj: function (canvas_container) {
 
-        this.context2d = canvas_obj.getContext('2d');
+        //Scene
+        this.scene = new THREE.Scene();
 
-        this.context2d.fillStyle = "rgb(84,84,84)";
+        //Axes
+        this.axes = new THREE.AxisHelper(100);
+        this.scene.add(this.axes);
 
-        this.context2d.fillRect(0, 0, this.html5CanvasObj.width, this.html5CanvasObj.height);
+        //Camera
+        var SCREEN_WIDTH = canvas_container.width, SCREEN_HEIGHT = canvas_container.height;
+        var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH/SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+        this.camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+        this.camera.position.set(0, 150, 300);
+        this.camera.lookAt(this.scene.position);
 
+        //Renderer
+        this.renderer = new THREE.WebGLRenderer();
+        this.renderer.setSize(canvas_container.width, canvas_container.height);
+
+        //Controls
+        this.controls = new THREE.OrbitControls(this.camera,this.renderer.domElement);
+
+        //Lighting
+        var light = new THREE.PointLight(0xffffff);
+        light.position.set(100, 250, 100);
+        this.scene.add(light);
+
+        var skyBoxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
+        var skyBoxMaterial = new THREE.MeshBasicMaterial({ color: this.backgroundColor, side: THREE.BackSide });
+        var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
+        this.scene.add(skyBox);
+
+        /* X Plane */
+        var gridXZ = new THREE.GridHelper(500, 10);
+        gridXZ.setColors(new THREE.Color(0x006600), new THREE.Color(0x006600));
+        gridXZ.position.set(0, 0, 0);
+        this.scene.add(gridXZ);
+        
+        //Arrow
+        var origin = new THREE.Vector3(0, 0, 0);
+        var length = 100;
+
+        var dirX = new THREE.Vector3(1, 0, 0),
+            colorX = 0xFF0000;
+        var dirY = new THREE.Vector3(0, 1, 0),
+            colorY = 0x00FF00;
+        var dirZ = new THREE.Vector3(0, 0, 1),
+            colorZ = 0x0000FF;
+
+        var arrowX = new THREE.ArrowHelper(dirX, origin, length, colorX);
+        this.scene.add(arrowX);
+        var arrowY = new THREE.ArrowHelper(dirY, origin, length, colorY);
+        this.scene.add(arrowY);
+        var arrowZ = new THREE.ArrowHelper(dirZ, origin, length, colorZ);
+        this.scene.add(arrowZ);
+
+        canvas_container.appendChild(this.renderer.domElement);
+        jQuery.data(document.body, "visualisation", this);
     },
 
-
-    /**
-    *  Return null if no GL context
-    *  @param null
-    *  @return glContext
-    */
-    getGLContext: function(canvas_obj){
+    render: function () {
+        var visualisation = jQuery.data(document.body, "visualisation");
         
-        var names =
-        ["webgl",
-        "experimental-webgl",
-        "webkit-3d",
-        "moz-webgl"];
-
-        for (var i = 0; i < names.length; ++i) {
-            try {
-                gl = canvas_obj.getContext(names[i]);
-            }
-            catch (e) {
-
-                console.log("Gl Init Error : " + e);
-            }
-
-            if (gl) break;
-        }
-        
-        return gl;
-    },
-
+        requestAnimationFrame(visualisation.render);
+        visualisation.renderer.render(visualisation.scene, visualisation.camera);
+    }
 }

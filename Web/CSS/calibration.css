@@ -7,6 +7,10 @@ body {
     text-align: center;
 }
 
+#sensors {
+    margin-top:20px;
+}
+
 #menu > .panel-body > .btn-group {
     margin-bottom:15px;
 }

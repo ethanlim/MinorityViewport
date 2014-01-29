@@ -39,9 +39,7 @@
             </div>
         </div>
         <div class="container">
-            <canvas id="canvas-stage-1">
-                Your browser does not support HTML5
-            </canvas>
+            <div id="canvas-container"></div>
             <div id="sensors" class="panel panel-primary">
                 <div class="panel-heading">
                     Sensor Info (Count=<span id="sensor-info-count"></span>)
@@ -79,8 +77,9 @@
         <!-- Core JS Libraries -->
         <script src="/JS/libraries/jquery-2.0.3.min.js"></script>
         <script src="/JS/libraries/bootstrap.min.js"></script>
-        <script src="/JS/libraries/three.min.js"></script>
+        <script src="/JS/libraries/three/three.min.js"></script>
         <!-- Page Level JS Libraries -->
+        <script src="/JS/libraries/three/controls/OrbitControls.js"></script>
         <script src="/JS/libraries/libNetwork.js"></script>
         <script src="/JS/libraries/libVisualisation.js"></script>
         <script src="/JS/calibration.js"></script>

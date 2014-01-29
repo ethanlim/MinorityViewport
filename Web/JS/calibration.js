@@ -14,13 +14,14 @@ var CalibrationPage = {
     Init:function(){
         
         this.networkClient = Network.initClient("localhost", 1626);
-        this.visualisation = Visualisation.init("canvas-stage-1");
+        this.visualisation = Visualisation.init("canvas-container");
 
         if (this.networkClient && this.visualisation) {
             console.log("Libraries Initialisation Successful");
         }
 
         this.clients = this.networkClient.fetchedConnectedClients();
+        this.visualisation.render();
 
         this.UpdateSensorTable(this.clients);
 
@@ -118,9 +119,12 @@ var CalibrationPage = {
         $("#calibrate-btn").on('click', { callingObj: this }, this.CalibrateBtnOnClick);
 
         var sensorsId = jQuery.data(document.body, "sensorIdList");
-        for (var sensor = 0; sensor < sensorsId.length; sensor += 1) {
-            var sensorRow = document.getElementById(sensorsId[sensor]);
-            $(sensorRow).on('click', { callingObj: this }, this.SensorRowOnClick);
+
+        if (sensorsId != null) {
+            for (var sensor = 0; sensor < sensorsId.length; sensor += 1) {
+                var sensorRow = document.getElementById(sensorsId[sensor]);
+                $(sensorRow).on('click', { callingObj: this }, this.SensorRowOnClick);
+            }
         }
     },
 

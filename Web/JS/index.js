@@ -8,15 +8,19 @@ jQuery(document).ready(function () {
 
 var IndexPage = {
 
-    Init: function () {
-        var networkClient = Network.initClient("localhost", 1626),
-        visualLib = Visualisation.init("canvas-stage-1");
+    networkClient: null,
+    visualisationClient:null,
 
-        if (networkClient || visualLib) {
+    Init: function () {
+        this.networkClient = Network.initClient("localhost", 1626),
+        this.visualisation = Visualisation.init("canvas-container");
+
+        if (this.networkClient || this.visualisation) {
             console.log("Libraries Initialisation Successful");
         }
 
-        var clients = networkClient.fetchedConnectedClients();
+        var clients = this.networkClient.fetchedConnectedClients();
+        this.visualisation.render();
 
         this.UpdateSensorTable(clients);
     },
