@@ -108,6 +108,8 @@ namespace MultipleKinectsPlatformServer{
 	Sensor* Client::ExtractSensor(string sensorId){
 		if(this->_sensors.size()!=0){
 			return this->_sensors.at(sensorId);
+		}else{
+			return NULL;
 		}
 	}
 
