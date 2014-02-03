@@ -71,7 +71,7 @@ namespace MultipleKinectsPlatformServer{
 		return true;
 	}
 
-	void MinorityViewport::LoadSkeleton(Skeleton newSkeleton,long timeStamp){
+	void MinorityViewport::LoadSkeleton(Skeleton newSkeleton){
 
 		unsigned int clientId = newSkeleton.GetClientId();
 		string sensorId = newSkeleton.GetSensorId();
@@ -80,7 +80,7 @@ namespace MultipleKinectsPlatformServer{
 
 		Sensor *sensor = client->ExtractSensor(sensorId);
 
-		sensor->UpdateScene(newSkeleton,timeStamp);
+		sensor->UpdateScene(newSkeleton);
 	}
 
 	void MinorityViewport::MergeScenes(){
@@ -108,8 +108,38 @@ namespace MultipleKinectsPlatformServer{
 		}
 	}
 
-	set<Scene*> MinorityViewport::GetScenesSet(){
-		return this->_scenesSet;
+	Scene* MinorityViewport::GetGlobalScene(){
+
+		Scene *activeScene;
+		return activeScene;
 	}
 
+	Scene* MinorityViewport::GetLocalScene(string sensorId){
+
+		Scene *activeScene;
+
+		Client *clientPtr;
+
+		for(unsigned int client=0;client<this->_clients->Size();client+=1){
+			
+			clientPtr = this->_clients->AtIdx(client);
+			map<string,Sensor*> sensors = clientPtr->GetSensorsList();
+
+			for(map<string,Sensor*>::iterator itr = sensors.begin();itr!=sensors.end();itr++)
+			{
+				if(itr->first==sensorId){
+					return itr->second->GetScene();
+				}
+			}
+		}
+
+		return activeScene;
+	}
+
+	string MinorityViewport::SceneToJSON(Scene* convertingScene){
+
+		string JSON ;
+
+		return JSON;
+	}
 }

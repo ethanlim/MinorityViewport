@@ -1,9 +1,10 @@
 /* Global Variables */
 var runningStatus = true,
     xmlHTTPObj = new XMLHttpRequest(),
+    sensorId = null,
     serverEndpt = "",
     port = 0,
-    path = "/api/visualisations/data.json",
+    path = "",
     fps = 1;
 
 /* External Script */
@@ -15,10 +16,19 @@ self.addEventListener('message', function (event) {
      
     switch (data.cmd) {
         case 'start':
+
+            //Configuration
             runningStatus = true;
             serverEndpt = data.serverEndPt;
             port = data.port;
             fps = data.fps;
+            path = data.path;
+            type = data.type;
+
+            if (type == "single") {
+                sensorId = data.sensorId;
+            }
+
             getGlobalSceneFromServer();
             postMessage({ type: "status", msg: "Worker Started" });
             break;
@@ -43,10 +53,14 @@ function getGlobalSceneFromServer() {
     if (serverEndpt != "") {
         xmlHTTPObj.onreadystatechange = globalSceneCallback;
         xmlHTTPObj.open("POST",serverEndpt + ":" + port + path,true);
-        xmlHTTPObj.setRequestHeader("DATAREQ", "GLOBALSCENE");
         xmlHTTPObj.setRequestHeader('Content-Type', 'application/javascript');
+        xmlHTTPObj.setRequestHeader('Request-Type', type);
+        
+        if (type == "single") {
+            xmlHTTPObj.setRequestHeader('Sensor-Id', sensorId);
+        }
+
         xmlHTTPObj.send();
-       
     }
 
     if (runningStatus) {
@@ -61,7 +75,6 @@ function globalSceneCallback() {
         if (xmlHTTPObj.status === 200) {
             postMessage({ type: "status", msg: "Response Received" });
             postMessage({ type: "data", msg: xmlHTTPObj.responseText});
-
         } else if (xmlHTTPObj.status == 404) {
             postMessage({ type: "error", msg: "Server Endpt not found" });
         } else {

@@ -66,8 +66,8 @@ namespace MultipleKinectsPlatformServer{
 				if (reader.parse(rawJSON,root))
 				{
 					for(unsigned short skeletons=0;skeletons<root.size();skeletons++){
-						MultipleKinectsPlatformServer::Skeleton newSkeleton(root.get(skeletons,NULL));
-						this->minorityViewport->LoadSkeleton(newSkeleton,atol(timeStamp.c_str()));
+						MultipleKinectsPlatformServer::Skeleton newSkeleton(root.get(skeletons,NULL),atol(timeStamp.c_str()));
+						this->minorityViewport->LoadSkeleton(newSkeleton);
 					}
 				}
 			}

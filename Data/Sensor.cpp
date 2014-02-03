@@ -17,8 +17,8 @@ namespace MultipleKinectsPlatformServer{
 		return this->_id;
 	}
 
-	void Sensor::UpdateScene(Skeleton person, long timeStamp){
-		this->_scene->Update(person,timeStamp);
+	void Sensor::UpdateScene(Skeleton person){
+		this->_scene->Update(person);
 	}
 
 	Scene* Sensor::GetScene(){

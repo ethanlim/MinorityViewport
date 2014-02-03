@@ -22,7 +22,7 @@ var CalibrationPage = {
 
         this.clients = this.networkClient.fetchedConnectedClients();
         this.visualisation.render();
-        this.networkClient.startCommWorker();
+        this.networkClient.startCommWorker({ type: "single", sensorId: this.clients[0]["sensors"][0]["id"]}, this.NetworkHandler);
 
         this.UpdateSensorTable(this.clients);
 
@@ -34,7 +34,6 @@ var CalibrationPage = {
     UpdateSensorTable: function (clients) {
         if (clients.length == 0) {
             $("#sensor-info-count").text("0");
-
             $("#calibrate-btn").css("display", "none");
             $("#calibration-progressbar").css("display", "none");
             $("#calibration-status").css("display", "block");
@@ -116,6 +115,8 @@ var CalibrationPage = {
         }
     },
 
+    /* Event Handlers */
+
     SetupEventHandlers: function () {
         $("#calibrate-btn").on('click', { callingObj: this }, this.CalibrateBtnOnClick);
 
@@ -179,5 +180,14 @@ var CalibrationPage = {
 
         jQuery(row).parent().children().removeClass(toggleClass);
         jQuery(row).addClass(toggleClass);
+    },
+
+    NetworkHandler: function(event){
+        var responseType = event.data.type;
+        var responseData = event.data.msg;
+
+        if (responseType == "data") {
+
+        }
     }
 };

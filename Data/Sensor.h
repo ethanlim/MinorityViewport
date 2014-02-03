@@ -14,17 +14,16 @@ using namespace std;
 namespace MultipleKinectsPlatformServer{
 	class Sensor{
 		private:
-			string _id;
 			Scene *_scene;
-			
 			Timer *_curTime;
+			string _id;
 		public:
 			Sensor(Timer *time, string id);
 			~Sensor();
 
 			string GetId();
 			
-			void UpdateScene(Skeleton person,long timeStamp);
+			void UpdateScene(Skeleton person);
 			Scene* GetScene();
 	};
 }

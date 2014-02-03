@@ -128,7 +128,17 @@ namespace http {
 
 	  if (request_path == "/api/visualisations/data.json")
 	  {
+		  string type = this->request_header_val(req,"Request-Type");
+		  ofstream outputFile(_doc_root+request_path);
 
+		  if(type=="global"){
+
+			  outputFile <<  this->_viewport->SceneToJSON(this->_viewport->GetGlobalScene());
+		  }else if(type == "single"){
+			  string sensorId = this->request_header_val(req,"Sensor-Id");
+
+			  outputFile << this->_viewport->SceneToJSON(this->_viewport->GetLocalScene(sensorId));
+		  }
 	  }
 
 	  // Determine the file extension.

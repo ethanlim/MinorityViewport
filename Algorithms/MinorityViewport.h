@@ -9,6 +9,7 @@
 #include "../Data/Client.h"
 #include "../Data/ClientsList.h"
 #include "../Data/Skeleton.h"
+#include "../Data/Sensor.h"
 #include "../Data/Scene.h"
 #include "../Misc/Timer.h"
 
@@ -19,6 +20,8 @@ namespace MultipleKinectsPlatformServer{
 	class MinorityViewport{
 		private:
 			ClientsList *_clients;
+
+			vector<Sensor*> _sensors;
 			vector<Scene*> _orderedScenes;
 			set<Scene*> _scenesSet;
 
@@ -26,12 +29,16 @@ namespace MultipleKinectsPlatformServer{
 		public:
 			MinorityViewport(Timer *curTime, ClientsList *clients);
 			~MinorityViewport();
+
 			bool Calibrate();
 			string GetClientOrdering();
-			void LoadSkeleton(Skeleton newSkeleton,long timeStamp);
+			void LoadSkeleton(Skeleton newSkeleton);
 			void MergeScenes();
 			void RefreshScenesSet();
-			set<Scene*> GetScenesSet();
+
+			Scene* GetGlobalScene();
+			Scene* GetLocalScene(string sensorId);
+			string SceneToJSON(Scene* convertingScene);
 	};
 
 }

@@ -2,7 +2,7 @@
 
 namespace MultipleKinectsPlatformServer{
 
-	Skeleton::Skeleton(Json::Value raw_skeleton_json){
+	Skeleton::Skeleton(Json::Value raw_skeleton_json,long time_stamp){
 
 		Json::Value joints_json = raw_skeleton_json.get("Joints",NULL);
 		Json::Value client_id = raw_skeleton_json.get("clientId",NULL);
@@ -54,6 +54,7 @@ namespace MultipleKinectsPlatformServer{
 		this->pos_z = pos_z.asDouble();
 		this->skeleton_id = skeleton_id.asUInt();
 		this->sensor_id = sensor_id.asString();
+		this->time_stamp = time_stamp;
 	}
 
 	Skeleton::~Skeleton(){
@@ -95,5 +96,11 @@ namespace MultipleKinectsPlatformServer{
 
 	unsigned short Skeleton::GetSkeletonId(){
 		return this->skeleton_id;
+	}
+
+	string Skeleton::ToJSON(){
+		string json;
+
+		return json;
 	}
 }

@@ -67,37 +67,45 @@ var Network = {
 
         return resultObj["result"][0];
     },
-
-    commHandler:function(event){
-        if (event.data.type == "error") {
-            console.log(event.data.msg);
-        }
-    },
-
+    
     commError:function(error){
         throw new Error(error.message + " (" + error.filename + ":" + error.lineno + ")");
     },
 
-    startCommWorker: function (handler) {
+    startCommWorker: function (cmd,handler) {
 
-        var worker_dir = "/js/libraries/workers/comm-worker.js";
+        var workerDir = "/js/libraries/workers/comm-worker.js";
+        var commPath = "/api/visualisations/data.json";
 
-        console.log("Starting Worker - " + worker_dir);
+        this.commWorker = new Worker(workerDir);
 
-        this.commWorker = new Worker(worker_dir);
         this.commWorker.onerror = this.commError;
 
-        if (handler == null) {
-            this.commWorker.addEventListener("message", this.commHandler, true);
-        } else {
-            this.commWorker.addEventListener("message", handler, true);
+        this.commWorker.addEventListener(/*type*/"message",/*handler*/handler,/*useCapture*/true);
+        
+        if (cmd.type == "single") {
+            this.commWorker.postMessage({
+                'cmd'           : 'start',
+                'serverEndPt'   : this.serverEndpt,
+                'port'          : this.port,
+                'fps'           : 1,
+                'path'          : commPath,
+                'type'          : cmd.type,
+                'sensorId'      : cmd.sensorId
+            });
+        } else if (cmd.type == "global") {
+            this.commWorker.postMessage({
+                'cmd'           : 'start',
+                'serverEndPt'   : this.serverEndpt,
+                'port'          : this.port,
+                'fps'           : 1,
+                'path'          : commPath,
+                'type'          : cmd.type
+            });
         }
-
-        this.commWorker.postMessage({ 'cmd': 'start', 'serverEndPt': this.serverEndpt, 'port': this.port, 'fps': 1 });
     },
 
     stopCommWorker: function () {
-        this.commWorker.postMessage({ 'cmd': 'stop' });
-        this.commWorker = null;
+            this.commWorker.postMessage({ 'cmd': 'stop' });
     }
 }

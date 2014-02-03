@@ -11,7 +11,7 @@ namespace MultipleKinectsPlatformServer{
 	Scene::~Scene(){
 	}
 
-	void Scene::Update(Skeleton newPerson,long timeStamp){
+	void Scene::Update(Skeleton newPerson){
 		
 		unsigned short skeletonId = newPerson.GetSkeletonId();
 
@@ -24,9 +24,7 @@ namespace MultipleKinectsPlatformServer{
 		this->_skeletons.erase(skeletonId);
 
 		this->_skeletons.insert(std::pair<unsigned short,Skeleton>(skeletonId,newPerson));
-
-		this->_timeStamps.insert(std::pair<unsigned short,long>(skeletonId,timeStamp));
-
+	
 		this->_sceneMutex.unlock();
 	}
 
@@ -40,7 +38,6 @@ namespace MultipleKinectsPlatformServer{
 				this->_sceneMutex.lock();
 
 				this->_skeletons.clear();
-				this->_timeStamps.clear();
 
 				this->_sceneMutex.unlock();
 
@@ -67,5 +64,54 @@ namespace MultipleKinectsPlatformServer{
 
 	void Scene::SetCalibration(bool calibrated){
 		this->_calibrated = calibrated;
+	}
+
+	map<unsigned short,Skeleton> Scene::GetSkeletons(){
+
+		map<unsigned short,Skeleton> tempSkeletonsHolder;
+
+		this->_sceneMutex.lock();
+
+		tempSkeletonsHolder = this->_skeletons;
+
+		this->_sceneMutex.unlock();
+
+		return tempSkeletonsHolder;
+	}
+	
+	string Scene::ToJSON(){
+		string json;
+
+		json+="{";
+
+		json+="\"ordering\":";
+		json+=to_string(this->_ordering);
+		json+=",";
+
+		json="\"calibrated\":";
+		json+=to_string(this->_calibrated);
+		json+=",";
+		
+		map<unsigned short,Skeleton> skeletons = this->GetSkeletons();
+		json+="\"skeleton\":";
+		json+="[";
+		map<unsigned short,Skeleton>::iterator lastSkeleton = skeletons.end();
+		std::advance(lastSkeleton,-1);
+		for(map<unsigned short,Skeleton>::iterator itr = skeletons.begin();itr!=skeletons.end();itr++)
+		{
+			json += "{";
+			json += itr->second.ToJSON();
+			json += "}";
+
+			if(itr!=lastSkeleton)
+			{
+				json += ",";
+			}
+		}
+		json+="]";
+
+		json += "}";
+		
+		return json;
 	}
 }

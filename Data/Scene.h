@@ -15,7 +15,6 @@ namespace MultipleKinectsPlatformServer{
 	class Scene{
 		private:
 			map<unsigned short,Skeleton> _skeletons;
-			map<unsigned short,long> _timeStamps;
 			
 			unsigned int _ordering;
 			bool _calibrated;
@@ -36,9 +35,14 @@ namespace MultipleKinectsPlatformServer{
 			bool GetCalibration();
 			void SetCalibration(bool calibrated);
 
-			void Update(Skeleton newPerson,long timeStamp);
+			void Update(Skeleton newPerson);
 			void Clear();
 			long GetFirstSkeletonObservedTime_ms();
+
+			map<unsigned short,Skeleton> GetSkeletons();
+			map<unsigned short,long> GetTimeStamps();
+
+			string ToJSON();
 	};
 }
 

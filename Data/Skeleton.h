@@ -18,6 +18,7 @@ namespace MultipleKinectsPlatformServer{
 			unsigned int client_id;
 			unsigned short skeleton_id;
 			string sensor_id;
+			long time_stamp;
 		public:
 			double pos_x;
 			double pos_y;
@@ -29,7 +30,7 @@ namespace MultipleKinectsPlatformServer{
 				Tracked
 			} TrackingMode;
 
-			Skeleton(Json::Value raw_skeleton_json);
+			Skeleton(Json::Value raw_skeleton_json,long time_stamp);
 			~Skeleton();
 			Joint GetJoint(Joint::JointType type);
 			
@@ -39,6 +40,8 @@ namespace MultipleKinectsPlatformServer{
 			unsigned int GetClientId();
 			string GetSensorId();
 			unsigned short GetSkeletonId();
+
+			string ToJSON();
 	};
 }
 #endif
