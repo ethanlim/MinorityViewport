@@ -23,9 +23,6 @@ using namespace std;
 
 namespace MultipleKinectsPlatformServer{
 	
-	/* Global Variables */
-	std::mutex joints_mutex;
-
 	class Core{
 		private:
 			MultipleKinectsPlatformServer::ClientsList *clientList;

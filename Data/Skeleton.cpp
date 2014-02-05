@@ -65,7 +65,6 @@ namespace MultipleKinectsPlatformServer{
 
 		//Protected from race conditions - clear joints while reading
 
-		std::lock_guard<std::mutex> lock(joints_mutex);
 
 		joints.clear();
 		joints = new_joints;
@@ -75,7 +74,6 @@ namespace MultipleKinectsPlatformServer{
 
 		// Protected by mutex that ensure joints is not empty when reading
 
-		std::lock_guard<std::mutex> lock(joints_mutex);
 
 		Joint bodyJoint;
 

@@ -10,15 +10,14 @@
 using namespace std;
 
 namespace MultipleKinectsPlatformServer{
-
-	extern std::mutex joints_mutex;
-
+	
 	class Skeleton{
 		private:
 			unsigned int client_id;
 			unsigned short skeleton_id;
 			string sensor_id;
 			long time_stamp;
+
 		public:
 			double pos_x;
 			double pos_y;
