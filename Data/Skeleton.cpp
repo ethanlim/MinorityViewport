@@ -62,19 +62,12 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	void Skeleton::SetJoints(vector<Joint> new_joints){
-
-		//Protected from race conditions - clear joints while reading
-
-
 		joints.clear();
 		joints = new_joints;
 	}
 
 	Joint Skeleton::GetJoint(Joint::JointType type){
-
-		// Protected by mutex that ensure joints is not empty when reading
-
-
+		
 		Joint bodyJoint;
 
 		if(joints.size()>0){

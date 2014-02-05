@@ -31,6 +31,7 @@ namespace MultipleKinectsPlatformServer{
 			~Scene();
 
 			unsigned int GetOrdering();
+			void ResetOrdering();
 			void SetOrdering(unsigned int order);
 			bool GetCalibration();
 			void SetCalibration(bool calibrated);

@@ -23,6 +23,7 @@ namespace MultipleKinectsPlatformServer{
 		
 		this->RefreshScenesSet();
 
+		this->_orderedScenes.clear();
 		unsigned int numOfCalibratedSceneRequired = this->_scenesSet.size(); 
 		unsigned int numOfCalibratedScene = 0;
 
@@ -43,19 +44,19 @@ namespace MultipleKinectsPlatformServer{
 
 		vector<long> sortedTimeStamp;
 
+		//Reset all scenes within the set
 		for(set<Scene*>::const_iterator itr = this->_scenesSet.begin();itr!=this->_scenesSet.end();itr++){
 					
 			Scene *scenePtr = *itr;
 
-			scenePtr->SetCalibration(false);
-			scenePtr->SetOrdering(0);
+			scenePtr->ResetOrdering();
 
 			sortedTimeStamp.push_back(scenePtr->GetFirstSkeletonObservedTime_ms());
 		}
 
 		sort(sortedTimeStamp.begin(),sortedTimeStamp.end());
 
-		unsigned int order = 0;
+		unsigned int order = 1;
 		for(vector<long>::const_iterator sortedTimeStampItr = sortedTimeStamp.begin();sortedTimeStampItr!=sortedTimeStamp.end();sortedTimeStampItr++){
 			for(set<Scene*>::const_iterator sceneItr = this->_scenesSet.begin();sceneItr!=this->_scenesSet.end();sceneItr++){
 				
@@ -63,7 +64,6 @@ namespace MultipleKinectsPlatformServer{
 
 				if(scenePtr->GetFirstSkeletonObservedTime_ms()==*sortedTimeStampItr){
 
-					scenePtr->SetCalibration(true);
 					scenePtr->SetOrdering(order);
 					order+=1;
 
@@ -113,33 +113,37 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	Scene* MinorityViewport::GetGlobalScene(){
+
+		if(this->_orderedScenes.size()!=0){
+
+		}else{
+			return NULL;
+		}
 		
-		//TODO : Most important algorithm to sitch scenes based on transform matrix
+		//TODO: Most important algorithm to sitch scenes based on transform matrix
 		Scene *activeScene = NULL;
 		return activeScene;
 	}
 
 	Scene* MinorityViewport::GetLocalScene(string sensorId){
 
-		if(this->_clients->Size()==0){
-			return NULL;
-		}
+		if(this->_clients->Size()>0){
+		
+			Client *clientPtr;
 
-		Scene *activeScene = NULL;
-
-		Client *clientPtr;
-
-		for(unsigned int client=0;client<this->_clients->Size();client+=1){
+			for(unsigned int client=0;client<this->_clients->Size();client+=1){
 			
-			clientPtr = this->_clients->AtIdx(client);
-			map<string,Sensor*> sensors = clientPtr->GetSensorsList();
+				clientPtr = this->_clients->AtIdx(client);
+				map<string,Sensor*> sensors = clientPtr->GetSensorsList();
 
-			for(map<string,Sensor*>::iterator itr = sensors.begin();itr!=sensors.end();itr++)
-			{
-				if(itr->first==sensorId){
-					return itr->second->GetScene();
+				for(map<string,Sensor*>::iterator itr = sensors.begin();itr!=sensors.end();itr++)
+				{
+					if(itr->first==sensorId){
+						return itr->second->GetScene();
+					}
 				}
 			}
+
 		}
 
 		return NULL;

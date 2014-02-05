@@ -3,31 +3,29 @@
 namespace MultipleKinectsPlatformServer{
 
 	JobsQueue::JobsQueue(){
-		json_queue = new std::queue<Job>();
+		_jsonQueue = new std::queue<Job>();
 	}
 
 	JobsQueue::~JobsQueue(){
-		delete json_queue;
+		delete _jsonQueue;
 	}
 
 	void JobsQueue::push(string object,string time_stamp){
 
 		Job new_incoming_data(object,time_stamp);
 
-		this->json_queue->push(new_incoming_data);
+		this->_jsonQueue->push(new_incoming_data);
 	}
 
-	Job JobsQueue::pop(){
-
-		Job obtainedJob = this->json_queue->front();
-		
-		this->json_queue->pop();
-
-		return obtainedJob;
+	Job JobsQueue::front(){
+		return this->_jsonQueue->front();
 	}
 
-	unsigned int JobsQueue::get_size(){
+	bool JobsQueue::empty(){
+		return this->_jsonQueue->empty();
+	}
 
-		return this->json_queue->size();
+	void JobsQueue::pop(){
+		return this->_jsonQueue->pop();
 	}
 }

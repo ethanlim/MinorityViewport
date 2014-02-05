@@ -5,20 +5,23 @@
 #include "JSON/json.h"
 #include <queue>
 #include <string>
+#include <mutex>
 
 using namespace std;
 
 namespace MultipleKinectsPlatformServer{
 
 	class JobsQueue{
+		private:
+			queue<Job> *_jsonQueue;
+			mutex _jobQueueMutex;
 		public:
 			JobsQueue();
 			~JobsQueue();
 			void push(string raw_json,string time_stamp);
-			Job pop();
-			unsigned int get_size();
-		private:
-			queue<Job> *json_queue;
+			Job front();
+			bool empty();
+			void pop();
 	};
 }
 

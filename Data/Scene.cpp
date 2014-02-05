@@ -58,6 +58,10 @@ namespace MultipleKinectsPlatformServer{
 		return this->_ordering;
 	}
 
+	void Scene::ResetOrdering(){
+		this->SetOrdering(0);
+	}
+
 	void Scene::SetOrdering(unsigned int order){
 		this->_ordering = order;
 	}

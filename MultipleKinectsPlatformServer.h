@@ -23,17 +23,18 @@ using namespace std;
 
 namespace MultipleKinectsPlatformServer{
 	
+	mutex JobQueueMutex;
+
 	class Core{
 		private:
-			MultipleKinectsPlatformServer::ClientsList *clientList;
-			MultipleKinectsPlatformServer::JobsQueue *jobQueue;
-			http::server::server *server;
-			MinorityViewport *minorityViewport;
-			Timer *time;
+			MultipleKinectsPlatformServer::ClientsList *_clientList;
+			MultipleKinectsPlatformServer::JobsQueue *_jobQueue;
+			http::server::server *_server;
+			MinorityViewport *_minorityViewport;
+			Timer *_time;
 			void ReportStatus(string message);
 		public :
 			Core(string address,string port);
-			~Core();
 			void BeginListen();			
 			void ProcessJobs();
 			void BeginVisualisation(int *argcp, char **argv);

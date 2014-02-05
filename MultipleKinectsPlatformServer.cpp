@@ -7,16 +7,17 @@ namespace MultipleKinectsPlatformServer{
 	  {
 		NTPClient timeClient("sg.pool.ntp.org");
 		long timeFromServer = timeClient.RequestDatetime_UNIX();
-		this->time = new Timer(timeFromServer);
-		this->time->Start();
+		this->_time = new Timer(timeFromServer);
+		this->_time->Start();
 		
 		// Initialise the Client Machine List
-		this->clientList = new MultipleKinectsPlatformServer::ClientsList(this->time);
+		this->_clientList = new MultipleKinectsPlatformServer::ClientsList(this->_time);
 
 		// Create the jobs queue that process each incoming data from client machines
-		this->jobQueue = new MultipleKinectsPlatformServer::JobsQueue();
+		this->_jobQueue = new MultipleKinectsPlatformServer::JobsQueue();
 
-		this->minorityViewport = new MinorityViewport(this->time,this->clientList);
+		//Create algorithm that merge the scenes
+		this->_minorityViewport = new MinorityViewport(this->_time,this->_clientList);
 
 		//Initialise the Server with the number of threads
 
@@ -24,13 +25,13 @@ namespace MultipleKinectsPlatformServer{
 
 		string docRoot = "C:\\Users\\ethanlim\\Documents\\Projects\\School\\MultipleKinectsPlatformServer\\Web";
 		std::size_t num_threads = boost::lexical_cast<std::size_t>(20);
-		this->server = new http::server::server(address, 
+		this->_server = new http::server::server(address, 
 												port, 
 												docRoot, 
-												this->jobQueue, 
+												this->_jobQueue, 
 												num_threads,
-												this->clientList,
-												this->minorityViewport);
+												this->_clientList,
+												this->_minorityViewport);
 
 		this->ReportStatus("Server Started");
 	  }
@@ -39,13 +40,10 @@ namespace MultipleKinectsPlatformServer{
 		std::cerr << "exception: " << e.what() << "\n";
 	  }
 	}
-
-	Core::~Core(){
-	}
-
+	
 	void Core::BeginListen(){
 		try{
-			this->server->run();			
+			this->_server->run();			
 		}
 		catch(std::exception& e){
 			std::cerr << "exception: " << e.what() << "\n";
@@ -53,30 +51,35 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	void Core::ProcessJobs(){
+
+		Json::Value root;   
+		Json::Reader reader;
+		string rawJSON;
+		string timeStamp;
+
 		while(true){
-			if(this->jobQueue->get_size()>0){
-				Json::Value root;   
-				Json::Reader reader;
 
-				Job recvJob =  this->jobQueue->pop();
+			JobQueueMutex.lock();
+			Job recvJob;
+			if(!this->_jobQueue->empty()){
+				recvJob =  this->_jobQueue->front();
+			
+				rawJSON = recvJob.GetJobJSON();
+				timeStamp = recvJob.GetTimeStamp();
 
-				string rawJSON = recvJob.GetJobJSON();
-				string timeStamp = recvJob.GetTimeStamp();
+				this->_jobQueue->pop();
+				
+			}
+			JobQueueMutex.unlock();
 
-				if (reader.parse(rawJSON,root))
-				{
-					for(unsigned short skeletons=0;skeletons<root.size();skeletons++){
-						MultipleKinectsPlatformServer::Skeleton newSkeleton(root.get(skeletons,NULL),atol(timeStamp.c_str()));
-						this->minorityViewport->LoadSkeleton(newSkeleton);
-					}
+			if (reader.parse(rawJSON,root))
+			{
+				for(unsigned short skeletons=0;skeletons<root.size();skeletons++){
+					MultipleKinectsPlatformServer::Skeleton newSkeleton(root.get(skeletons,NULL),atol(timeStamp.c_str()));
+					this->_minorityViewport->LoadSkeleton(newSkeleton);
 				}
 			}
 		}
-	}
-
-	void Core::BeginVisualisation(int *argc, char **argv){
-		/* TODO: Restore the visualisation soon */
-		//this->visualisation = new Visualisation(argc,argv);
 	}
 
 	void Core::ReportStatus(string msg){
@@ -99,13 +102,8 @@ int main(int argc, char **argv)
 		// Process Job on a separate thread
 		thread job_thread(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
 
-		// Begin Visual
-		thread ui_thread(&MultipleKinectsPlatformServer::Core::BeginVisualisation,platform,&argc,argv);
-
 		server_thread.join();
 		job_thread.join();
-		ui_thread.join();
-
 	}catch(exception &error){
 		throw error;
 	}
