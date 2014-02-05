@@ -116,7 +116,7 @@ namespace http {
 		  outputFile << "\"result\":";
 		  outputFile << "[";
 
-		  if(this->_viewport->Calibrate()){
+		  if(this->_viewport->CalibrateSceneOrder()){
 				outputFile << "true";
 	      }else{
 				outputFile << "false";

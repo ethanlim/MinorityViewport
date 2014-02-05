@@ -46,6 +46,10 @@ namespace MultipleKinectsPlatformServer{
 		}
 	}
 
+	/**
+	 *  GetFirstSkeletonObservedTime_ms
+	 *  Get the time when the first skeleton was observed in the scene
+	 */ 
 	long Scene::GetFirstSkeletonObservedTime_ms(){
 		return this->_firstSkeletonObservedTime_ms;
 	}

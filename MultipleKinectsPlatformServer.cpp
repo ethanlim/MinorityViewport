@@ -75,7 +75,6 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	void Core::BeginVisualisation(int *argc, char **argv){
-
 		/* TODO: Restore the visualisation soon */
 		//this->visualisation = new Visualisation(argc,argv);
 	}
@@ -88,24 +87,28 @@ namespace MultipleKinectsPlatformServer{
 int main(int argc, char **argv)
 {
 	if(argc==1){
-		cout << "Program arguments are empty" << endl;
-		return 0;
+		throw exception("Program arguments are empty");
 	}
 
-	MultipleKinectsPlatformServer::Core platform(argv[1],argv[2]);
+	try{
+		MultipleKinectsPlatformServer::Core platform(argv[1],argv[2]);
 
-	// Start Server on a separate thread
-	thread server_thread(&MultipleKinectsPlatformServer::Core::BeginListen,platform);
+		// Start Server on a separate thread
+		thread server_thread(&MultipleKinectsPlatformServer::Core::BeginListen,platform);
 
-	// Process Job on a separate thread
-	thread job_thread(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+		// Process Job on a separate thread
+		thread job_thread(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
 
-	// Begin Visual
-	thread ui_thread(&MultipleKinectsPlatformServer::Core::BeginVisualisation,platform,&argc,argv);
+		// Begin Visual
+		thread ui_thread(&MultipleKinectsPlatformServer::Core::BeginVisualisation,platform,&argc,argv);
 
-	server_thread.join();
-	job_thread.join();
-	ui_thread.join();
+		server_thread.join();
+		job_thread.join();
+		ui_thread.join();
+
+	}catch(exception &error){
+		throw error;
+	}
 
 	return 0;
 }

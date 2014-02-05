@@ -26,14 +26,16 @@ namespace MultipleKinectsPlatformServer{
 			set<Scene*> _scenesSet;
 
 			Timer *_curTime;
+
+			void MergeScenes();
 		public:
 			MinorityViewport(Timer *curTime, ClientsList *clients);
 			~MinorityViewport();
 
-			bool Calibrate();
+			bool CalibrateSceneOrder();
 			string GetClientOrdering();
 			void LoadSkeleton(Skeleton newSkeleton);
-			void MergeScenes();
+
 			void RefreshScenesSet();
 
 			Scene* GetGlobalScene();

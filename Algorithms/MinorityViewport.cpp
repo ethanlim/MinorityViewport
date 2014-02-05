@@ -14,11 +14,13 @@ namespace MultipleKinectsPlatformServer{
 
 	}
 
-	bool MinorityViewport::Calibrate(){
+	/**
+	 *
+	 */
+	bool MinorityViewport::CalibrateSceneOrder(){
 		
 		this->RefreshScenesSet();
 
-		//Probe each scene
 		unsigned int numOfCalibratedSceneRequired = this->_scenesSet.size(); 
 		unsigned int numOfCalibratedScene = 0;
 
@@ -109,14 +111,16 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	Scene* MinorityViewport::GetGlobalScene(){
+		
+		//TODO : Most important algorithm to sitch scenes based on transform matrix
 
-		Scene *activeScene;
+		Scene *activeScene = NULL;
 		return activeScene;
 	}
 
 	Scene* MinorityViewport::GetLocalScene(string sensorId){
 
-		Scene *activeScene;
+		Scene *activeScene = NULL;
 
 		Client *clientPtr;
 
@@ -138,8 +142,6 @@ namespace MultipleKinectsPlatformServer{
 
 	string MinorityViewport::SceneToJSON(Scene* convertingScene){
 
-		string JSON ;
-
-		return JSON;
+		return convertingScene->ToJSON();
 	}
 }
