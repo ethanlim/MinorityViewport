@@ -83,26 +83,15 @@ var Network = {
 
         this.commWorker.addEventListener(/*type*/"message",/*handler*/handler,/*useCapture*/true);
         
-        if (cmd.type == "single") {
-            this.commWorker.postMessage({
-                'cmd'           : 'start',
-                'serverEndPt'   : this.serverEndpt,
-                'port'          : this.port,
-                'fps'           : 1,
-                'path'          : commPath,
-                'type'          : cmd.type,
-                'sensorId'      : cmd.sensorId
-            });
-        } else if (cmd.type == "global") {
-            this.commWorker.postMessage({
-                'cmd'           : 'start',
-                'serverEndPt'   : this.serverEndpt,
-                'port'          : this.port,
-                'fps'           : 1,
-                'path'          : commPath,
-                'type'          : cmd.type
-            });
-        }
+        this.commWorker.postMessage({
+            'cmd'           : 'start',
+            'serverEndPt'   : this.serverEndpt,
+            'port'          : this.port,
+            'fps'           : 1,
+            'path'          : commPath,
+            'type'          : cmd.type,
+            'sensorId'      : cmd.sensorId
+        });
     },
 
     stopCommWorker: function () {

@@ -12,4 +12,28 @@ namespace MultipleKinectsPlatformServer{
 	Joint::~Joint(){
 	}
 
+	string Joint::ToJSON(){
+		string json;
+
+		json+="{";
+
+		json+="\"type:\":";
+		json+=to_string(this->Type);
+		json+=",";
+
+		json+="\"X\":";
+		json+=to_string(this->X);
+		json+=",";
+
+		json+="\"Y\":";
+		json+=to_string(this->Y);
+		json+=",";
+
+		json+="\"Z\":";
+		json+=to_string(this->Z);
+
+		json += "}";
+
+		return json;
+	}
 }

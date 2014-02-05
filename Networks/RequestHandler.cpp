@@ -132,12 +132,10 @@ namespace http {
 		  ofstream outputFile(_doc_root+request_path);
 
 		  if(type=="global"){
-
 			  outputFile <<  this->_viewport->SceneToJSON(this->_viewport->GetGlobalScene());
 		  }else if(type == "single"){
 			  string sensorId = this->request_header_val(req,"Sensor-Id");
-
-			  outputFile << this->_viewport->SceneToJSON(this->_viewport->GetLocalScene(sensorId));
+			  outputFile <<  this->_viewport->SceneToJSON(this->_viewport->GetLocalScene(sensorId));
 		  }
 	  }
 
@@ -149,7 +147,7 @@ namespace http {
 	  {
 		extension = request_path.substr(last_dot_pos + 1);
 	  }
-
+	  
 	  // Open the file to send back.
 	  std::string full_path = _doc_root + request_path;
 	  std::ifstream is(full_path.c_str(), std::ios::in | std::ios::binary);

@@ -7,7 +7,6 @@ var Visualisation = {
     axes:null,
     camera: null,
     renderer: null,
-
     controls:null,
 
     /**

@@ -21,8 +21,9 @@ var CalibrationPage = {
         }
 
         this.clients = this.networkClient.fetchedConnectedClients();
+
         this.visualisation.render();
-        this.networkClient.startCommWorker({ type: "single", sensorId: this.clients[0]["sensors"][0]["id"]}, this.NetworkHandler);
+        this.StartCommunicationWithScenes();
 
         this.UpdateSensorTable(this.clients);
 
@@ -115,6 +116,18 @@ var CalibrationPage = {
         }
     },
 
+    /* Networking */
+    StartCommunicationWithScenes: function(){
+        if (this.clients != null) {
+            for (var client = 0; client < this.clients.length; client += 1) {
+                var sensors = this.clients[client]["sensors"];
+                for (var sensor = 0; sensor < sensors.length; sensor += 1) {
+                    this.networkClient.startCommWorker({ type: "single", sensorId: sensors[sensor]["id"] }, this.NetworkHandler);
+                }
+            }
+        }
+    },
+
     /* Event Handlers */
 
     SetupEventHandlers: function () {
@@ -187,7 +200,7 @@ var CalibrationPage = {
         var responseData = event.data.msg;
 
         if (responseType == "data") {
-
+            console.log(responseData);
         }
     }
 };

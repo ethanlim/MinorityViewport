@@ -14,26 +14,26 @@ function Skeleton(id){
     this._jointCount = 20;
     this._joints = new Array(this._jointCount);
 
-    this._joints["hand_R"]=null;
-    this._joints["hand_L"]=null;
-    this._joints["head"] = null;
-    this._joints["shoulder_C"] = null;
-    this._joints["wrist_R"] = null;
-    this._joints["wrist_L"] = null;
-    this._joints["elbow_R"] = null;
+    this._joints["ankle_L"] = null;
+    this._joints["ankle_R"] = null;
     this._joints["elbow_L"] = null;
-    this._joints["shoulder_R"] = null;
-    this._joints["shoulder_L"] = null;
-    this._joints["spine"] = null;
-    this._joints["hip_R"] = null;
+    this._joints["elbow_R"] = null;
+    this._joints["foot_L"] = null;
+    this._joints["foot_R"] = null;
+    this._joints["hand_L"] = null;
+    this._joints["hand_R"]=null;
+    this._joints["head"] = null;
     this._joints["hip_C"] = null;
     this._joints["hip_L"] = null;
-    this._joints["knee_R"] = null;
+    this._joints["hip_R"] = null;
     this._joints["knee_L"] = null;
-    this._joints["ankle_R"] = null;
-    this._joints["ankle_L"] = null;
-    this._joints["foot_R"] = null;
-    this._joints["foot_L"] = null;
+    this._joints["knee_R"] = null;
+    this._joints["shoulder_C"] = null;
+    this._joints["shoulder_L"] = null;
+    this._joints["shoulder_R"] = null;
+    this._joints["spine"] = null;
+    this._joints["wrist_L"] = null;
+    this._joints["wrist_R"] = null;
 }
 
 Skeleton.prototype = {

@@ -21,7 +21,6 @@ namespace MultipleKinectsPlatformServer{
 		private:
 			ClientsList *_clients;
 
-			vector<Sensor*> _sensors;
 			vector<Scene*> _orderedScenes;
 			set<Scene*> _scenesSet;
 

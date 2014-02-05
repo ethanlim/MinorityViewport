@@ -8,9 +8,11 @@ using namespace std;
 namespace MultipleKinectsPlatformServer{
 
 	class Joint{
+		private:
 		public:
 			enum JointType
 			{
+				//20 joints
 				AnkleLeft,
 				AnkleRight,
 				ElbowLeft,
@@ -31,6 +33,7 @@ namespace MultipleKinectsPlatformServer{
 				Spine,
 				WristLeft,
 				WristRight,
+				//
 				None
 			};
 
@@ -50,7 +53,7 @@ namespace MultipleKinectsPlatformServer{
 			Joint();
 			Joint(JointType type, double x_pos,double y_pos,double z_pos,Mode mode);
 			~Joint();
-		private:
+			string ToJSON();
 	};
 
 }

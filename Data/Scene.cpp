@@ -92,24 +92,24 @@ namespace MultipleKinectsPlatformServer{
 		json+=to_string(this->_ordering);
 		json+=",";
 
-		json="\"calibrated\":";
+		json+="\"calibrated\":";
 		json+=to_string(this->_calibrated);
 		json+=",";
 		
 		map<unsigned short,Skeleton> skeletons = this->GetSkeletons();
-		json+="\"skeleton\":";
+		json+="\"skeletons\":";
 		json+="[";
-		map<unsigned short,Skeleton>::iterator lastSkeleton = skeletons.end();
-		std::advance(lastSkeleton,-1);
-		for(map<unsigned short,Skeleton>::iterator itr = skeletons.begin();itr!=skeletons.end();itr++)
-		{
-			json += "{";
-			json += itr->second.ToJSON();
-			json += "}";
-
-			if(itr!=lastSkeleton)
+		if(skeletons.size()>0){
+			map<unsigned short,Skeleton>::iterator lastSkeleton = skeletons.end();
+			std::advance(lastSkeleton,-1);
+			for(map<unsigned short,Skeleton>::iterator itr = skeletons.begin();itr!=skeletons.end();itr++)
 			{
-				json += ",";
+				json += itr->second.ToJSON();
+
+				if(itr!=lastSkeleton)
+				{
+					json += ",";
+				}
 			}
 		}
 		json+="]";

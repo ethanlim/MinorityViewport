@@ -101,6 +101,66 @@ namespace MultipleKinectsPlatformServer{
 	string Skeleton::ToJSON(){
 		string json;
 
+		json+="{";
+
+		json+="\"id\":";
+		json+=to_string(this->GetSkeletonId());
+		json+=",";
+
+		json+="\"client_id\":";
+		json+=to_string(this->GetClientId());
+		json+=",";
+
+		json+="\"sensor_id\":";
+		string sensorId = this->GetSensorId();
+		size_t i = sensorId.find('\\');
+		while (i != string::npos)
+		{
+			string part1 = sensorId.substr(0, i);
+			string part2 = sensorId.substr(i + 1);
+			sensorId = part1 + "\\\\" + part2;
+			i = sensorId.find('\\', i + 4);
+		}
+
+		json += "\"" + sensorId + "\"";
+		json += ",";
+
+		json+="\"time_stamp\":";
+		json+=to_string(this->time_stamp);
+		json+=",";
+
+		json+="\"pos_x\":";
+		json+=to_string(this->pos_x);
+		json+=",";
+
+		json+="\"pos_y\":";
+		json+=to_string(this->pos_y);
+		json+=",";
+
+		json+="\"pos_z\":";
+		json+=to_string(this->pos_z);
+		json+=",";
+
+		json+="\"joints\":";
+		json+="[";
+		vector<Joint>::iterator lastJoint =  this->joints.end();
+
+		if(this->joints.size()>0){
+			std::advance(lastJoint,-1);
+			for(vector<Joint>::iterator itr = this->joints.begin();itr!=this->joints.end();itr++)
+			{
+				json += itr->ToJSON();
+
+				if(itr!=lastJoint)
+				{
+					json += ",";
+				}
+			}
+		}
+		json+="]";
+
+		json += "}";
+
 		return json;
 	}
 }

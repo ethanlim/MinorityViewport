@@ -15,7 +15,9 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	/**
-	 *
+	 *   CalibrateSceneOrder
+	 *   Determine the order of scene based on their last skeleton observed time
+	 *   @return - true if scenes have been assigned with order
 	 */
 	bool MinorityViewport::CalibrateSceneOrder(){
 		
@@ -113,12 +115,15 @@ namespace MultipleKinectsPlatformServer{
 	Scene* MinorityViewport::GetGlobalScene(){
 		
 		//TODO : Most important algorithm to sitch scenes based on transform matrix
-
 		Scene *activeScene = NULL;
 		return activeScene;
 	}
 
 	Scene* MinorityViewport::GetLocalScene(string sensorId){
+
+		if(this->_clients->Size()==0){
+			return NULL;
+		}
 
 		Scene *activeScene = NULL;
 
@@ -137,11 +142,15 @@ namespace MultipleKinectsPlatformServer{
 			}
 		}
 
-		return activeScene;
+		return NULL;
 	}
 
 	string MinorityViewport::SceneToJSON(Scene* convertingScene){
 
-		return convertingScene->ToJSON();
+		if(convertingScene!=NULL){
+			return convertingScene->ToJSON();
+		}else{
+			return "";
+		}
 	}
 }

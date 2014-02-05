@@ -29,7 +29,7 @@ self.addEventListener('message', function (event) {
                 sensorId = data.sensorId;
             }
 
-            getGlobalSceneFromServer();
+            getSceneFromServer();
             postMessage({ type: "status", msg: "Worker Started" });
             break;
         case 'stop':
@@ -45,13 +45,13 @@ self.addEventListener('message', function (event) {
 });
 
 /* Functions */
-function getGlobalSceneFromServer() {
+function getSceneFromServer() {
 
     var connections = 0,
         updateDelay = 1000/fps;
 
     if (serverEndpt != "") {
-        xmlHTTPObj.onreadystatechange = globalSceneCallback;
+        xmlHTTPObj.onreadystatechange = sceneCallback;
         xmlHTTPObj.open("POST",serverEndpt + ":" + port + path,true);
         xmlHTTPObj.setRequestHeader('Content-Type', 'application/javascript');
         xmlHTTPObj.setRequestHeader('Request-Type', type);
@@ -64,13 +64,13 @@ function getGlobalSceneFromServer() {
     }
 
     if (runningStatus) {
-        setTimeout(getGlobalSceneFromServer, updateDelay);
+        setTimeout(getSceneFromServer, updateDelay);
     }
 }
 
 /* Callbacks */
 
-function globalSceneCallback() {
+function sceneCallback() {
     if (xmlHTTPObj.readyState === 4) {
         if (xmlHTTPObj.status === 200) {
             postMessage({ type: "status", msg: "Response Received" });
