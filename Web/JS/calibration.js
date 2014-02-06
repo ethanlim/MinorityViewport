@@ -26,10 +26,10 @@ var CalibrationPage = {
 
         this.clients = this.networkClient.fetchedConnectedClients();
 
-        this.visualisationCanvas0.init({ id: "canvas-container-0", height: "600px", width: "500px" }
+        this.visualisationCanvas0.init({ id: "canvas-container-0", height: "600px", width: "550px" }
                                        ,{ wireFrameColor: 0x3300FF, backgroundColor: 0xB6B6B4 }
                                        ,this.ReconstructFn);
-        this.visualisationCanvas1.init({ id: "canvas-container-1", height: "600px", width: "500px" }
+        this.visualisationCanvas1.init({ id: "canvas-container-1", height: "600px", width: "550px" }
                                        ,{ wireFrameColor: 0x006600, backgroundColor: 0xB6B6B4 }
                                        ,this.ReconstructFn);
         this.visualisationCanvas0.render("canvas-container-0");
