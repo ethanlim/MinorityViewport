@@ -79,12 +79,14 @@ namespace MultipleKinectsPlatformServer{
 
 		unsigned int clientId = newSkeleton.GetClientId();
 		string sensorId = newSkeleton.GetSensorId();
-		
+
 		Client *client = this->_clients->At(clientId);
 
-		Sensor *sensor = client->ExtractSensor(sensorId);
+		if(client!=NULL){
+			Sensor *sensor = client->ExtractSensor(sensorId);
 
-		sensor->UpdateScene(newSkeleton);
+			sensor->UpdateScene(newSkeleton);
+		}
 	}
 
 	void MinorityViewport::MergeScenes(){

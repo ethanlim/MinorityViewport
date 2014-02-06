@@ -2,8 +2,8 @@
 
 namespace MultipleKinectsPlatformServer{
 
-	Scene::Scene(Timer *time)
-		:_dimensionX(0),_dimensionY(0),_dimensionZ(0),_curTime(time),_refreshRate_ms(1000),_firstSkeletonObservedTime_ms(0),_ordering(0),_calibrated(false)
+	Scene::Scene(string sensorId,Timer *time)
+		:_sensorId(sensorId),_dimensionX(0),_dimensionY(0),_dimensionZ(0),_curTime(time),_refreshRate_ms(1000),_firstSkeletonObservedTime_ms(0),_ordering(0),_calibrated(false)
 	{
 		this->refreshThread = new thread(&MultipleKinectsPlatformServer::Scene::Clear,this);
 	}
@@ -97,6 +97,19 @@ namespace MultipleKinectsPlatformServer{
 		string json;
 
 		json+="{";
+
+		json+="\"sensorId\":";
+		string sensorId = this->_sensorId;
+		size_t i = sensorId.find('\\');
+		while (i != string::npos)
+		{
+			string part1 = sensorId.substr(0, i);
+			string part2 = sensorId.substr(i + 1);
+			sensorId = part1 + "\\\\" + part2;
+			i = sensorId.find('\\', i + 4);
+		}
+		json+="\"" + sensorId + "\"";
+		json+=",";
 
 		json+="\"dimensionX\":";
 		json+=to_string(this->_dimensionX);

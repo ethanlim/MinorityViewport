@@ -5,7 +5,7 @@ namespace MultipleKinectsPlatformServer{
 	Sensor::Sensor(Timer *time, string id)
 	:_id(id),_curTime(time)
 	{
-		this->_scene = new Scene(time);
+		this->_scene = new Scene(id,time);
 	}
 
 	Sensor::~Sensor()

@@ -10,7 +10,7 @@ var CalibrationPage = {
     networkClient: null,
     visualisationCanvas0:null,
     visualisationCanvas1: null,
-    commWorkersId:[],
+    commWorkersId: [],
 
     Init:function(){
         
@@ -18,13 +18,12 @@ var CalibrationPage = {
         this.visualisationCanvas0 = new Visualisation();
         this.visualisationCanvas1 = new Visualisation();
 
-        if (
-            this.networkClient
-            && this.visualisationCanvas0
-            && this.visualisationCanvas1
-            ) {
-            console.log("Libraries Initialisation Successful");
-        }
+        var scenes = new Array(2)
+        scenes[0] = { sensorId: null, scene: null };
+        scenes[1] = { sensorId: null, scene: null };
+        jQuery.data(document.body,"scenes",scenes);
+
+        this.Diagnostic();
 
         this.clients = this.networkClient.fetchedConnectedClients();
 
@@ -49,6 +48,18 @@ var CalibrationPage = {
         /* Establish the Event Handlers */
 
         this.SetupEventHandlers();
+    },
+
+    Diagnostic:function(){
+        if (this.networkClient
+           && this.visualisationCanvas0
+           && this.visualisationCanvas1
+           ) {
+            console.log("Libraries Initialisation Successful");
+            return true;
+        } else {
+            return false;
+        }
     },
 
     UpdateSensorTable: function (clients) {
@@ -202,17 +213,34 @@ var CalibrationPage = {
         // Remember the web worker so that we can shut it down later
         var workerId = callingObj.StartCommunicationWithScene(text);
         var sceneSelectionId = jQuery(li).closest(".scene-selection").attr("id");
+        var arr = sceneSelectionId.split("-");
+
+        var scenes = jQuery.data(document.body, "scenes");
+        sceneId = arr[2];
+        scenes[sceneId].sensorId = text;
+        jQuery.data(document.body,"scenes",scenes);
+
         callingObj.commWorkersId[sceneSelectionId] = workerId;
     },
 
     NetworkHandler: function(event){
+
         var responseType = event.data.type;
         var responseData = event.data.msg;
 
         if (responseType == "data") {
+            
+            var sceneFromServer = JSON.parse(responseData);
 
-            /* Obtain scene information ("Dimensions","Skeletons") */
-            console.log(responseData);
+            var sensorId = sceneFromServer["sensorId"];
+            var scenes = jQuery.data(document.body,"scenes");
+
+            for (var sceneNo = 0;sceneNo<scenes.length; sceneNo += 1) {
+                if (scenes[sceneNo].sensorId == sensorId) {
+                    scenes[sceneNo].scene = sceneFromServer;
+                    jQuery.data(document.body, "scenes", scenes);
+                }
+            }
         }
     },
     

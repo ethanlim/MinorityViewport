@@ -130,13 +130,17 @@ namespace http {
 	  {
 		  string type = this->request_header_val(req,"Request-Type");
 		  ofstream outputFile(_doc_root+request_path);
+		  string Scene_JSON;
 
 		  if(type=="global"){
-			  outputFile <<  this->_viewport->SceneToJSON(this->_viewport->GetGlobalScene());
+			  Scene_JSON = this->_viewport->SceneToJSON(this->_viewport->GetGlobalScene());
+
 		  }else if(type == "single"){
 			  string sensorId = this->request_header_val(req,"Sensor-Id");
-			  outputFile <<  this->_viewport->SceneToJSON(this->_viewport->GetLocalScene(sensorId));
+			  Scene_JSON = this->_viewport->SceneToJSON(this->_viewport->GetLocalScene(sensorId));
 		  }
+
+		  outputFile << Scene_JSON;
 	  }
 
 	  // Determine the file extension.

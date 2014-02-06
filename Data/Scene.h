@@ -14,6 +14,8 @@ namespace MultipleKinectsPlatformServer{
 
 	class Scene{
 		private:
+			string _sensorId;
+
 			map<unsigned short,Skeleton> _skeletons;
 			unsigned int _dimensionX;
 			unsigned int _dimensionY;
@@ -29,7 +31,7 @@ namespace MultipleKinectsPlatformServer{
 
 			long _firstSkeletonObservedTime_ms;
 		public:
-			Scene(Timer *time);
+			Scene(string sensorId,Timer *time);
 			~Scene();
 
 			unsigned int GetOrdering();
