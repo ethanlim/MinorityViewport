@@ -66,30 +66,32 @@
               <div class="panel-body">
                 <div class="row">
                     <h4 class="col-md-offset-1">
-                        Status: <span class="label label-default">No Client Detected</span>
+                        Status: <span id="status-msg" class="label label-default"></span>
                     </h4>
                 </div>
                 <div class="row">
-                  <div class="btn-group col-md-12">
-                      <div id="canvas0-scene-select" class="col-md-offset-1">
+                      <div id="canvas0-scene-select" class="scene-selection">
                         <span class="label label-primary">Scene A</span>
-                        <button type="button" class="btn btn-default">No Sensor Selected</button>
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                            <span class="caret"></span>
-                        </button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default" disabled="disabled">No Sensor Selected</button>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                        </div>
                       </div>
-                      <div id="canvas1-scene-select" class="col-md-offset-1">
+                      <div id="canvas1-scene-select" class="scene-selection col-md-offset-1">
                         <span class="label label-primary">Scene B</span>
-                        <button type="button" class="btn btn-default">No Sensor Selected</button>
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                            <span class="caret"></span>
-                        </button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default" disabled="disabled">No Sensor Selected</button>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                        </div>
                       </div>
-                      <div class="col-md-offset-9">
+                      <div class="col-md-offset-10">
                         <button id="lock-btn" type="button" class="btn btn-default">Lock</button>
                         <button id="calibrate-btn" type="button" class="btn btn-default">Calibrate</button>
-                      </div>
-                  </div>                  
+                      </div>                 
                 </div>
               </div>
             </div>

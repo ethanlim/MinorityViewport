@@ -28,3 +28,7 @@ body {
 #lock-btn{
     margin-right:10px;
 }
+
+.scene-selection > div.btn-group > ul {
+    cursor:pointer;
+}

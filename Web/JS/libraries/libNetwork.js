@@ -5,7 +5,8 @@ var Network = {
     port: 0,
     clientListing_URL: "/api/clients/listing.json",
     clientCalibration_URL: "/api/visualisations/calibrate.json",
-    commWorker:null,
+    commWorker: null,
+    commWorkersId:[],
 
     /**
     * Construct all network components
@@ -92,9 +93,15 @@ var Network = {
             'type'          : cmd.type,
             'sensorId'      : cmd.sensorId
         });
+
+        //Return a random number
+        var randomId = Math.random() * (99999999 - 1) + 1;
+        this.commWorkersId[randomId]=this.commWorker;
+
+        return randomId;
     },
 
-    stopCommWorker: function () {
-            this.commWorker.postMessage({ 'cmd': 'stop' });
+    stopCommWorker: function (id) {
+         this.commWorkersId[id].postMessage({ 'cmd': 'stop' });
     }
 }
