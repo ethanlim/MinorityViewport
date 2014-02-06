@@ -68,7 +68,6 @@ namespace MultipleKinectsPlatformServer{
 				timeStamp = recvJob.GetTimeStamp();
 
 				this->_jobQueue->pop();
-				
 			}
 			JobQueueMutex.unlock();
 

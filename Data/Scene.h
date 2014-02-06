@@ -15,7 +15,9 @@ namespace MultipleKinectsPlatformServer{
 	class Scene{
 		private:
 			map<unsigned short,Skeleton> _skeletons;
-			
+			unsigned int _dimensionX;
+			unsigned int _dimensionY;
+			unsigned int _dimensionZ;
 			unsigned int _ordering;
 			bool _calibrated;
 
@@ -35,6 +37,7 @@ namespace MultipleKinectsPlatformServer{
 			void SetOrdering(unsigned int order);
 			bool GetCalibration();
 			void SetCalibration(bool calibrated);
+			void SetDimensions(unsigned int x, unsigned int y, unsigned int z);
 
 			void Update(Skeleton newPerson);
 			void Clear();

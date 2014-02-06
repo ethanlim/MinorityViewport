@@ -7,23 +7,12 @@ body {
     text-align: center;
 }
 
-#canvas-container > canvas {
+#canvas-container-0 > canvas,
+#canvas-container-1 > canvas{
     border:1px solid black;
+
 }
 
-
-#sensors {
-    margin-top:20px;
-}
-
-#menu > .panel-body > .btn-group {
-    margin-bottom:15px;
-}
-
-#calibration-progressbar {
-    display:none;
-}
-
-#calibration-status {
-    display:none;
+#canvas-container-1 {
+    margin-left: 10px;
 }

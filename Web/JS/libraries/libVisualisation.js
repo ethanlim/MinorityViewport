@@ -1,38 +1,41 @@
-var Visualisation = {
-    
-    canvasContainer: null,
 
-    scene: null,
-    backgroundColor:0xB6B6B4,
-    axes:null,
-    camera: null,
-    renderer: null,
-    controls:null,
+var Visualisation = function Visualisation() {
+        
+    this.canvasContainer = null,
+    this.scene = null,
+    this.sceneProperties = null;
+    this.axes = null,
+    this.camera = null,
+    this.renderer =  null,
+    this.controls = null,
+    this.reconstructFn=null,
 
     /**
     *  Begin constructing key elements for graphics
     *
     */ 
-    init: function (canvas_container_dom_id) {
+    this.init = function (canvas_properties,scene_properties,reconstuct_fn) {
 
-        this.canvasContainer = document.getElementById(canvas_container_dom_id);
+        this.canvasContainer = document.getElementById(canvas_properties.id);
+        this.sceneProperties = scene_properties;
 
-        // Div hack to set the dimension
-        this.canvasContainer.style.width = '100%';
-        this.canvasContainer.style.height = "600px";
+        //Div hack to set the dimension
+        this.canvasContainer.style.cssFloat = 'left';
+        this.canvasContainer.style.width = canvas_properties.width;
+        this.canvasContainer.style.height = canvas_properties.height;
         this.canvasContainer.width = this.canvasContainer.offsetWidth;
         this.canvasContainer.height = this.canvasContainer.offsetHeight;
 
         this.initCanvasObj(this.canvasContainer);
 
         return this;
-    },
+    };
 
     /**
     *  Initialise the 3d Canvas
     *
     */
-    initCanvasObj: function (canvas_container) {
+    this.initCanvasObj = function (canvas_container) {
 
         //Scene
         this.scene = new THREE.Scene();
@@ -61,13 +64,13 @@ var Visualisation = {
         this.scene.add(light);
 
         var skyBoxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
-        var skyBoxMaterial = new THREE.MeshBasicMaterial({ color: this.backgroundColor, side: THREE.BackSide });
+        var skyBoxMaterial = new THREE.MeshBasicMaterial({ color: this.sceneProperties.backgroundColor, side: THREE.BackSide });
         var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
         this.scene.add(skyBox);
 
         /* X Plane */
         var gridXZ = new THREE.GridHelper(500, 10);
-        gridXZ.setColors(new THREE.Color(0x006600), new THREE.Color(0x006600));
+        gridXZ.setColors(new THREE.Color(this.sceneProperties.wireFrameColor), new THREE.Color(this.sceneProperties.wireFrameColor));
         gridXZ.position.set(0, 0, 0);
         this.scene.add(gridXZ);
         
@@ -90,13 +93,19 @@ var Visualisation = {
         this.scene.add(arrowZ);
 
         canvas_container.appendChild(this.renderer.domElement);
-        jQuery.data(document.body, "visualisation", this);
+        jQuery.data(document.body, this.canvasContainer.id, this);
     },
 
-    render: function () {
-        var visualisation = jQuery.data(document.body, "visualisation");
-        
-        requestAnimationFrame(visualisation.render);
+    this.render =  function (canvas_id) {
+        var visualisation = jQuery.data(document.body,canvas_id);
+
         visualisation.renderer.render(visualisation.scene, visualisation.camera);
+
+        /* Reconstruct the scene here */
+
+        // Loop using this special function
+        requestAnimationFrame(function(){
+            visualisation.render(canvas_id);
+        });
     }
 }

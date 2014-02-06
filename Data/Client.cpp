@@ -113,10 +113,6 @@ namespace MultipleKinectsPlatformServer{
 		}
 	}
 
-	unsigned int Client::GetNumOfSensors(){
-		return this->_sensors.size();
-	}
-
 	map<string,Sensor*> Client::GetSensorsList(){
 		return this->_sensors;
 	}

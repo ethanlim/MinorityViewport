@@ -74,6 +74,12 @@ namespace MultipleKinectsPlatformServer{
 		this->_calibrated = calibrated;
 	}
 
+	void Scene::SetDimensions(unsigned int x, unsigned int y, unsigned int z){
+		this->_dimensionX = x;
+		this->_dimensionY = y;
+		this->_dimensionZ = z;
+	}
+
 	map<unsigned short,Skeleton> Scene::GetSkeletons(){
 
 		map<unsigned short,Skeleton> tempSkeletonsHolder;
@@ -91,6 +97,18 @@ namespace MultipleKinectsPlatformServer{
 		string json;
 
 		json+="{";
+
+		json+="\"dimensionX\":";
+		json+=to_string(this->_dimensionX);
+		json+=",";
+
+		json+="\"dimensionY\":";
+		json+=to_string(this->_dimensionY);
+		json+=",";
+
+		json+="\"dimensionZ\":";
+		json+=to_string(this->_dimensionZ);
+		json+=",";
 
 		json+="\"ordering\":";
 		json+=to_string(this->_ordering);

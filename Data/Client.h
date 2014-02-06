@@ -24,7 +24,6 @@ namespace MultipleKinectsPlatformServer{
 			Client(Timer *time,unsigned int id, string loc,string ip_addr);
 			~Client();
 			unsigned int GetId();
-			unsigned int GetNumOfSensors();
 			string ToJSON();
 			void InitialSensorsList(string rawSensors_JSON);
 			Sensor* ExtractSensor(string sensorId);

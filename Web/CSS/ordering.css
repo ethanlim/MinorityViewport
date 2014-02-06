@@ -1,0 +1,28 @@
+body {
+    padding-top: 50px;
+}
+
+.starter-template {
+    padding: 40px 15px;
+    text-align: center;
+}
+
+#canvas-container > canvas {
+    border:1px solid black;
+}
+
+#sensors {
+    margin-top:20px;
+}
+
+#menu > .panel-body > .btn-group {
+    margin-bottom:15px;
+}
+
+#calibration-progressbar {
+    display:none;
+}
+
+#calibration-status {
+    display:none;
+}

@@ -23,7 +23,7 @@ using namespace std;
 
 namespace MultipleKinectsPlatformServer{
 	
-	mutex JobQueueMutex;
+	mutex JobQueueMutex;	//Need this to prevent empty job queue from being accessed due to race conditions
 
 	class Core{
 		private:
