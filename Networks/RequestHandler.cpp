@@ -47,7 +47,9 @@ namespace http {
 		string time_stamp = this->request_header_val(req,"TIME_STAMP");
 
 		/* Insert it into the Job Queue */
-		_job_queue->push(sensorData_JSON,time_stamp);
+		if(!sensorData_JSON.empty()&&!time_stamp.empty()){
+			_job_queue->push(sensorData_JSON,time_stamp);
+		}
 	  }
 
 	  if(request_path == "/api/clients/register.json")
