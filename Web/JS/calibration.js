@@ -11,6 +11,7 @@ var CalibrationPage = {
     visualisationCanvas0:null,
     visualisationCanvas1: null,
     commWorkersId: [],
+    lockBtnToggle:false,
 
     Init:function(){
         
@@ -21,7 +22,12 @@ var CalibrationPage = {
         var scenes = new Array(2)
         scenes[0] = { sensorId: null, scene: null };
         scenes[1] = { sensorId: null, scene: null };
-        jQuery.data(document.body,"scenes",scenes);
+        jQuery.data(document.body, "scenes", scenes);
+
+        var lockedScenes = new Array(2)
+        lockedScenes[0] = { sensorId: null, scene: null };
+        lockedScenes[1] = { sensorId: null, scene: null };
+        jQuery.data(document.body, "lockedScenes", lockedScenes);
 
         this.Diagnostic();
 
@@ -182,6 +188,8 @@ var CalibrationPage = {
     SetupEventHandlers: function () {
         jQuery(".scene-selection > div.btn-group > ul > li").on('click', { callingObj: this }, this.SensorSelectionHandler);
         jQuery(".scene-selection > div > button.dropdown-toggle").on('click', { callingObj: this }, this.RemoveCommWorker);
+        jQuery("#lock-btn").on('click', { callingObj: this }, this.LockBtnHandler);
+        jQuery("#calibrate-btn").on('click', { callingObj: this }, this.CalibrateBtnHandler);
     },
 
     RemoveCommWorker:function(event){
@@ -218,7 +226,10 @@ var CalibrationPage = {
         var scenes = jQuery.data(document.body, "scenes");
         sceneId = arr[2];
         scenes[sceneId].sensorId = text;
-        jQuery.data(document.body,"scenes",scenes);
+        jQuery.data(document.body, "scenes", scenes);
+
+        //Set the canvas sensor id status
+        jQuery("#canvas-container-" + sceneId + "-scene-status").text(text);
 
         callingObj.commWorkersId[sceneSelectionId] = workerId;
     },
@@ -242,6 +253,30 @@ var CalibrationPage = {
                 }
             }
         }
+    },
+
+    LockBtnHandler: function(event){
+        var callingObj = event.data.callingObj;
+        var lockBtn = event.currentTarget;
+
+        if (!callingObj.lockBtnToggle) {
+            jQuery(lockBtn).removeClass("btn-default");
+            jQuery(lockBtn).addClass("btn-warning");
+            callingObj.lockBtnToggle = true;
+
+            /* Copy a set of locked scenes from active scenes which are constantly updated */
+
+            jQuery.data(document.body, "lockedScenes",jQuery.data(document.body, "scenes"));
+
+        } else {
+            jQuery(lockBtn).addClass("btn-default");
+            jQuery(lockBtn).removeClass("btn-warning");
+            callingObj.lockBtnToggle = false;
+        }
+    },
+
+    CalibrateBtnHandler: function(event){
+
     },
     
     /* Scene Reconstruction */
