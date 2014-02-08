@@ -1,0 +1,363 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Algorithms">
+      <UniqueIdentifier>{396e6938-5f29-4367-9daa-18724de9d28e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Data">
+      <UniqueIdentifier>{b30e21d3-87fb-4d3a-b7ad-45665466de09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Networks">
+      <UniqueIdentifier>{ebda5222-f870-4e61-b221-93130829d4da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Algorithms">
+      <UniqueIdentifier>{382d5034-3f08-44a0-b434-18be4effdd9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Data">
+      <UniqueIdentifier>{a65a5166-9530-465d-bc64-a4319ac6800a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Networks">
+      <UniqueIdentifier>{a89f7430-49f6-4848-8cbd-5eccb5eb00bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Web">
+      <UniqueIdentifier>{5b12bf8d-41df-410c-988e-086e8734475c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Data\JSON">
+      <UniqueIdentifier>{02e49c6a-f6d0-4487-8486-68348864e582}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Web\API">
+      <UniqueIdentifier>{46f91bc6-72a7-4a6b-9747-e2c70e8034db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Web\CSS">
+      <UniqueIdentifier>{1636e1e4-e1bc-49dc-a377-c229820a3fff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Web\JS">
+      <UniqueIdentifier>{da3870de-d1bf-435f-ad35-16058eb4cf99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Web\JS\libraries">
+      <UniqueIdentifier>{84ea8d96-a4e4-4c01-9f69-ab17975857a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Web\API\clients">
+      <UniqueIdentifier>{3fc6571f-dd64-4e16-9948-46c7cb7d0782}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Web\API\visualisations">
+      <UniqueIdentifier>{896a9f28-7407-40f9-a607-a67cda43bc74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Web\API\sensors">
+      <UniqueIdentifier>{ac8f5c9a-ad58-44a3-a5b4-332333015f9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Web\CSS\libraries">
+      <UniqueIdentifier>{c462c6fb-4673-4bd7-a220-87cf6ed19ff3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Web\JS\libraries\kinect">
+      <UniqueIdentifier>{fb8c1dc9-e26c-4b1c-9855-4553ac3c8db9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Web\JS\libraries\three">
+      <UniqueIdentifier>{18be1bf9-f302-490e-a76a-455c0b098bb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Web\JS\libraries\workers">
+      <UniqueIdentifier>{bf9a215d-a583-4299-ab00-24d7141c5c83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Web\JS\libraries\three\controls">
+      <UniqueIdentifier>{b3b3e452-dcc4-414d-b6ef-0d82f991569d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Misc">
+      <UniqueIdentifier>{268d4a5f-2564-42d2-b08f-2a24d2a42602}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Misc">
+      <UniqueIdentifier>{e663e9ed-422f-4ec7-8bc2-a02d302717a3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="index.html" />
+    <None Include="Data\JSON\json_internalarray.inl">
+      <Filter>Header Files\Data\JSON</Filter>
+    </None>
+    <None Include="Data\JSON\json_internalmap.inl">
+      <Filter>Header Files\Data\JSON</Filter>
+    </None>
+    <None Include="Data\JSON\json_valueiterator.inl">
+      <Filter>Header Files\Data\JSON</Filter>
+    </None>
+    <None Include="Data\JSON\sconscript">
+      <Filter>Header Files\Data\JSON</Filter>
+    </None>
+    <None Include="Web\about.html">
+      <Filter>Source Files\Web</Filter>
+    </None>
+    <None Include="Web\contact.html">
+      <Filter>Source Files\Web</Filter>
+    </None>
+    <None Include="Web\CSS\index.css">
+      <Filter>Source Files\Web\CSS</Filter>
+    </None>
+    <None Include="Web\JS\libraries\libNetwork.js">
+      <Filter>Source Files\Web\JS\libraries</Filter>
+    </None>
+    <None Include="Web\JS\libraries\libVisualisation.js">
+      <Filter>Source Files\Web\JS\libraries</Filter>
+    </None>
+    <None Include="Web\JS\index.js">
+      <Filter>Source Files\Web\JS</Filter>
+    </None>
+    <None Include="Web\API\clients\calibrate.json">
+      <Filter>Source Files\Web\API\clients</Filter>
+    </None>
+    <None Include="Web\API\clients\deregister.json">
+      <Filter>Source Files\Web\API\clients</Filter>
+    </None>
+    <None Include="Web\API\clients\listing.json">
+      <Filter>Source Files\Web\API\clients</Filter>
+    </None>
+    <None Include="Web\API\clients\register.json">
+      <Filter>Source Files\Web\API\clients</Filter>
+    </None>
+    <None Include="Web\API\sensors\data.json">
+      <Filter>Source Files\Web\API\sensors</Filter>
+    </None>
+    <None Include="Web\API\sensors\deregister.json">
+      <Filter>Source Files\Web\API\sensors</Filter>
+    </None>
+    <None Include="Web\API\sensors\register.json">
+      <Filter>Source Files\Web\API\sensors</Filter>
+    </None>
+    <None Include="Web\API\visualisations\calibrate.json">
+      <Filter>Source Files\Web\API\visualisations</Filter>
+    </None>
+    <None Include="Web\API\visualisations\data.json">
+      <Filter>Source Files\Web\API\visualisations</Filter>
+    </None>
+    <None Include="Web\CSS\calibration.css">
+      <Filter>Source Files\Web\CSS</Filter>
+    </None>
+    <None Include="Web\CSS\libraries\bootstrap.min.css">
+      <Filter>Source Files\Web\CSS\libraries</Filter>
+    </None>
+    <None Include="Web\CSS\libraries\bootstrap-theme.min.css">
+      <Filter>Source Files\Web\CSS\libraries</Filter>
+    </None>
+    <None Include="Web\JS\calibration.js">
+      <Filter>Source Files\Web\JS</Filter>
+    </None>
+    <None Include="Web\JS\libraries\bootstrap.min.js">
+      <Filter>Source Files\Web\JS\libraries</Filter>
+    </None>
+    <None Include="Web\JS\libraries\jquery-2.0.3.min.js">
+      <Filter>Source Files\Web\JS\libraries</Filter>
+    </None>
+    <None Include="Web\JS\libraries\kinect\skeleton.js">
+      <Filter>Source Files\Web\JS\libraries\kinect</Filter>
+    </None>
+    <None Include="Web\JS\libraries\workers\comm-worker.js">
+      <Filter>Source Files\Web\JS\libraries\workers</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\three.min.js">
+      <Filter>Source Files\Web\JS\libraries\three</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\controls\EditorControls.js">
+      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\controls\FirstPersonControls.js">
+      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\controls\FlyControls.js">
+      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\controls\OculusControls.js">
+      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\controls\OrbitControls.js">
+      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\controls\PathControls.js">
+      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\controls\PointerLockControls.js">
+      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\controls\TrackballControls.js">
+      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\controls\TransformControls.js">
+      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Algorithms\MinorityViewport.h">
+      <Filter>Header Files\Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\JSON\autolink.h">
+      <Filter>Header Files\Data\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\JSON\config.h">
+      <Filter>Header Files\Data\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\JSON\features.h">
+      <Filter>Header Files\Data\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\JSON\forwards.h">
+      <Filter>Header Files\Data\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\JSON\json.h">
+      <Filter>Header Files\Data\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\JSON\json_batchallocator.h">
+      <Filter>Header Files\Data\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\JSON\reader.h">
+      <Filter>Header Files\Data\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\JSON\value.h">
+      <Filter>Header Files\Data\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\JSON\writer.h">
+      <Filter>Header Files\Data\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\Client.h">
+      <Filter>Header Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\ClientsList.h">
+      <Filter>Header Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\JobsQueue.h">
+      <Filter>Header Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\Joint.h">
+      <Filter>Header Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\Scene.h">
+      <Filter>Header Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\Skeleton.h">
+      <Filter>Header Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\SkeletonsQueue.h">
+      <Filter>Header Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Networks\Connection.h">
+      <Filter>Header Files\Networks</Filter>
+    </ClInclude>
+    <ClInclude Include="Networks\Header.h">
+      <Filter>Header Files\Networks</Filter>
+    </ClInclude>
+    <ClInclude Include="Networks\IOServicePool.h">
+      <Filter>Header Files\Networks</Filter>
+    </ClInclude>
+    <ClInclude Include="Networks\MimeTypes.h">
+      <Filter>Header Files\Networks</Filter>
+    </ClInclude>
+    <ClInclude Include="Networks\Reply.h">
+      <Filter>Header Files\Networks</Filter>
+    </ClInclude>
+    <ClInclude Include="Networks\Request.h">
+      <Filter>Header Files\Networks</Filter>
+    </ClInclude>
+    <ClInclude Include="Networks\RequestHandler.h">
+      <Filter>Header Files\Networks</Filter>
+    </ClInclude>
+    <ClInclude Include="Networks\RequestParser.h">
+      <Filter>Header Files\Networks</Filter>
+    </ClInclude>
+    <ClInclude Include="Networks\Server.h">
+      <Filter>Header Files\Networks</Filter>
+    </ClInclude>
+    <ClInclude Include="MultipleKinectsPlatformServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\Job.h">
+      <Filter>Header Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\Sensor.h">
+      <Filter>Header Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Networks\NTPClient.h">
+      <Filter>Header Files\Networks</Filter>
+    </ClInclude>
+    <ClInclude Include="Misc\Timer.h">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Algorithms\MinorityViewport.cpp">
+      <Filter>Source Files\Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="Data\JSON\json_reader.cpp">
+      <Filter>Header Files\Data\JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="Data\JSON\json_value.cpp">
+      <Filter>Header Files\Data\JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="Data\JSON\json_writer.cpp">
+      <Filter>Header Files\Data\JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="Data\Client.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Data\ClientsList.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Data\JobsQueue.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Data\Joint.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Data\Scene.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Data\Skeleton.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Data\SkeletonsQueue.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Networks\Connection.cpp">
+      <Filter>Source Files\Networks</Filter>
+    </ClCompile>
+    <ClCompile Include="Networks\IOServicePool.cpp">
+      <Filter>Source Files\Networks</Filter>
+    </ClCompile>
+    <ClCompile Include="Networks\MimeTypes.cpp">
+      <Filter>Source Files\Networks</Filter>
+    </ClCompile>
+    <ClCompile Include="Networks\Reply.cpp">
+      <Filter>Source Files\Networks</Filter>
+    </ClCompile>
+    <ClCompile Include="Networks\RequestHandler.cpp">
+      <Filter>Source Files\Networks</Filter>
+    </ClCompile>
+    <ClCompile Include="Networks\RequestParser.cpp">
+      <Filter>Source Files\Networks</Filter>
+    </ClCompile>
+    <ClCompile Include="Networks\Server.cpp">
+      <Filter>Source Files\Networks</Filter>
+    </ClCompile>
+    <ClCompile Include="MultipleKinectsPlatformServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Data\Job.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Data\Sensor.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Networks\NTPClient.cpp">
+      <Filter>Source Files\Networks</Filter>
+    </ClCompile>
+    <ClCompile Include="Misc\Timer.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
