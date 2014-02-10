@@ -20,9 +20,13 @@ var CalibrationPage = {
         this.visualisationCanvas1 = new Visualisation();
 
         var scenes = new Array(2)
-        scenes[0] = { sensorId: null, scene: null };
-        scenes[1] = { sensorId: null, scene: null };
+        scenes[0] = { sensorId: null, scene: null};
+        scenes[1] = { sensorId: null, scene: null};
         jQuery.data(document.body, "scenes", scenes);
+        var sceneSkeletons = new Array(2);
+        sceneSkeletons[0] = [];
+        sceneSkeletons[1] = [];
+        jQuery.data(document.body, "sceneSkeletons", sceneSkeletons);
 
         var lockedScenes = new Array(2)
         lockedScenes[0] = { sensorId: null, scene: null };
@@ -281,7 +285,34 @@ var CalibrationPage = {
     
     /* Scene Reconstruction */
 
-    ReconstructFn : function(scene){
+    ReconstructFn : function(glScene,canvasId){
 
+        /* Choose the right scene from server to draw on the right canvas */
+        var scenesFromServer = jQuery.data(document.body, "scenes");
+        var sceneIdFromCanvasId =  canvasId.split("-")[2];
+        var sceneFromServerToDraw = scenesFromServer[sceneIdFromCanvasId].scene;
+
+        /* Choose the prev skeletons drawn on this scene */
+        var scenesSkeletons = jQuery.data(document.body, "sceneSkeletons");
+        var thisSceneSkeletons = scenesSkeletons[sceneIdFromCanvasId];
+
+        if (sceneFromServerToDraw != null) {
+
+            // Remove all skeletons previously inserted into scene
+            for (var oldSkeleton = 0; oldSkeleton < thisSceneSkeletons.length; oldSkeleton += 1) {
+                glScene.remove(thisSceneSkeletons[oldSkeleton]);
+            }
+
+            for (var skeleton = 0; skeleton < sceneFromServerToDraw["skeletons"].length; skeleton += 1) {
+
+                var skeletonObj = new Skeleton(sceneFromServerToDraw["skeletons"][skeleton]);
+
+                var skeletonGeometry = skeletonObj.getGeometry();
+
+                glScene.add(skeletonGeometry);
+                thisSceneSkeletons.push(skeletonGeometry);
+                jQuery.data(document.body, "sceneSkeletons", thisSceneSkeletons);
+            }
+        }
     }
 };
