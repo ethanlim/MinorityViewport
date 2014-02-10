@@ -225,10 +225,9 @@ var CalibrationPage = {
         // Remember the web worker so that we can shut it down later
         var workerId = callingObj.StartCommunicationWithScene(text);
         var sceneSelectionId = jQuery(li).closest(".scene-selection").attr("id");
-        var arr = sceneSelectionId.split("-");
+        var sceneId = sceneSelectionId.split("-")[2];
 
         var scenes = jQuery.data(document.body, "scenes");
-        sceneId = arr[2];
         scenes[sceneId].sensorId = text;
         jQuery.data(document.body, "scenes", scenes);
 
@@ -292,27 +291,34 @@ var CalibrationPage = {
         var sceneIdFromCanvasId =  canvasId.split("-")[2];
         var sceneFromServerToDraw = scenesFromServer[sceneIdFromCanvasId].scene;
 
-        /* Choose the prev skeletons drawn on this scene */
-        var scenesSkeletons = jQuery.data(document.body, "sceneSkeletons");
-        var thisSceneSkeletons = scenesSkeletons[sceneIdFromCanvasId];
-
         if (sceneFromServerToDraw != null) {
 
+            /* Choose the prev skeletons drawn on this scene */
+            var scenesSkeletons = jQuery.data(document.body, "sceneSkeletons");
+            var thisSceneSkeletons = scenesSkeletons[sceneIdFromCanvasId];
+
             // Remove all skeletons previously inserted into scene
-            for (var oldSkeleton = 0; oldSkeleton < thisSceneSkeletons.length; oldSkeleton += 1) {
-                glScene.remove(thisSceneSkeletons[oldSkeleton]);
+            for (var oldSkeletonGeometry in thisSceneSkeletons) {
+                glScene.remove(thisSceneSkeletons[oldSkeletonGeometry]);
+                thisSceneSkeletons.pop();
             }
 
-            for (var skeleton = 0; skeleton < sceneFromServerToDraw["skeletons"].length; skeleton += 1) {
+            for (var newSkeleton in sceneFromServerToDraw["skeletons"]) {
 
-                var skeletonObj = new Skeleton(sceneFromServerToDraw["skeletons"][skeleton]);
+                var skeletonObj = new Skeleton(sceneFromServerToDraw["skeletons"][newSkeleton]);
 
                 var skeletonGeometry = skeletonObj.getGeometry();
 
                 glScene.add(skeletonGeometry);
+
                 thisSceneSkeletons.push(skeletonGeometry);
-                jQuery.data(document.body, "sceneSkeletons", thisSceneSkeletons);
+                scenesSkeletons[sceneIdFromCanvasId] = thisSceneSkeletons;
+                jQuery.data(document.body, "sceneSkeletons", scenesSkeletons);
             }
+
+            return glScene;
+        } else {
+            return null;
         }
     }
 };

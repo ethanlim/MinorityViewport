@@ -40,8 +40,6 @@ var Visualisation = function Visualisation() {
     */
     this.initCanvasObj = function (canvas_container) {
 
-        this.lastTime = new Date().getTime();
-
         //Statistics
         this.stats = new Stats();
         this.stats.setMode(0); // 0: fps, 1: ms
@@ -114,9 +112,13 @@ var Visualisation = function Visualisation() {
         var visualisation = jQuery.data(document.body, canvas_id);
 
         /* Reconstruct the scene here */
-        visualisation.reconstructFn(visualisation.scene,canvas_id);
+        var newScene = visualisation.reconstructFn(visualisation.scene,canvas_id);
 
-        visualisation.renderer.render(visualisation.scene, visualisation.camera);
+        if (newScene == null) {
+            visualisation.renderer.render(visualisation.scene, visualisation.camera);
+        } else {
+            visualisation.renderer.render(newScene, visualisation.camera);
+        }
 
         // Loop using this special function
         requestAnimationFrame(function(){

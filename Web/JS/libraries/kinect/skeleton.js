@@ -85,18 +85,27 @@ Skeleton.prototype = {
 
     getGeometry: function () {
 
+        var skeleton3DObject = new THREE.Object3D();
+        var multiplier = 100;
+
+        skeleton3DObject.position.set(this._X * multiplier, this._Y * multiplier, (-this._Z) * multiplier /*Kinect's Z axis is positive but Gl is -ve for viewing*/);
+
         /* Requires THREE.js library */
 
-        for (var joint = 0; joint < skeletonObj.joints.length; joint += 1) {
+        for (var joint in this._joints) {
 
-            var jointSphere = new THREE.SphereGeometry(10, 100, 100);
+            var jointSphere = new THREE.SphereGeometry(5, 10, 10);
             var jointMaterial = new THREE.MeshPhongMaterial({ color: 0xffff00 });
 
             var jointGeometry = new THREE.Mesh(jointSphere, jointMaterial);
 
-            jointGeometry.position.x = skeletonObj.joints[joint].X;
-            jointGeometry.position.x = skeletonObj.joints[joint].Y;
-            jointGeometry.position.x = skeletonObj.joints[joint].Z;
+            jointGeometry.position.x = this._joints[joint].X * multiplier;
+            jointGeometry.position.y = this._joints[joint].Y * multiplier;
+            jointGeometry.position.z = (-this._joints[joint].Z) * multiplier;
+
+            skeleton3DObject.add(jointGeometry);
         }
+
+        return skeleton3DObject;
     }
 };
