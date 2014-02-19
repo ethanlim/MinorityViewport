@@ -132,15 +132,17 @@ namespace http {
 	  {
 		  string type = this->request_header_val(req,"Request-Type");
 		  ofstream outputFile(_doc_root+request_path);
+		  MultipleKinectsPlatformServer::Scene *scene;
 		  string Scene_JSON;
 
 		  if(type=="global"){
-			  Scene_JSON = this->_viewport->SceneToJSON(this->_viewport->GetGlobalScene());
-
+			  scene = this->_viewport->GetGlobalScene();
 		  }else if(type == "single"){
 			  string sensorId = this->request_header_val(req,"Sensor-Id");
-			  Scene_JSON = this->_viewport->SceneToJSON(this->_viewport->GetLocalScene(sensorId));
+			  scene = this->_viewport->GetLocalSceneBySensorId(sensorId);
 		  }
+
+		  Scene_JSON = scene->ToJSON();
 
 		  outputFile << Scene_JSON;
 	  }

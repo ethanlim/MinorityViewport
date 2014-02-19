@@ -117,17 +117,13 @@ namespace MultipleKinectsPlatformServer{
 	Scene* MinorityViewport::GetGlobalScene(){
 
 		if(this->_orderedScenes.size()!=0){
-
+			return this->_globalScene;
 		}else{
 			return NULL;
 		}
-		
-		//TODO: Most important algorithm to sitch scenes based on transform matrix
-		Scene *activeScene = NULL;
-		return activeScene;
 	}
 
-	Scene* MinorityViewport::GetLocalScene(string sensorId){
+	Scene* MinorityViewport::GetLocalSceneBySensorId(string sensorId){
 
 		if(this->_clients->Size()>0){
 		
@@ -151,12 +147,4 @@ namespace MultipleKinectsPlatformServer{
 		return NULL;
 	}
 
-	string MinorityViewport::SceneToJSON(Scene* convertingScene){
-
-		if(convertingScene!=NULL){
-			return convertingScene->ToJSON();
-		}else{
-			return "";
-		}
-	}
 }

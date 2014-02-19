@@ -19,27 +19,24 @@ namespace MultipleKinectsPlatformServer{
 
 	class MinorityViewport{
 		private:
+			Timer *_curTime;
 			ClientsList *_clients;
+			Scene* _globalScene;
 
 			vector<Scene*> _orderedScenes;
 			set<Scene*> _scenesSet;
 
-			Timer *_curTime;
-
+			void RefreshScenesSet();
 			void MergeScenes();
 		public:
 			MinorityViewport(Timer *curTime, ClientsList *clients);
 			~MinorityViewport();
 
 			bool CalibrateSceneOrder();
-			string GetClientOrdering();
 			void LoadSkeleton(Skeleton newSkeleton);
 
-			void RefreshScenesSet();
-
 			Scene* GetGlobalScene();
-			Scene* GetLocalScene(string sensorId);
-			string SceneToJSON(Scene* convertingScene);
+			Scene* GetLocalSceneBySensorId(string sensorId);
 	};
 
 }
