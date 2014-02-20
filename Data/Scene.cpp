@@ -81,6 +81,10 @@ namespace MultipleKinectsPlatformServer{
 		this->right = right;
 	}
 
+	void Scene::SetCalibrationSkeleton(Skeleton *calibrationSkeleton){
+		this->calibrationSkeleton = calibrationSkeleton;
+	}
+
 	map<unsigned short,Skeleton> Scene::GetSkeletons(){
 
 		map<unsigned short,Skeleton> tempSkeletonsHolder;

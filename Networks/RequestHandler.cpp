@@ -181,6 +181,32 @@ namespace http {
  		  outputFile << "}";
 	  }
 
+	   /********************************************************/
+	  /*
+		 Endpoint for Browser to Calibrating Scenes
+		 @parameters
+		 string SensorData_JSON
+		 string time_stamp
+	  */
+	  /********************************************************/
+	  if (request_path == "/api/visualisations/calibrate.json")
+	  {
+		  ofstream outputFile(_doc_root+request_path);
+		  MultipleKinectsPlatformServer::Scene *scene;
+		  string Scene_JSON;
+
+		  if(type=="global"){
+			  scene = this->_viewport->GetGlobalScene();
+		  }else if(type == "single"){
+			  string sensorId = this->request_header_val(req,"Sensor-Id");
+			  scene = this->_viewport->GetLocalSceneBySensorId(sensorId);
+		  }
+
+		  Scene_JSON = scene->ToJSON();
+
+		  outputFile << Scene_JSON;
+	  }
+
 	  /********************************************************/
 	  /*
 		 Endpoint for Browser to Get Live Sensor Data
