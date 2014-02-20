@@ -97,6 +97,33 @@ namespace MultipleKinectsPlatformServer{
 		return true;
 	}
 
+	/** 
+	 *   Calibrate the R & T from the two scenes 
+	 *   @return true if computation of R & T matrix is successful
+	 */
+	bool MinorityViewport::CalibrateScenes(unsigned int sceneAOrder,
+										   string skeletonA_json,
+										   unsigned int sceneBOrder,
+										   string skeletonB_json)
+	{
+		bool calibrateSuccess = false;
+		
+		Json::Value skeletonARoot; 
+		Json::Value skeletonBRoot; 
+		Json::Reader reader;
+
+		if (reader.parse(skeletonA_json,skeletonARoot)&&reader.parse(skeletonB_json,skeletonBRoot))
+		{
+			unsigned short idx=0;
+			Skeleton skeletonFromSceneA(skeletonARoot.get("skeleton",NULL),0);
+			Skeleton skeletonFromSceneB(skeletonBRoot.get("skeleton",NULL),0);
+		}else{
+			calibrateSuccess = false;
+		}
+
+		return calibrateSuccess;
+	}
+
 	void MinorityViewport::LoadSkeleton(Skeleton newSkeleton){
 
 		unsigned int clientId = newSkeleton.GetClientId();

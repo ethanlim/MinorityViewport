@@ -170,7 +170,7 @@ namespace http {
 		  outputFile << "{";
 		  outputFile << "\"result\":";
 		  outputFile << "[";
-
+		  
 		  if(this->_viewport->CalibrateSceneOrder()){
 				outputFile << "true";
 	      }else{
@@ -179,6 +179,8 @@ namespace http {
 		 
 		  outputFile << "]";
  		  outputFile << "}";
+
+		  outputFile.close();
 	  }
 
 	   /********************************************************/
@@ -192,7 +194,24 @@ namespace http {
 	  if (request_path == "/api/visualisations/calibrate.json")
 	  {
 		  ofstream outputFile(_doc_root+request_path);
-		  
+		  string sceneAOrder_JSON = this->request_header_val(req,"SCENE_A_ORDER");
+		  string skeletonA_JSON = this->request_header_val(req,"SKELETON_A");
+		  string sceneBOrder_JSON = this->request_header_val(req,"SCENE_B_ORDER");
+		  string skeletonB_JSON = this->request_header_val(req,"SKELETON_B");
+
+		  outputFile << "{";
+		  outputFile << "\"result\":";
+		  outputFile << "[";
+
+		 
+		  if(this->_viewport->CalibrateScenes(std::stoi(sceneAOrder_JSON),skeletonA_JSON,std::stoi(sceneBOrder_JSON),skeletonB_JSON)){
+				outputFile << "true";
+	      }else{
+				outputFile << "false";
+	      }
+
+		  outputFile << "]";
+ 		  outputFile << "}";
 	  }
 
 	  /********************************************************/

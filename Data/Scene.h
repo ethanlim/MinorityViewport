@@ -38,8 +38,9 @@ namespace MultipleKinectsPlatformServer{
 			~Scene();
 
 			unsigned int GetOrdering();
-			void SetOrdering(unsigned int order);
 			bool GetCalibration();
+
+			void SetOrdering(unsigned int order);
 			void SetCalibration(bool calibrated);
 			void SetDimensions(unsigned int x, unsigned int y, unsigned int z);
 			void SetLeftRightScene(Scene *left, Scene *right);

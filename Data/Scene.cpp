@@ -97,7 +97,7 @@ namespace MultipleKinectsPlatformServer{
 
 		return tempSkeletonsHolder;
 	}
-	
+
 	string Scene::ToJSON(){
 		string json;
 

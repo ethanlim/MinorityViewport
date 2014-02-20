@@ -12,6 +12,7 @@
 #include "../Data/Sensor.h"
 #include "../Data/Scene.h"
 #include "../Misc/Timer.h"
+#include "../Data/JSON/json.h"
 
 using namespace std;
 
@@ -33,6 +34,7 @@ namespace MultipleKinectsPlatformServer{
 			~MinorityViewport();
 
 			bool CalibrateSceneOrder();
+			bool CalibrateScenes(unsigned int sceneAOrder,string skeletonA_json,unsigned int sceneBOrder,string skeletonB_json);
 			void LoadSkeleton(Skeleton newSkeleton);
 
 			Scene* GetGlobalScene();
