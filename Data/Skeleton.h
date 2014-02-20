@@ -4,6 +4,7 @@
 #include "JSON/json.h"
 
 #include <vector>
+#include <map>
 #include <mutex>
 #include "Joint.h"
 
@@ -35,6 +36,8 @@ namespace MultipleKinectsPlatformServer{
 			
 			vector<Joint> joints;
 			void SetJoints(vector<Joint> new_joints);
+
+			map<string,double> ComputeCentroid();
 
 			unsigned int GetClientId();
 			string GetSensorId();

@@ -67,6 +67,29 @@ namespace MultipleKinectsPlatformServer{
 
 	}
 
+	map<string,double> Skeleton::ComputeCentroid(){
+
+		map<string,double> Centroid;
+
+		Centroid["X"] = this->pos_x;
+		Centroid["Y"] = this->pos_y;
+		Centroid["Z"] = this->pos_z;
+
+		for(unsigned short joint =0;joint<this->joints.size();joint+=1){
+			Centroid["X"] += this->joints.at(joint).X;
+			Centroid["Y"] += this->joints.at(joint).Y;
+			Centroid["Z"] += this->joints.at(joint).Z;
+		}
+
+		double N = this->joints.size()+1;
+
+		Centroid["X"] = Centroid["X"]/N;
+		Centroid["Y"] = Centroid["Y"]/N;
+		Centroid["Z"] = Centroid["Z"]/N;
+
+		return Centroid;
+	}
+
 	void Skeleton::SetJoints(vector<Joint> new_joints){
 		joints.clear();
 		joints = new_joints;
