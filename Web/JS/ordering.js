@@ -129,7 +129,7 @@ var OrderingPage = {
             $("#calibration-status").css("display", "block");
             $("#calibration-status").text("Calibrating...");
 
-            if (!callingObj.networkClient.calibrateClients()) {
+            if (!callingObj.networkClient.calibrateOrder()) {
 
                 $("#calibration-status").text("Calibration Failed - Skeletons not detected");
 

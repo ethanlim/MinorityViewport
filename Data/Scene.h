@@ -22,6 +22,8 @@ namespace MultipleKinectsPlatformServer{
 			unsigned int _dimensionZ;
 			unsigned int _ordering;
 			bool _calibrated;
+			Scene *left;
+			Scene *right;
 
 			Timer *_curTime;
 			
@@ -35,11 +37,11 @@ namespace MultipleKinectsPlatformServer{
 			~Scene();
 
 			unsigned int GetOrdering();
-			void ResetOrdering();
 			void SetOrdering(unsigned int order);
 			bool GetCalibration();
 			void SetCalibration(bool calibrated);
 			void SetDimensions(unsigned int x, unsigned int y, unsigned int z);
+			void SetLeftRightScene(Scene *left, Scene *right);
 
 			void Update(Skeleton newPerson);
 			void Clear();

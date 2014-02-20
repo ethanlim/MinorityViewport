@@ -49,7 +49,7 @@ namespace MultipleKinectsPlatformServer{
 					
 			Scene *scenePtr = *itr;
 
-			scenePtr->ResetOrdering();
+			scenePtr->SetOrdering(0);
 
 			sortedTimeStamp.push_back(scenePtr->GetFirstSkeletonObservedTime_ms());
 		}
@@ -59,15 +59,37 @@ namespace MultipleKinectsPlatformServer{
 		unsigned int order = 1;
 		for(vector<long>::const_iterator sortedTimeStampItr = sortedTimeStamp.begin();sortedTimeStampItr!=sortedTimeStamp.end();sortedTimeStampItr++){
 			for(set<Scene*>::const_iterator sceneItr = this->_scenesSet.begin();sceneItr!=this->_scenesSet.end();sceneItr++){
-				
+
 				Scene *scenePtr = *sceneItr;
 
 				if(scenePtr->GetFirstSkeletonObservedTime_ms()==*sortedTimeStampItr){
 
 					scenePtr->SetOrdering(order);
 					order+=1;
-
+					
 					this->_orderedScenes.push_back(scenePtr);
+				}
+			}
+		}
+
+		for(vector<Scene*>::iterator orderedSceneItr = this->_orderedScenes.begin();orderedSceneItr!=this->_orderedScenes.end();orderedSceneItr++)
+		{
+			Scene *scenePtr = *orderedSceneItr;
+			vector<Scene*>::iterator next, prev;
+
+			if(this->_orderedScenes.size()>1){
+				if(orderedSceneItr==this->_orderedScenes.begin()){
+					next = orderedSceneItr+1;
+					scenePtr->SetLeftRightScene(NULL,*next);
+				}else if(orderedSceneItr==this->_orderedScenes.end()-1)
+				{
+					prev = orderedSceneItr-1;
+					scenePtr->SetLeftRightScene(*prev,NULL);
+				}else
+				{
+					next = orderedSceneItr+1;
+					prev = orderedSceneItr-1;
+					scenePtr->SetLeftRightScene(*prev,*next);
 				}
 			}
 		}

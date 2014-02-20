@@ -5,24 +5,22 @@ namespace MultipleKinectsPlatformServer{
 	Core::Core(/*Server Address*/string address,/*Server Port*/string port){
 	  try
 	  {
+		this->ReportStatus("Sync Server Time");
 		NTPClient timeClient("sg.pool.ntp.org");
 		long timeFromServer = timeClient.RequestDatetime_UNIX();
 		this->_time = new Timer(timeFromServer);
 		this->_time->Start();
 		
+		this->ReportStatus("Create Key Objects");
 		// Initialise the Client Machine List
 		this->_clientList = new MultipleKinectsPlatformServer::ClientsList(this->_time);
-
 		// Create the jobs queue that process each incoming data from client machines
 		this->_jobQueue = new MultipleKinectsPlatformServer::JobsQueue();
-
 		//Create algorithm that merge the scenes
 		this->_minorityViewport = new MinorityViewport(this->_time,this->_clientList);
 
-		//Initialise the Server with the number of threads
-
 		this->ReportStatus("Server Starting");
-
+		//Initialise the Server with the number of threads
 		string docRoot = "C:\\Users\\ethanlim\\Documents\\Projects\\School\\MultipleKinectsPlatformServer\\Web";
 		std::size_t num_threads = boost::lexical_cast<std::size_t>(20);
 		this->_server = new http::server::server(address, 

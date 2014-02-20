@@ -40,6 +40,16 @@ namespace http {
 		request_path += "index.html";
 	  }
 
+	  /********************************************************/
+	  /*
+		 Endpoint for Sensor Data
+		 @parameters
+		 string SensorData_JSON
+		 string time_stamp
+		 @return
+		 nil
+	  */
+	  /********************************************************/
 	  if(request_path == "/api/sensors/data.json")
 	  {
 		// Get Sensor JSON in the header
@@ -52,6 +62,16 @@ namespace http {
 		}
 	  }
 
+	  /********************************************************/
+	  /*
+		 Endpoint for Client Registration
+		 @parameters
+		 string physical location
+		 string ip address
+		 @return
+		 unsigned int client_id
+	  */
+	  /********************************************************/
 	  if(request_path == "/api/clients/register.json")
 	  {
 		ofstream outputFile(_doc_root+request_path);
@@ -69,6 +89,15 @@ namespace http {
 		outputFile.close();
 	  }
 
+	  /********************************************************/
+	  /*
+		 Endpoint for Client Deregistration
+		 @parameters
+		 string client_id
+		 @return
+		 nil
+	  */
+	  /********************************************************/
 	  if(request_path == "/api/clients/deregister.json")
 	  {
 		string deregisterClientId = this->request_header_val(req,"CLIENT_ID");
@@ -76,6 +105,33 @@ namespace http {
 		this->_client_list->RemoveClient(std::stoi(deregisterClientId));
 	  }
 
+	  /********************************************************/
+	  /*
+		 Endpoint for Sensor Registration
+		 @parameters
+		 string Sensor List 
+		 string clientId
+	  */
+	  /********************************************************/
+	  if(request_path == "/api/sensors/register.json")
+	  {
+		string sensorsList_JSON = this->request_header_val(req,"SENSOR_LIST");
+		unsigned int clientId = std::stoi(this->request_header_val(req,"CLIENT_ID"));
+
+		MultipleKinectsPlatformServer::Client *extractedClient = this->_client_list->At(clientId);
+
+		extractedClient->InitialSensorsList(sensorsList_JSON);
+	  }
+
+	  /********************************************************/
+	  /*
+		 Endpoint for Obtaining Client Listings
+		 @parameters
+		 nil
+		 @return
+		 string client listing
+	  */
+	  /********************************************************/
 	  if(request_path == "/api/clients/listing.json")
 	  {
 		ofstream outputFile(_doc_root+request_path);
@@ -97,21 +153,18 @@ namespace http {
 		outputFile.close();
 	  }
 
-	  if(request_path == "/api/sensors/register.json")
-	  {
-		// Get Sensor Listing 
-		string sensorsList_JSON = this->request_header_val(req,"SENSOR_LIST");
-		unsigned int clientId = std::stoi(this->request_header_val(req,"CLIENT_ID"));
 
-		MultipleKinectsPlatformServer::Client *extractedClient = this->_client_list->At(clientId);
-
-		extractedClient->InitialSensorsList(sensorsList_JSON);
-	  }
 	  
-	  if(request_path == "/api/visualisations/calibrate.json")
+	  /********************************************************/
+	  /*
+		 Endpoint for Browser to Calibrate the Sensors
+		 @parameters
+		 string calibrateType
+		 string time_stamp
+	  */
+	  /********************************************************/
+	  if(request_path == "/api/visualisations/order.json")
 	  {
-		  string calibrateType = this->request_header_val(req,"TYPE");
-
 		  ofstream outputFile(_doc_root+request_path);
 
 		  outputFile << "{";
@@ -128,6 +181,14 @@ namespace http {
  		  outputFile << "}";
 	  }
 
+	  /********************************************************/
+	  /*
+		 Endpoint for Browser to Get Live Sensor Data
+		 @parameters
+		 string SensorData_JSON
+		 string time_stamp
+	  */
+	  /********************************************************/
 	  if (request_path == "/api/visualisations/data.json")
 	  {
 		  string type = this->request_header_val(req,"Request-Type");

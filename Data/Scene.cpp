@@ -58,10 +58,6 @@ namespace MultipleKinectsPlatformServer{
 		return this->_ordering;
 	}
 
-	void Scene::ResetOrdering(){
-		this->SetOrdering(0);
-	}
-
 	void Scene::SetOrdering(unsigned int order){
 		this->_ordering = order;
 	}
@@ -78,6 +74,11 @@ namespace MultipleKinectsPlatformServer{
 		this->_dimensionX = x;
 		this->_dimensionY = y;
 		this->_dimensionZ = z;
+	}
+
+	void Scene::SetLeftRightScene(Scene *left, Scene *right){
+		this->left = left;
+		this->right = right;
 	}
 
 	map<unsigned short,Skeleton> Scene::GetSkeletons(){

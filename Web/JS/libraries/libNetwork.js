@@ -4,7 +4,7 @@ var Network = {
     serverEndpt: null,
     port: 0,
     clientListing_URL: "/api/clients/listing.json",
-    clientCalibration_URL: "/api/visualisations/calibrate.json",
+    clientOrdering_URL: "/api/visualisations/order.json",
     commWorker: null,
     commWorkersId:[],
 
@@ -58,9 +58,9 @@ var Network = {
     *  Initial the calibration of clients
     *  @return clients
     */
-    calibrateClients:function(){
+    calibrateOrder:function(){
         var raw_json = jQuery.ajax({
-            url: this.serverEndpt + ":" + this.port + this.clientCalibration_URL,
+            url: this.serverEndpt + ":" + this.port + this.clientOrdering_URL,
             async: false
         }).responseText;
 
