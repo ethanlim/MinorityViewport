@@ -12,6 +12,7 @@
 #include "../Data/Sensor.h"
 #include "../Data/Scene.h"
 #include "../Misc/Timer.h"
+#include "../Data/JSON/json.h"
 
 using namespace std;
 
@@ -19,27 +20,25 @@ namespace MultipleKinectsPlatformServer{
 
 	class MinorityViewport{
 		private:
+			Timer *_curTime;
 			ClientsList *_clients;
+			Scene* _globalScene;
 
 			vector<Scene*> _orderedScenes;
 			set<Scene*> _scenesSet;
 
-			Timer *_curTime;
-
+			void RefreshScenesSet();
 			void MergeScenes();
 		public:
 			MinorityViewport(Timer *curTime, ClientsList *clients);
 			~MinorityViewport();
 
 			bool CalibrateSceneOrder();
-			string GetClientOrdering();
+			bool CalibrateScenes(unsigned int sceneAOrder,string skeletonA_json,unsigned int sceneBOrder,string skeletonB_json);
 			void LoadSkeleton(Skeleton newSkeleton);
 
-			void RefreshScenesSet();
-
 			Scene* GetGlobalScene();
-			Scene* GetLocalScene(string sensorId);
-			string SceneToJSON(Scene* convertingScene);
+			Scene* GetLocalSceneBySensorId(string sensorId);
 	};
 
 }

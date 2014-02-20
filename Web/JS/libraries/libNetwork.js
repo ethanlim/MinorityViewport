@@ -3,8 +3,9 @@ var Network = {
 
     serverEndpt: null,
     port: 0,
-    clientListing_URL: "/api/clients/listing.json",
-    clientCalibration_URL: "/api/visualisations/calibrate.json",
+    clientListing_URL       : "/api/clients/listing.json",
+    clientOrdering_URL      : "/api/visualisations/order.json",
+    clientCalibration_URL   : "/api/visualisations/calibrate.json",
     commWorker: null,
     commWorkersId:[],
 
@@ -58,9 +59,27 @@ var Network = {
     *  Initial the calibration of clients
     *  @return clients
     */
-    calibrateClients:function(){
+    calibrateOrder:function(){
+        var raw_json = jQuery.ajax({
+            url: this.serverEndpt + ":" + this.port + this.clientOrdering_URL,
+            async: false
+        }).responseText;
+
+        var resultObj = JSON.parse(raw_json);
+
+        return resultObj["result"][0];
+    },
+
+    calibrateScene:function(sceneAOrder,skeletonA,sceneBOrder,skeletonB){
         var raw_json = jQuery.ajax({
             url: this.serverEndpt + ":" + this.port + this.clientCalibration_URL,
+            headers:
+            {
+                SCENE_A_ORDER   : sceneAOrder,
+                SKELETON_A      : JSON.stringify({skeleton:skeletonA}),
+                SCENE_B_ORDER   : sceneBOrder,
+                SKELETON_B      : JSON.stringify({ skeleton: skeletonB})
+            },
             async: false
         }).responseText;
 

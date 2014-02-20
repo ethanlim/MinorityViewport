@@ -6,9 +6,11 @@ var Visualisation = function Visualisation() {
     this.sceneProperties = null;
     this.axes = null,
     this.camera = null,
-    this.renderer =  null,
+    this.renderer = null,
     this.controls = null,
-    this.reconstructFn=null,
+    this.reconstructFn = null,
+
+    this.stats = null;
 
     /**
     *  Begin constructing key elements for graphics
@@ -18,6 +20,7 @@ var Visualisation = function Visualisation() {
 
         this.canvasContainer = document.getElementById(canvas_properties.id);
         this.sceneProperties = scene_properties;
+        this.reconstructFn = reconstuct_fn;
 
         //Div hack to set the dimension
         this.canvasContainer.style.cssFloat = 'left';
@@ -36,6 +39,15 @@ var Visualisation = function Visualisation() {
     *
     */
     this.initCanvasObj = function (canvas_container) {
+
+        //Statistics
+        this.stats = new Stats();
+        this.stats.setMode(0); // 0: fps, 1: ms
+
+        this.stats.domElement.style.position = "relative";
+        this.stats.domElement.style.top = "8%";
+
+        canvas_container.appendChild(this.stats.domElement);
 
         //Scene
         this.scene = new THREE.Scene();
@@ -74,7 +86,7 @@ var Visualisation = function Visualisation() {
         gridXZ.position.set(0, 0, 0);
         this.scene.add(gridXZ);
         
-        //Arrow
+        /* Arrow */
         var origin = new THREE.Vector3(0, 0, 0);
         var length = 100;
 
@@ -97,15 +109,22 @@ var Visualisation = function Visualisation() {
     },
 
     this.render =  function (canvas_id) {
-        var visualisation = jQuery.data(document.body,canvas_id);
-
-        visualisation.renderer.render(visualisation.scene, visualisation.camera);
+        var visualisation = jQuery.data(document.body, canvas_id);
 
         /* Reconstruct the scene here */
+        var newScene = visualisation.reconstructFn(visualisation.scene,canvas_id);
+
+        if (newScene == null) {
+            visualisation.renderer.render(visualisation.scene, visualisation.camera);
+        } else {
+            visualisation.renderer.render(newScene, visualisation.camera);
+        }
 
         // Loop using this special function
         requestAnimationFrame(function(){
             visualisation.render(canvas_id);
         });
+
+        visualisation.stats.update();
     }
 }

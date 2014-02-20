@@ -4,13 +4,13 @@ namespace MultipleKinectsPlatformServer{
 
 	Skeleton::Skeleton(Json::Value raw_skeleton_json,long time_stamp){
 
-		Json::Value joints_json = raw_skeleton_json.get("Joints",NULL);
-		Json::Value client_id = raw_skeleton_json.get("clientId",NULL);
+		Json::Value joints_json = raw_skeleton_json.get("joints",NULL);
+		Json::Value client_id = raw_skeleton_json.get("client_id",NULL);
 		Json::Value pos_x = raw_skeleton_json.get("pos_x",NULL);
 		Json::Value pos_y = raw_skeleton_json.get("pos_y",NULL);
 		Json::Value pos_z = raw_skeleton_json.get("pos_z",NULL);
-		Json::Value sensor_id = raw_skeleton_json.get("sensorId",NULL);
-		Json::Value skeleton_id = raw_skeleton_json.get("skeleton",NULL);
+		Json::Value sensor_id = raw_skeleton_json.get("sensor_id",NULL);
+		Json::Value skeleton_id = raw_skeleton_json.get("skeleton_id",NULL);
 		Json::Value tracking_mode = raw_skeleton_json.get("trackingMode",NULL);
 
 		vector<Joint> newJoints;
@@ -19,15 +19,21 @@ namespace MultipleKinectsPlatformServer{
 
 			Joint::JointType type = (Joint::JointType)joint;
 
-			string trackingMode = joints_json[joint].get("trackedMode",NULL).asString();
+			Json::Value tracking_mode_joint = joints_json[joint].get("trackedMode",NULL);
 			Joint::Mode trackingType;
 
-			if(trackingMode=="Tracked"){
-				trackingType = Joint::Mode::Tracked;
-			}else if(trackingMode=="NotTracked"){
+			if(tracking_mode_joint!=NULL){
+				string trackingMode = joints_json[joint].get("trackedMode",NULL).asString();
+		
+				if(trackingMode=="Tracked"){
+					trackingType = Joint::Mode::Tracked;
+				}else if(trackingMode=="NotTracked"){
+					trackingType = Joint::Mode::NotTracked;
+				}else if(trackingMode=="Inferred"){
+					trackingType = Joint::Mode::Inferred;
+				}
+			}else{
 				trackingType = Joint::Mode::NotTracked;
-			}else if(trackingMode=="Inferred"){
-				trackingType = Joint::Mode::Inferred;
 			}
 
 			Joint newJoint( type,
@@ -42,7 +48,7 @@ namespace MultipleKinectsPlatformServer{
 
 		this->SetJoints(newJoints);
 
-		if(tracking_mode.asString()=="Tracked"){
+		if(tracking_mode!=NULL&&tracking_mode.asString()=="Tracked"){
 			this->TrackingMode = Skeleton::Tracked;
 		}else{
 			this->TrackingMode = Skeleton::PositionOnly;

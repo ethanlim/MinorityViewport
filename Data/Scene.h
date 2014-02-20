@@ -22,6 +22,8 @@ namespace MultipleKinectsPlatformServer{
 			unsigned int _dimensionZ;
 			unsigned int _ordering;
 			bool _calibrated;
+			Scene *left;
+			Scene *right;
 
 			Timer *_curTime;
 			
@@ -30,16 +32,19 @@ namespace MultipleKinectsPlatformServer{
 			thread *refreshThread;
 
 			long _firstSkeletonObservedTime_ms;
+			Skeleton *calibrationSkeleton;
 		public:
 			Scene(string sensorId,Timer *time);
 			~Scene();
 
 			unsigned int GetOrdering();
-			void ResetOrdering();
-			void SetOrdering(unsigned int order);
 			bool GetCalibration();
+
+			void SetOrdering(unsigned int order);
 			void SetCalibration(bool calibrated);
 			void SetDimensions(unsigned int x, unsigned int y, unsigned int z);
+			void SetLeftRightScene(Scene *left, Scene *right);
+			void SetCalibrationSkeleton(Skeleton *skeleton);
 
 			void Update(Skeleton newPerson);
 			void Clear();

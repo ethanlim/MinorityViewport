@@ -49,7 +49,7 @@ namespace MultipleKinectsPlatformServer{
 					
 			Scene *scenePtr = *itr;
 
-			scenePtr->ResetOrdering();
+			scenePtr->SetOrdering(0);
 
 			sortedTimeStamp.push_back(scenePtr->GetFirstSkeletonObservedTime_ms());
 		}
@@ -59,20 +59,69 @@ namespace MultipleKinectsPlatformServer{
 		unsigned int order = 1;
 		for(vector<long>::const_iterator sortedTimeStampItr = sortedTimeStamp.begin();sortedTimeStampItr!=sortedTimeStamp.end();sortedTimeStampItr++){
 			for(set<Scene*>::const_iterator sceneItr = this->_scenesSet.begin();sceneItr!=this->_scenesSet.end();sceneItr++){
-				
+
 				Scene *scenePtr = *sceneItr;
 
 				if(scenePtr->GetFirstSkeletonObservedTime_ms()==*sortedTimeStampItr){
 
 					scenePtr->SetOrdering(order);
 					order+=1;
-
+					
 					this->_orderedScenes.push_back(scenePtr);
+				}
+			}
+		}
+
+		for(vector<Scene*>::iterator orderedSceneItr = this->_orderedScenes.begin();orderedSceneItr!=this->_orderedScenes.end();orderedSceneItr++)
+		{
+			Scene *scenePtr = *orderedSceneItr;
+			vector<Scene*>::iterator next, prev;
+
+			if(this->_orderedScenes.size()>1){
+				if(orderedSceneItr==this->_orderedScenes.begin()){
+					next = orderedSceneItr+1;
+					scenePtr->SetLeftRightScene(NULL,*next);
+				}else if(orderedSceneItr==this->_orderedScenes.end()-1)
+				{
+					prev = orderedSceneItr-1;
+					scenePtr->SetLeftRightScene(*prev,NULL);
+				}else
+				{
+					next = orderedSceneItr+1;
+					prev = orderedSceneItr-1;
+					scenePtr->SetLeftRightScene(*prev,*next);
 				}
 			}
 		}
 		
 		return true;
+	}
+
+	/** 
+	 *   Calibrate the R & T from the two scenes 
+	 *   @return true if computation of R & T matrix is successful
+	 */
+	bool MinorityViewport::CalibrateScenes(unsigned int sceneAOrder,
+										   string skeletonA_json,
+										   unsigned int sceneBOrder,
+										   string skeletonB_json)
+	{
+		bool calibrateSuccess = false;
+		
+		Json::Value skeletonARoot; 
+		Json::Value skeletonBRoot; 
+		Json::Reader reader;
+
+		if (reader.parse(skeletonA_json,skeletonARoot)&&reader.parse(skeletonB_json,skeletonBRoot))
+		{
+			unsigned short idx=0;
+			Skeleton skeletonFromSceneA(skeletonARoot.get("skeleton",NULL),0);
+			Skeleton skeletonFromSceneB(skeletonBRoot.get("skeleton",NULL),0);
+		}else{
+			calibrateSuccess = false;
+		}
+
+		return calibrateSuccess;
 	}
 
 	void MinorityViewport::LoadSkeleton(Skeleton newSkeleton){
@@ -117,17 +166,13 @@ namespace MultipleKinectsPlatformServer{
 	Scene* MinorityViewport::GetGlobalScene(){
 
 		if(this->_orderedScenes.size()!=0){
-
+			return this->_globalScene;
 		}else{
 			return NULL;
 		}
-		
-		//TODO: Most important algorithm to sitch scenes based on transform matrix
-		Scene *activeScene = NULL;
-		return activeScene;
 	}
 
-	Scene* MinorityViewport::GetLocalScene(string sensorId){
+	Scene* MinorityViewport::GetLocalSceneBySensorId(string sensorId){
 
 		if(this->_clients->Size()>0){
 		
@@ -151,12 +196,4 @@ namespace MultipleKinectsPlatformServer{
 		return NULL;
 	}
 
-	string MinorityViewport::SceneToJSON(Scene* convertingScene){
-
-		if(convertingScene!=NULL){
-			return convertingScene->ToJSON();
-		}else{
-			return "";
-		}
-	}
 }

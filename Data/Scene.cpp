@@ -58,10 +58,6 @@ namespace MultipleKinectsPlatformServer{
 		return this->_ordering;
 	}
 
-	void Scene::ResetOrdering(){
-		this->SetOrdering(0);
-	}
-
 	void Scene::SetOrdering(unsigned int order){
 		this->_ordering = order;
 	}
@@ -80,6 +76,15 @@ namespace MultipleKinectsPlatformServer{
 		this->_dimensionZ = z;
 	}
 
+	void Scene::SetLeftRightScene(Scene *left, Scene *right){
+		this->left = left;
+		this->right = right;
+	}
+
+	void Scene::SetCalibrationSkeleton(Skeleton *calibrationSkeleton){
+		this->calibrationSkeleton = calibrationSkeleton;
+	}
+
 	map<unsigned short,Skeleton> Scene::GetSkeletons(){
 
 		map<unsigned short,Skeleton> tempSkeletonsHolder;
@@ -92,7 +97,7 @@ namespace MultipleKinectsPlatformServer{
 
 		return tempSkeletonsHolder;
 	}
-	
+
 	string Scene::ToJSON(){
 		string json;
 
