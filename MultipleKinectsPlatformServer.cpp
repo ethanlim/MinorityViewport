@@ -5,18 +5,19 @@ namespace MultipleKinectsPlatformServer{
 	Core::Core(/*Server Address*/string address,/*Server Port*/string port){
 	  try
 	  {
-		this->ReportStatus("Sync Server Time");
-		NTPClient timeClient("sg.pool.ntp.org");
+		/* Communicate with a centralised time server */
+		this->ReportStatus("Sync with Server Time");
+		NTPClient timeClient("0.pool.ntp.org");
 		long timeFromServer = timeClient.RequestDatetime_UNIX();
 		this->_time = new Timer(timeFromServer);
 		this->_time->Start();
 		
 		this->ReportStatus("Create Key Objects");
-		// Initialise the Client Machine List
+		/* Initialise the Client Machine List */
 		this->_clientList = new MultipleKinectsPlatformServer::ClientsList(this->_time);
-		// Create the jobs queue that process each incoming data from client machines
+		/* Create the jobs queue that process each incoming data from client machines */
 		this->_jobQueue = new MultipleKinectsPlatformServer::JobsQueue();
-		//Create algorithm that merge the scenes
+		/* Create algorithm that merge the scenes */
 		this->_minorityViewport = new MinorityViewport(this->_time,this->_clientList);
 
 		this->ReportStatus("Server Starting");

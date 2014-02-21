@@ -193,6 +193,27 @@
     <None Include="Web\JS\libraries\three\controls\TransformControls.js">
       <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
     </None>
+    <None Include="Web\CSS\ordering.css">
+      <Filter>Source Files\Web\CSS</Filter>
+    </None>
+    <None Include="Web\JS\libraries\kinect\joint.js">
+      <Filter>Source Files\Web\JS\libraries\kinect</Filter>
+    </None>
+    <None Include="Web\JS\libraries\kinect\scene.js">
+      <Filter>Source Files\Web\JS\libraries\kinect</Filter>
+    </None>
+    <None Include="Web\JS\ordering.js">
+      <Filter>Source Files\Web\JS</Filter>
+    </None>
+    <None Include="Web\calibration.html">
+      <Filter>Source Files\Web</Filter>
+    </None>
+    <None Include="Web\index.html">
+      <Filter>Source Files\Web</Filter>
+    </None>
+    <None Include="Web\ordering.html">
+      <Filter>Source Files\Web</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Algorithms\MinorityViewport.h">
