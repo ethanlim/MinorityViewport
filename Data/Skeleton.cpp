@@ -67,6 +67,9 @@ namespace MultipleKinectsPlatformServer{
 
 	}
 
+	/**
+	 *  Returns a 3x1 matrix
+	 */
 	Mat Skeleton::ComputeCentroid(){
 
 		/* 1x3 matrix*/
@@ -74,15 +77,20 @@ namespace MultipleKinectsPlatformServer{
 
 		Mat completeVectorMatrix = this->GetCompletePointsVectorMatrix();
 
-		reduce(completeVectorMatrix,centroid_transpose,0,/*CV_REDUCE_SUM*/0,CV_64F);
+		reduce(completeVectorMatrix,/*Sum into this 1x3 matrix*/centroid_transpose,0,/*CV_REDUCE_SUM*/0);
 
+		//divide by N
 		divide(completeVectorMatrix.rows,centroid_transpose,centroid_transpose);
 
+		//Convert to 3x1 matrix
 		transpose(centroid_transpose,centroid_transpose);
 
 		return centroid_transpose;
 	}
 
+	/**
+	 *	Returns a nx3 matrix that represents all the vector points of the skeleton
+	 */
 	Mat Skeleton::GetCompletePointsVectorMatrix(){
 
 		/* Create a nx3 matrix n is the number of point vectors */

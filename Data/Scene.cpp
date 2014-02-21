@@ -70,6 +70,11 @@ namespace MultipleKinectsPlatformServer{
 		this->_calibrated = calibrated;
 	}
 
+	void Scene::SetRotationTranslationMatrix(Mat R,Mat T){
+		this->RotationMatrix = &R;
+		this->TranslatioMatrix = &T;
+	}
+
 	void Scene::SetDimensions(unsigned int x, unsigned int y, unsigned int z){
 		this->_dimensionX = x;
 		this->_dimensionY = y;

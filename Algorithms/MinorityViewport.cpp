@@ -99,6 +99,10 @@ namespace MultipleKinectsPlatformServer{
 
 	/** 
 	 *   Calibrate the R & T from the two scenes 
+	 *   A = RB+T
+	 *   A is the reference frame
+	 *   B is the body frame
+	 *   R and T is the rotation and translation from B to A
 	 *   @return true if computation of R & T matrix is successful
 	 */
 	bool MinorityViewport::CalibrateScenes(unsigned int sceneAOrder,
@@ -117,11 +121,81 @@ namespace MultipleKinectsPlatformServer{
 			Skeleton skeletonFromSceneA(skeletonARoot.get("skeleton",NULL),0);
 			Skeleton skeletonFromSceneB(skeletonBRoot.get("skeleton",NULL),0);
 
-			vector<Joint> skeletonAJoints = skeletonFromSceneA.joints;
-			vector<Joint> skeletonBJoints = skeletonFromSceneB.joints;
+			/* Regardless of Scene A or Scene B, Matrix A must be the reference frame which is the lower order */
+			Mat A,B,centroidA,centroidB;
+			unsigned int bodyFrameOrder=0;
 
-			Mat centroidA = skeletonFromSceneA.ComputeCentroid();
-			Mat centroidB = skeletonFromSceneB.ComputeCentroid();
+			//scene A is the reference frame
+			if(sceneAOrder<sceneBOrder){
+				//nx3 vector matrix
+				A = skeletonFromSceneA.GetCompletePointsVectorMatrix(); //A
+				B = skeletonFromSceneB.GetCompletePointsVectorMatrix(); //B
+
+				//3x1 centroid matrix
+				centroidA = skeletonFromSceneA.ComputeCentroid();
+				centroidB = skeletonFromSceneB.ComputeCentroid();
+
+				bodyFrameOrder = sceneBOrder;
+			}else{
+			//scene B is the reference frame
+				//nx3 vector matrix
+				A = skeletonFromSceneB.GetCompletePointsVectorMatrix(); //A
+				B = skeletonFromSceneA.GetCompletePointsVectorMatrix(); //B
+
+				//3x1 centroid matrix
+				centroidA = skeletonFromSceneB.ComputeCentroid();
+				centroidB = skeletonFromSceneA.ComputeCentroid();
+
+				bodyFrameOrder = sceneAOrder;
+			}
+
+			//3xn vector matrix
+			Mat At;
+			transpose(A,At); //A transpose
+			Mat Bt;
+			transpose(B,Bt);
+
+			/* Construct the H matrix */
+			Mat H(3, 3, CV_32F, Scalar(0));
+			for(int col=0;col<At.cols;col+=1){
+				Mat matrixACol = At.col(col);	//PAi
+				Mat matrixBCol = Bt.col(col);	//PBi
+
+				Mat subTotalB;
+				subtract(matrixBCol,centroidB,subTotalB);
+				Mat subTotalA;
+				subtract(matrixACol,centroidA,subTotalA);
+				Mat subTotalA_transpose;
+				transpose(subTotalA,subTotalA_transpose);
+
+				Mat subTotal = subTotalB*subTotalA_transpose;
+
+				add(H,subTotal,H,noArray(),CV_32F);
+			}
+
+			/* Perform SVD on H */
+			Mat W,U,Vt,Ut,V;
+			SVD::compute(H,W,U,Vt);
+
+			transpose(Vt,V);
+			transpose(U,Ut);
+
+			/* Compute the Rotation Matrix (3x3) */
+			Mat rotationMatrix=V*Ut;
+
+			/* Compute the Translation Matrix (3x3) */
+			Mat translationMatrix;
+			Mat negativeRMatrix = -1*rotationMatrix;
+
+			negativeRMatrix.convertTo(negativeRMatrix, CV_32F);
+			centroidB.convertTo(centroidB,CV_32F);
+
+			Mat temp = negativeRMatrix * centroidB;
+ 			add(temp,centroidA,translationMatrix,noArray(),CV_32F);
+
+			/* Assign to the R and T to the B scene */
+			Scene *BScene = this->_orderedScenes.at(bodyFrameOrder-1);
+			BScene->SetRotationTranslationMatrix(rotationMatrix,translationMatrix);
 
 			calibrateSuccess = true;
 		}else{

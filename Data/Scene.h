@@ -5,6 +5,11 @@
 #include <mutex>
 #include <thread>
 
+/*********************/
+/*		OPENCV		 */
+/*********************/
+#include <opencv2/core/core.hpp>
+
 #include "Skeleton.h"
 #include "../Misc/Timer.h"
 
@@ -22,8 +27,12 @@ namespace MultipleKinectsPlatformServer{
 			unsigned int _dimensionZ;
 			unsigned int _ordering;
 			bool _calibrated;
+
 			Scene *left;
 			Scene *right;
+
+			Mat *RotationMatrix;
+			Mat *TranslatioMatrix;
 
 			Timer *_curTime;
 			
@@ -45,6 +54,7 @@ namespace MultipleKinectsPlatformServer{
 			void SetDimensions(unsigned int x, unsigned int y, unsigned int z);
 			void SetLeftRightScene(Scene *left, Scene *right);
 			void SetCalibrationSkeleton(Skeleton *skeleton);
+			void SetRotationTranslationMatrix(Mat R,Mat T);
 
 			void Update(Skeleton newPerson);
 			void Clear();

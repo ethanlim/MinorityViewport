@@ -7,7 +7,7 @@ namespace MultipleKinectsPlatformServer{
 	  {
 		/* Communicate with a centralised time server */
 		this->ReportStatus("Sync with Server Time");
-		NTPClient timeClient("0.pool.ntp.org");
+		NTPClient timeClient("2.asia.pool.ntp.org");
 		long timeFromServer = timeClient.RequestDatetime_UNIX();
 		this->_time = new Timer(timeFromServer);
 		this->_time->Start();
@@ -74,7 +74,6 @@ namespace MultipleKinectsPlatformServer{
 			{
 				for(unsigned short skeletons=0;skeletons<root.size();skeletons++){
 					MultipleKinectsPlatformServer::Skeleton newSkeleton(root.get(skeletons,NULL),atol(timeStamp.c_str()));
-					newSkeleton.ComputeCentroid();
 					this->_minorityViewport->LoadSkeleton(newSkeleton);
 				}
 			}

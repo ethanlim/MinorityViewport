@@ -157,10 +157,9 @@ namespace http {
 	  
 	  /********************************************************/
 	  /*
-		 Endpoint for Browser to Calibrate the Sensors
+		 Endpoint for Browser to Get the Order the Sensors
 		 @parameters
-		 string calibrateType
-		 string time_stamp
+		 nil
 	  */
 	  /********************************************************/
 	  if(request_path == "/api/visualisations/order.json")
@@ -187,8 +186,10 @@ namespace http {
 	  /*
 		 Endpoint for Browser to Calibrating Scenes
 		 @parameters
-		 string SensorData_JSON
-		 string time_stamp
+		 string sceneAOrder_JSON 
+		 string skeletonA_JSON 
+		 string sceneBOrder_JSON
+		 string skeletonB_JSON 
 	  */
 	  /********************************************************/
 	  if (request_path == "/api/visualisations/calibrate.json")
@@ -204,7 +205,10 @@ namespace http {
 		  outputFile << "[";
 
 		 
-		  if(this->_viewport->CalibrateScenes(std::stoi(sceneAOrder_JSON),skeletonA_JSON,std::stoi(sceneBOrder_JSON),skeletonB_JSON)){
+		  if(this->_viewport->CalibrateScenes(std::stoi(sceneAOrder_JSON),
+											  skeletonA_JSON,
+											  std::stoi(sceneBOrder_JSON),
+											  skeletonB_JSON)){
 				outputFile << "true";
 	      }else{
 				outputFile << "false";

@@ -303,7 +303,11 @@ var CalibrationPage = {
         var lockedSkeletonsB = lockedScenes[1]["scene"]["skeletons"];
 
         if (lockedSkeletonsA.length > 0  && lockedSkeletonsB.length > 0) {
-            callingObj.networkClient.calibrateScene(sceneAOrder,lockedSkeletonsA[0], sceneBOrder, lockedSkeletonsB[0]);
+            if (callingObj.networkClient.calibrateScene(sceneAOrder, lockedSkeletonsA[0], sceneBOrder, lockedSkeletonsB[0])) {
+                callingObj.UpdateCalibrationMenuStatus("Calibration Succeeded", "success");
+            } else {
+                callingObj.UpdateCalibrationMenuStatus("Calibration Failed", "warning");
+            }
         }
     },
 

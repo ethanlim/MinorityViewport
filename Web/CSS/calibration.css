@@ -11,6 +11,10 @@ body {
     margin-top:20px;
 }
 
+#status-msg {
+    color:white;
+}
+
 #canvas-container-0 > canvas,
 #canvas-container-1 > canvas{
     border:1px solid black;
