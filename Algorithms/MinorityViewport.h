@@ -6,6 +6,11 @@
 #include <vector>
 #include <algorithm>
 
+/*********************/
+/*		OPENCV		 */
+/*********************/
+#include <opencv2/core/core.hpp>
+
 #include "../Data/Client.h"
 #include "../Data/ClientsList.h"
 #include "../Data/Skeleton.h"
@@ -14,6 +19,7 @@
 #include "../Misc/Timer.h"
 #include "../Data/JSON/json.h"
 
+using namespace cv;
 using namespace std;
 
 namespace MultipleKinectsPlatformServer{

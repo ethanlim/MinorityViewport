@@ -67,27 +67,37 @@ namespace MultipleKinectsPlatformServer{
 
 	}
 
-	map<string,double> Skeleton::ComputeCentroid(){
+	Mat Skeleton::ComputeCentroid(){
 
-		map<string,double> Centroid;
+		/* 1x3 matrix*/
+		Mat centroid_transpose(1,3,CV_32F);
 
-		Centroid["X"] = this->pos_x;
-		Centroid["Y"] = this->pos_y;
-		Centroid["Z"] = this->pos_z;
+		Mat completeVectorMatrix = this->GetCompletePointsVectorMatrix();
 
-		for(unsigned short joint =0;joint<this->joints.size();joint+=1){
-			Centroid["X"] += this->joints.at(joint).X;
-			Centroid["Y"] += this->joints.at(joint).Y;
-			Centroid["Z"] += this->joints.at(joint).Z;
+		reduce(completeVectorMatrix,centroid_transpose,0,/*CV_REDUCE_SUM*/0,CV_64F);
+
+		divide(completeVectorMatrix.rows,centroid_transpose,centroid_transpose);
+
+		transpose(centroid_transpose,centroid_transpose);
+
+		return centroid_transpose;
+	}
+
+	Mat Skeleton::GetCompletePointsVectorMatrix(){
+
+		/* Create a nx3 matrix n is the number of point vectors */
+		Mat vectorMatrix = (Mat_<double>(1,3) << this->pos_x, this->pos_y,this->pos_z);
+
+		for(int vectorIdx = 0;vectorIdx<this->joints.size();vectorIdx+=1){
+			
+			Mat row = (Mat_<double>(1,3) <<  this->joints.at(vectorIdx).X, 
+											 this->joints.at(vectorIdx).Y,
+											 this->joints.at(vectorIdx).Z);
+
+			vectorMatrix.push_back(row);
 		}
 
-		double N = this->joints.size()+1;
-
-		Centroid["X"] = Centroid["X"]/N;
-		Centroid["Y"] = Centroid["Y"]/N;
-		Centroid["Z"] = Centroid["Z"]/N;
-
-		return Centroid;
+		return vectorMatrix;
 	}
 
 	void Skeleton::SetJoints(vector<Joint> new_joints){

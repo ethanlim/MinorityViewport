@@ -14,11 +14,6 @@
 #include <boost/lexical_cast.hpp>
 
 /*********************/
-/*		OPENCV		 */
-/*********************/
-#include <opencv2/core/core.hpp>
-
-/*********************/
 /*	PROJECT CLASSES	 */
 /*********************/
 #include "Networks/Server.h"

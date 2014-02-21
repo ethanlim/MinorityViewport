@@ -117,9 +117,11 @@ namespace MultipleKinectsPlatformServer{
 			Skeleton skeletonFromSceneA(skeletonARoot.get("skeleton",NULL),0);
 			Skeleton skeletonFromSceneB(skeletonBRoot.get("skeleton",NULL),0);
 
-			map<string,double> centroidA = skeletonFromSceneA.ComputeCentroid();
-			map<string,double> centroidB = skeletonFromSceneB.ComputeCentroid();
+			vector<Joint> skeletonAJoints = skeletonFromSceneA.joints;
+			vector<Joint> skeletonBJoints = skeletonFromSceneB.joints;
 
+			Mat centroidA = skeletonFromSceneA.ComputeCentroid();
+			Mat centroidB = skeletonFromSceneB.ComputeCentroid();
 
 			calibrateSuccess = true;
 		}else{
