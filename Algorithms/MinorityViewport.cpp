@@ -114,9 +114,16 @@ namespace MultipleKinectsPlatformServer{
 
 		if (reader.parse(skeletonA_json,skeletonARoot)&&reader.parse(skeletonB_json,skeletonBRoot))
 		{
-			unsigned short idx=0;
 			Skeleton skeletonFromSceneA(skeletonARoot.get("skeleton",NULL),0);
 			Skeleton skeletonFromSceneB(skeletonBRoot.get("skeleton",NULL),0);
+
+			vector<Joint> skeletonAJoints = skeletonFromSceneA.joints;
+			vector<Joint> skeletonBJoints = skeletonFromSceneB.joints;
+
+			Mat centroidA = skeletonFromSceneA.ComputeCentroid();
+			Mat centroidB = skeletonFromSceneB.ComputeCentroid();
+
+			calibrateSuccess = true;
 		}else{
 			calibrateSuccess = false;
 		}

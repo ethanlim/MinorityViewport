@@ -3,10 +3,17 @@
 
 #include "JSON/json.h"
 
+/*********************/
+/*		OPENCV		 */
+/*********************/
+#include <opencv2/core/core.hpp>
+
 #include <vector>
+#include <map>
 #include <mutex>
 #include "Joint.h"
 
+using namespace cv;
 using namespace std;
 
 namespace MultipleKinectsPlatformServer{
@@ -35,6 +42,9 @@ namespace MultipleKinectsPlatformServer{
 			
 			vector<Joint> joints;
 			void SetJoints(vector<Joint> new_joints);
+
+			Mat ComputeCentroid();
+			Mat GetCompletePointsVectorMatrix();
 
 			unsigned int GetClientId();
 			string GetSensorId();

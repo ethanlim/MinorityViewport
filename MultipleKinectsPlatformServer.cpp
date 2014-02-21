@@ -73,6 +73,7 @@ namespace MultipleKinectsPlatformServer{
 			{
 				for(unsigned short skeletons=0;skeletons<root.size();skeletons++){
 					MultipleKinectsPlatformServer::Skeleton newSkeleton(root.get(skeletons,NULL),atol(timeStamp.c_str()));
+					newSkeleton.ComputeCentroid();
 					this->_minorityViewport->LoadSkeleton(newSkeleton);
 				}
 			}

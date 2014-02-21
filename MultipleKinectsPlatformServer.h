@@ -5,10 +5,17 @@
 #include <string>
 #include <thread>
 #include <mutex>
+
+/*********************/
+/*		BOOST		*/
+/********************/
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 
+/*********************/
+/*	PROJECT CLASSES	 */
+/*********************/
 #include "Networks/Server.h"
 #include "Data/JobsQueue.h"
 #include "Data/Job.h"
