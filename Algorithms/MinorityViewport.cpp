@@ -7,11 +7,11 @@ namespace MultipleKinectsPlatformServer{
 	MinorityViewport::MinorityViewport(Timer *curTime,ClientsList *clients)
 		:_curTime(curTime),_clients(clients)
 	{
-		
+		this->_mergethread = new thread(&MultipleKinectsPlatformServer::MinorityViewport::MergeScenes,this);
 	}
 
 	MinorityViewport::~MinorityViewport(){
-
+		this->_mergethread->join();
 	}
 
 	/**
@@ -23,7 +23,10 @@ namespace MultipleKinectsPlatformServer{
 		
 		this->RefreshScenesSet();
 
+		this->_orderedSceneMutex.lock();
 		this->_orderedScenes.clear();
+		this->_orderedSceneMutex.unlock();
+
 		unsigned int numOfCalibratedSceneRequired = this->_scenesSet.size(); 
 		unsigned int numOfCalibratedScene = 0;
 
@@ -219,9 +222,20 @@ namespace MultipleKinectsPlatformServer{
 		}
 	}
 
+	/**
+	 * Separate thread to merge scenes
+	 * 
+	 */
 	void MinorityViewport::MergeScenes(){
+		while(1){
+			this->_orderedSceneMutex.lock();
+			vector<Scene*> orderedScenes = this->_orderedScenes;
+			this->_orderedSceneMutex.unlock();
 
-		
+			if(orderedScenes.size()>0){
+
+			}
+		}
 	}
 
 	void MinorityViewport::RefreshScenesSet(){
