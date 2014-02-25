@@ -36,3 +36,8 @@ body {
 .scene-selection > div.btn-group > ul {
     cursor:pointer;
 }
+
+#stats {
+    position: relative; 
+    top: 8%;
+}

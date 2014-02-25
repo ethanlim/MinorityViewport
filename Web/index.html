@@ -5,7 +5,6 @@
 
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
         
         <!-- Core Stylesheet -->
         
@@ -43,9 +42,9 @@
             <div id="canvas-container"></div>
             <div id="sensors" class="panel panel-primary">
                 <div class="panel-heading">
-                    Sensor Info (Count=<span id="sensor-info-count"></span>)
+                    Client Info (Count=<span id="sensor-info-count"></span>)
                 </div>
-                <table id="sensor-info" class="table table-striped">
+                <table id="sensor-info" class="table">
                     <thead>
                         <tr>
                             <th>Client ID</th>
@@ -62,10 +61,13 @@
             </div>
         </div>
         <!-- Core JS Libraries -->
+        <script src="/JS/libraries/libGlobal.js"></script>
          <script src="/JS/libraries/jquery-2.0.3.min.js"></script>
         <script src="/JS/libraries/bootstrap.min.js"></script>
         <script src="/JS/libraries/three/three.min.js"></script>
+        <script src="/JS/libraries/three/stats.min.js"></script>
         <!-- Page Level JS Libraries -->
+        <script src="/JS/libraries/kinect/skeleton.js"></script>
         <script src="/JS/libraries/three/controls/OrbitControls.js"></script>
         <script src="/JS/libraries/libNetwork.js"></script>
         <script src="/JS/libraries/libVisualisation.js"></script>

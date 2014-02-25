@@ -17,7 +17,7 @@ var CalibrationPage = {
 
     Init:function(){
         
-        this.networkClient = Network.initClient("localhost", 1626);
+        this.networkClient = Network.initClient(GlobalVar.hostURL,GlobalVar.port);
         this.visualisationCanvas0 = new Visualisation();
         this.visualisationCanvas1 = new Visualisation();
 
@@ -35,10 +35,10 @@ var CalibrationPage = {
         this.clients = this.networkClient.fetchedConnectedClients();
 
         this.visualisationCanvas0.init({ id: "canvas-container-0", height: "600px", width: "550px" }
-                                       ,{ wireFrameColor: 0x3300FF, backgroundColor: 0xB6B6B4 }
+                                       ,{ wireFrameColor: 0x3300FF, backgroundColor: 0xB6B6B4, float:'left'}
                                        ,this.ReconstructFn);
         this.visualisationCanvas1.init({ id: "canvas-container-1", height: "600px", width: "550px" }
-                                       ,{ wireFrameColor: 0x006600, backgroundColor: 0xB6B6B4 }
+                                       , { wireFrameColor: 0x006600, backgroundColor: 0xB6B6B4, float: 'left' }
                                        ,this.ReconstructFn);
         this.visualisationCanvas0.render("canvas-container-0");
         this.visualisationCanvas1.render("canvas-container-1");

@@ -23,9 +23,10 @@ var Visualisation = function Visualisation() {
         this.reconstructFn = reconstuct_fn;
 
         //Div hack to set the dimension
-        this.canvasContainer.style.cssFloat = 'left';
+        this.canvasContainer.style.cssFloat = scene_properties.float;
         this.canvasContainer.style.width = canvas_properties.width;
         this.canvasContainer.style.height = canvas_properties.height;
+
         this.canvasContainer.width = this.canvasContainer.offsetWidth;
         this.canvasContainer.height = this.canvasContainer.offsetHeight;
 
@@ -43,9 +44,6 @@ var Visualisation = function Visualisation() {
         //Statistics
         this.stats = new Stats();
         this.stats.setMode(0); // 0: fps, 1: ms
-
-        this.stats.domElement.style.position = "relative";
-        this.stats.domElement.style.top = "8%";
 
         canvas_container.appendChild(this.stats.domElement);
 
