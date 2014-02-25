@@ -31,7 +31,7 @@ namespace MultipleKinectsPlatformServer{
 			ClientsList *_clients;
 			Scene *_globalScene;
 			thread *_mergethread;
-			
+
 			mutex _orderedSceneMutex;
 			vector<Scene*> _orderedScenes;
 			set<Scene*> _scenesSet;

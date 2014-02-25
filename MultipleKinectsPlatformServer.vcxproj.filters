@@ -165,7 +165,6 @@
     <None Include="Web\ordering.html">
       <Filter>Source Files\Web</Filter>
     </None>
-    <None Include="Web\sensors\data.json" />
     <None Include="Web\JS\libraries\libGlobal.js">
       <Filter>Source Files\Web\JS\libraries</Filter>
     </None>
@@ -263,6 +262,9 @@
     </ClInclude>
     <ClInclude Include="Graphics\Visualisation.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LinedList.h">
+      <Filter>Header Files\Algorithms</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
