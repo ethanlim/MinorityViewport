@@ -11,14 +11,21 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	void JobsQueue::push(string object,string time_stamp){
+		if(!object.empty()&&!time_stamp.empty()){
+			Job new_incoming_data(object,time_stamp);
 
-		Job new_incoming_data(object,time_stamp);
-
-		this->_jsonQueue->push(new_incoming_data);
+			this->_jsonQueue->push(new_incoming_data);
+		}
 	}
 
 	Job JobsQueue::front(){
-		return this->_jsonQueue->front();
+		Job recvJob("","");
+		try{
+			recvJob = this->_jsonQueue->front();
+		}catch(exception failedRetrieve){
+			return recvJob;
+		}
+		return recvJob;
 	}
 
 	bool JobsQueue::empty(){
