@@ -165,7 +165,6 @@
     <None Include="Web\ordering.html">
       <Filter>Source Files\Web</Filter>
     </None>
-    <None Include="Web\sensors\data.json" />
     <None Include="Web\JS\libraries\libGlobal.js">
       <Filter>Source Files\Web\JS\libraries</Filter>
     </None>
@@ -261,9 +260,6 @@
     <ClInclude Include="Misc\Timer.h">
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Visualisation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Algorithms\MinorityViewport.cpp">
@@ -334,9 +330,6 @@
     </ClCompile>
     <ClCompile Include="Misc\Timer.cpp">
       <Filter>Source Files\Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Visualisation.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
