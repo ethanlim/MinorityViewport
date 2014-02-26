@@ -72,7 +72,9 @@ namespace MultipleKinectsPlatformServer{
 					scenePtr->SetOrdering(order);
 					order+=1;
 					
+					this->_orderedSceneMutex.lock();
 					this->_orderedScenes.push_back(scenePtr);
+					this->_orderedSceneMutex.unlock();
 				}
 			}
 		}
@@ -241,75 +243,89 @@ namespace MultipleKinectsPlatformServer{
 			this->_orderedSceneMutex.unlock();
 
 			if(orderedScenes.size()>0){
-				typedef std::map<unsigned short,Skeleton>::iterator it_type;
-
-				if(orderedScenes.at(0)->GetCalibration()==true){
-					/* Add all skeletons from first scene into the global scene*/
-					map<unsigned short,Skeleton> skeletonsFrom1stScene = orderedScenes.at(0)->GetSkeletons();
+				for(vector<Scene*>::iterator orderedSceneItr = orderedScenes.begin();orderedSceneItr!=orderedScenes.end();orderedSceneItr++){
 					
-					for(it_type firstSceneSkeleton=skeletonsFrom1stScene.begin(); firstSceneSkeleton!= skeletonsFrom1stScene.end();firstSceneSkeleton++) {
-						this->_globalScene->Update(firstSceneSkeleton->first,firstSceneSkeleton->second);
-					}
-				}
+					Scene *scenePtr = *orderedSceneItr;
 
-				for(unsigned int scene=1;scene<this->_orderedScenes.size();scene+=1){
-					
-					if(this->_orderedScenes[scene]->GetCalibration()==true){
+					if(scenePtr->GetCalibration()){
 
-						/* Get the body frame of each scene */
-						map<unsigned short,Skeleton> originalSkeletons = this->_orderedScenes[scene]->GetSkeletons();
-						Mat R = this->_orderedScenes[scene]->GetRMatrix(); //3x3
-						Mat T = this->_orderedScenes[scene]->GetTMatrix(); //3x1
-					
-						/* Transform all the skeletons within body frame to the reference frame (global scene)*/
-						for(it_type bodyFrameSkeleton=originalSkeletons.begin(); bodyFrameSkeleton!= originalSkeletons.end();bodyFrameSkeleton++){
-						
-							Mat B = bodyFrameSkeleton->second.GetCompletePointsVectorMatrix();
-							Mat Bt;		
-							transpose(B,Bt);	//3x21
+						map<unsigned short,Skeleton> originalSkeletons = scenePtr->GetSkeletons();
 
-							Mat Tt;				
-							transpose(T,Tt);
-							Mat TResized(Tt);	//1x3
-						
-							for(int col=0;col<Bt.cols-1;col+=1){
-								TResized.push_back(Tt);			//21x3
+						if(orderedSceneItr==orderedScenes.begin()){
+							/* Reference frame skeletons need not do any transformation */
+							for(map<unsigned short,Skeleton>::iterator firstSceneSkeleton=originalSkeletons.begin(); firstSceneSkeleton!= originalSkeletons.end();firstSceneSkeleton++) {
+								this->_globalScene->Update(firstSceneSkeleton->first,firstSceneSkeleton->second);
 							}
+						}else{
+							/* All body frames skeletons need to be transform to reference frame */
+							Mat R = scenePtr->GetRMatrix(); //3x3
+							Mat T = scenePtr->GetTMatrix(); //3x1
+					
+							/* Transform all the skeletons within body frame to the reference frame (global scene)*/
+							for(map<unsigned short,Skeleton>::iterator bodyFrameSkeleton=originalSkeletons.begin(); bodyFrameSkeleton!= originalSkeletons.end();bodyFrameSkeleton++){
+						
+								Mat translatedSkeletonMatrix = this->TransformSkeletonMatrix(bodyFrameSkeleton->second.GetCompletePointsVectorMatrix(),R,T);
 
-							transpose(TResized,TResized);	//3x21
+								/* Do the comparison with reference frame skeletons and discard skeletons as necessary */
+								map<unsigned short,Skeleton> globalSkeletons = this->_globalScene->GetSkeletons();
+								bool samePerson = false;
+								for(map<unsigned short,Skeleton>::iterator refFrameSkeleton=globalSkeletons.begin(); refFrameSkeleton!=globalSkeletons.end(); refFrameSkeleton++){
 
-							Mat translatedSkeleton;
-							Mat RmulBt;
-							RmulBt = R*Bt;		//3x21
-							add(RmulBt,TResized,translatedSkeleton,noArray(),CV_32F);
+									Mat Areft;
+									transpose(refFrameSkeleton->second.GetCompletePointsVectorMatrix(),Areft); //3x21
 
-							/* Do the comparison with reference frame skeletons and discard skeletons as necessary */
-							map<unsigned short,Skeleton> globalSkeletons = this->_globalScene->GetSkeletons();
-							bool samePerson = false;
-							for(it_type refFrameSkeleton=globalSkeletons.begin(); refFrameSkeleton!=globalSkeletons.end(); refFrameSkeleton++){
+									SVD svd(translatedSkeletonMatrix);
+									Mat pInverse = svd.vt.t()*Mat::diag(1./svd.w)*svd.u.t();	//3x21
+									
+									Mat leastSquare = pInverse*Areft;
 
-								Mat Areft;
-								transpose(refFrameSkeleton->second.GetCompletePointsVectorMatrix(),Areft);
-								Mat disparity = translatedSkeleton-Areft;
-							}
+									transpose(leastSquare,leastSquare);
 
-							if(samePerson){
-
-							}else{
-								// Add into the global scene but if they have same skeleton id
-								unsigned short currentSkeletonId = bodyFrameSkeleton->first;
-								while(globalSkeletons.find(currentSkeletonId)!=globalSkeletons.end()){
-									unsigned short randomSkeletonId = rand() % 100;
-									currentSkeletonId = randomSkeletonId;
+									Mat disparity;
+									subtract(Areft,translatedSkeletonMatrix,disparity,noArray(),CV_64F);
 								}
 
-								this->_globalScene->Update(currentSkeletonId,bodyFrameSkeleton->second);
+								if(samePerson){
+
+								}else{
+									//check that skeleton id do not clash
+									unsigned short currentSkeletonId = bodyFrameSkeleton->first;
+									while(globalSkeletons.find(currentSkeletonId)!=globalSkeletons.end()){
+										currentSkeletonId = rand()%100;;
+									}
+
+									// Add into the global scene
+									this->_globalScene->Update(currentSkeletonId,bodyFrameSkeleton->second);
+								}
 							}
 						}
 					}
 				}
 			}
 		}
+	}
+
+	Mat MinorityViewport::TransformSkeletonMatrix(Mat bodyFramesSkeleton,Mat R, Mat T){
+		Mat B = bodyFramesSkeleton;
+		Mat Bt;		
+		transpose(B,Bt);	//3x21
+
+		Mat Tt;				
+		transpose(T,Tt);
+		Mat TResized(Tt);	//1x3
+						
+		for(int col=0;col<Bt.cols-1;col+=1){
+			TResized.push_back(Tt);			//21x3
+		}
+
+		transpose(TResized,TResized);	//3x21
+
+		Mat translatedMatrix;	//3x21
+		Mat RmulBt;
+		RmulBt = R*Bt;		//3x21
+		add(RmulBt,TResized,translatedMatrix,noArray(),CV_32F);
+
+		return translatedMatrix;	//3x21
 	}
 
 	void MinorityViewport::RefreshScenesSet(){

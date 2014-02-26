@@ -38,6 +38,7 @@ namespace MultipleKinectsPlatformServer{
 
 			void RefreshScenesSet();
 			void MergeScenes();
+			Mat TransformSkeletonMatrix(Mat bodyFramesSkeleton,Mat R, Mat T);
 		public:
 			MinorityViewport(Timer *curTime, ClientsList *clients);
 			~MinorityViewport();
