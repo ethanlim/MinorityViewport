@@ -190,7 +190,7 @@ namespace MultipleKinectsPlatformServer{
 			/* Compute the Rotation Matrix (3x3) */
 			Mat rotationMatrix=V*Ut;
 
-			/* Compute the Translation Matrix (3x3) */
+			/* Compute the Translation Matrix (3x1) */
 			Mat translationMatrix;
 			Mat negativeRMatrix = -1*rotationMatrix;
 
@@ -241,7 +241,73 @@ namespace MultipleKinectsPlatformServer{
 			this->_orderedSceneMutex.unlock();
 
 			if(orderedScenes.size()>0){
+				typedef std::map<unsigned short,Skeleton>::iterator it_type;
 
+				if(orderedScenes.at(0)->GetCalibration()==true){
+					/* Add all skeletons from first scene into the global scene*/
+					map<unsigned short,Skeleton> skeletonsFrom1stScene = orderedScenes.at(0)->GetSkeletons();
+					
+					for(it_type firstSceneSkeleton=skeletonsFrom1stScene.begin(); firstSceneSkeleton!= skeletonsFrom1stScene.end();firstSceneSkeleton++) {
+						this->_globalScene->Update(firstSceneSkeleton->first,firstSceneSkeleton->second);
+					}
+				}
+
+				for(unsigned int scene=1;scene<this->_orderedScenes.size();scene+=1){
+					
+					if(this->_orderedScenes[scene]->GetCalibration()==true){
+
+						/* Get the body frame of each scene */
+						map<unsigned short,Skeleton> originalSkeletons = this->_orderedScenes[scene]->GetSkeletons();
+						Mat R = this->_orderedScenes[scene]->GetRMatrix(); //3x3
+						Mat T = this->_orderedScenes[scene]->GetTMatrix(); //3x1
+					
+						/* Transform all the skeletons within body frame to the reference frame (global scene)*/
+						for(it_type bodyFrameSkeleton=originalSkeletons.begin(); bodyFrameSkeleton!= originalSkeletons.end();bodyFrameSkeleton++){
+						
+							Mat B = bodyFrameSkeleton->second.GetCompletePointsVectorMatrix();
+							Mat Bt;		
+							transpose(B,Bt);	//3x21
+
+							Mat Tt;				
+							transpose(T,Tt);
+							Mat TResized(Tt);	//1x3
+						
+							for(int col=0;col<Bt.cols-1;col+=1){
+								TResized.push_back(Tt);			//21x3
+							}
+
+							transpose(TResized,TResized);	//3x21
+
+							Mat translatedSkeleton;
+							Mat RmulBt;
+							RmulBt = R*Bt;		//3x21
+							add(RmulBt,TResized,translatedSkeleton,noArray(),CV_32F);
+
+							/* Do the comparison with reference frame skeletons and discard skeletons as necessary */
+							map<unsigned short,Skeleton> globalSkeletons = this->_globalScene->GetSkeletons();
+							bool samePerson = false;
+							for(it_type refFrameSkeleton=globalSkeletons.begin(); refFrameSkeleton!=globalSkeletons.end(); refFrameSkeleton++){
+
+								Mat Areft;
+								transpose(refFrameSkeleton->second.GetCompletePointsVectorMatrix(),Areft);
+								Mat disparity = translatedSkeleton-Areft;
+							}
+
+							if(samePerson){
+
+							}else{
+								// Add into the global scene but if they have same skeleton id
+								unsigned short currentSkeletonId = bodyFrameSkeleton->first;
+								while(globalSkeletons.find(currentSkeletonId)!=globalSkeletons.end()){
+									unsigned short randomSkeletonId = rand() % 100;
+									currentSkeletonId = randomSkeletonId;
+								}
+
+								this->_globalScene->Update(currentSkeletonId,bodyFrameSkeleton->second);
+							}
+						}
+					}
+				}
 			}
 		}
 	}
