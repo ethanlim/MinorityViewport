@@ -19,9 +19,7 @@ namespace MultipleKinectsPlatformServer{
 			JobsQueue();
 			~JobsQueue();
 			void push(string raw_json,string time_stamp);
-			Job front();
-			bool empty();
-			void pop();
+			Job get();
 	};
 }
 

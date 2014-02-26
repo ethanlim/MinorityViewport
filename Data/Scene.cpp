@@ -8,7 +8,7 @@ namespace MultipleKinectsPlatformServer{
 		_dimensionY(0),
 		_dimensionZ(0),
 		_curTime(time),
-		_refreshRate_ms(1000),
+		_refreshRate_ms(10000),
 		_firstSkeletonObservedTime_ms(0)
 		,_ordering(0),
 		_calibrated(false)
@@ -22,7 +22,7 @@ namespace MultipleKinectsPlatformServer{
 		_dimensionY(dim_y),
 		_dimensionZ(dim_z),
 		_curTime(time),
-		_refreshRate_ms(1000),
+		_refreshRate_ms(10000),
 		_firstSkeletonObservedTime_ms(0)
 		,_ordering(0),
 		_calibrated(false)
@@ -33,20 +33,18 @@ namespace MultipleKinectsPlatformServer{
 	Scene::~Scene(){
 	}
 
-	void Scene::Update(Skeleton newPerson){
+	void Scene::Update(unsigned short serverSkeletonId, Skeleton newPerson){
 		
-		unsigned short skeletonId = newPerson.GetSkeletonId();
-
+		// Tracked the 1st time sensor observe a skeleton, used for ordering sensors
 		if(this->_firstSkeletonObservedTime_ms==0&&this->_skeletons.size()==0){
 			this->_firstSkeletonObservedTime_ms = this->_curTime->GetTicks_ms();
 		}
 
 		this->_sceneMutex.lock();
 
-		this->_skeletons.erase(skeletonId);
-
-		this->_skeletons.insert(std::pair<unsigned short,Skeleton>(skeletonId,newPerson));
-	
+		this->_skeletons.erase(serverSkeletonId);
+		this->_skeletons.insert(std::pair<unsigned short,Skeleton>(serverSkeletonId,newPerson));
+		
 		this->_sceneMutex.unlock();
 	}
 
@@ -93,8 +91,8 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	void Scene::SetRotationTranslationMatrix(Mat R,Mat T){
-		this->RotationMatrix = &R;
-		this->TranslatioMatrix = &T;
+		this->RotationMatrix = R;
+		this->TranslationMatrix = T;
 	}
 
 	void Scene::SetDimensions(unsigned int x, unsigned int y, unsigned int z){
@@ -110,6 +108,14 @@ namespace MultipleKinectsPlatformServer{
 
 	void Scene::SetCalibrationSkeleton(Skeleton *calibrationSkeleton){
 		this->calibrationSkeleton = calibrationSkeleton;
+	}
+
+	Mat Scene::GetRMatrix(){
+		return this->RotationMatrix;
+	}
+	
+	Mat Scene::GetTMatrix(){
+		return this->TranslationMatrix;
 	}
 
 	map<unsigned short,Skeleton> Scene::GetSkeletons(){

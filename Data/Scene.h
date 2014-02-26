@@ -20,7 +20,8 @@ namespace MultipleKinectsPlatformServer{
 	class Scene{
 		private:
 			string _sensorId;
-
+			
+			// id given by server
 			map<unsigned short,Skeleton> _skeletons;
 			unsigned int _dimensionX;
 			unsigned int _dimensionY;
@@ -31,8 +32,8 @@ namespace MultipleKinectsPlatformServer{
 			Scene *left;
 			Scene *right;
 
-			Mat *RotationMatrix;
-			Mat *TranslatioMatrix;
+			Mat RotationMatrix;
+			Mat TranslationMatrix;
 
 			Timer *_curTime;
 			
@@ -56,8 +57,10 @@ namespace MultipleKinectsPlatformServer{
 			void SetLeftRightScene(Scene *left, Scene *right);
 			void SetCalibrationSkeleton(Skeleton *skeleton);
 			void SetRotationTranslationMatrix(Mat R,Mat T);
+			Mat GetRMatrix();
+			Mat GetTMatrix();
 
-			void Update(Skeleton newPerson);
+			void Update(unsigned short serverSkeletonId, Skeleton newPerson);
 			void Clear();
 			long GetFirstSkeletonObservedTime_ms();
 

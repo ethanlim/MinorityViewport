@@ -21,7 +21,7 @@ namespace MultipleKinectsPlatformServer{
 	class Skeleton{
 		private:
 			unsigned int client_id;
-			unsigned short skeleton_id;
+			unsigned short skeleton_id;	//id given by sensor
 			string sensor_id;
 			long time_stamp;
 
@@ -49,7 +49,7 @@ namespace MultipleKinectsPlatformServer{
 			unsigned int GetClientId();
 			string GetSensorId();
 			unsigned short GetSkeletonId();
-
+			
 			string ToJSON();
 	};
 }

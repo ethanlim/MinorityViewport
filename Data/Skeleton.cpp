@@ -105,6 +105,8 @@ namespace MultipleKinectsPlatformServer{
 			vectorMatrix.push_back(row);
 		}
 
+		vectorMatrix.convertTo(vectorMatrix,CV_32F);
+
 		return vectorMatrix;
 	}
 

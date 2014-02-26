@@ -18,7 +18,7 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	void Sensor::UpdateScene(Skeleton person){
-		this->_scene->Update(person);
+		this->_scene->Update(person.GetSkeletonId(),person);
 	}
 
 	Scene* Sensor::GetScene(){
