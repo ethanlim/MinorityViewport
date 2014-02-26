@@ -9,10 +9,11 @@ namespace MultipleKinectsPlatformServer{
 	{
 		//Create the global scene
 		this->_globalScene = new Scene(10,10,10,curTime);
+		this->_mergethread = new thread(&MultipleKinectsPlatformServer::MinorityViewport::MergeScenes,this);
 	}
 
 	MinorityViewport::~MinorityViewport(){
-
+		this->_mergethread->join();
 	}
 
 	/**
@@ -24,7 +25,10 @@ namespace MultipleKinectsPlatformServer{
 		
 		this->RefreshScenesSet();
 
+		this->_orderedSceneMutex.lock();
 		this->_orderedScenes.clear();
+		this->_orderedSceneMutex.unlock();
+
 		unsigned int numOfCalibratedSceneRequired = this->_scenesSet.size(); 
 		unsigned int numOfCalibratedScene = 0;
 
@@ -117,14 +121,14 @@ namespace MultipleKinectsPlatformServer{
 		Json::Value skeletonBRoot; 
 		Json::Reader reader;
 
-		if (reader.parse(skeletonA_json,skeletonARoot)&&reader.parse(skeletonB_json,skeletonBRoot))
+		if (this->_orderedScenes.size()>0&&reader.parse(skeletonA_json,skeletonARoot)&&reader.parse(skeletonB_json,skeletonBRoot))
 		{
 			Skeleton skeletonFromSceneA(skeletonARoot.get("skeleton",NULL),0);
 			Skeleton skeletonFromSceneB(skeletonBRoot.get("skeleton",NULL),0);
 
 			/* Regardless of Scene A or Scene B, Matrix A must be the reference frame which is the lower order */
 			Mat A,B,centroidA,centroidB;
-			unsigned int bodyFrameOrder=0;
+			unsigned int bodyFrameOrder=0,refFrameOrder=0;
 
 			//scene A is the reference frame
 			if(sceneAOrder<sceneBOrder){
@@ -136,6 +140,7 @@ namespace MultipleKinectsPlatformServer{
 				centroidA = skeletonFromSceneA.ComputeCentroid();
 				centroidB = skeletonFromSceneB.ComputeCentroid();
 
+				refFrameOrder = sceneAOrder;
 				bodyFrameOrder = sceneBOrder;
 			}else{
 			//scene B is the reference frame
@@ -147,6 +152,7 @@ namespace MultipleKinectsPlatformServer{
 				centroidA = skeletonFromSceneB.ComputeCentroid();
 				centroidB = skeletonFromSceneA.ComputeCentroid();
 
+				refFrameOrder = sceneBOrder;
 				bodyFrameOrder = sceneAOrder;
 			}
 
@@ -195,9 +201,13 @@ namespace MultipleKinectsPlatformServer{
  			add(temp,centroidA,translationMatrix,noArray(),CV_32F);
 
 			/* Assign to the R and T to the B scene */
-			Scene *BScene = this->_orderedScenes.at(bodyFrameOrder-1);
-			BScene->SetRotationTranslationMatrix(rotationMatrix,translationMatrix);
+			Scene *bodyFrameScene = this->_orderedScenes.at(bodyFrameOrder-1);
+			bodyFrameScene->SetRotationTranslationMatrix(rotationMatrix,translationMatrix);
 
+			Scene *refFrameScene = this->_orderedScenes.at(refFrameOrder-1);
+
+			bodyFrameScene->SetCalibration(true);
+			refFrameScene->SetCalibration(true);
 			calibrateSuccess = true;
 		}else{
 			calibrateSuccess = false;
@@ -220,9 +230,20 @@ namespace MultipleKinectsPlatformServer{
 		}
 	}
 
+	/**
+	 * Separate thread to merge scenes
+	 * 
+	 */
 	void MinorityViewport::MergeScenes(){
+		while(1){
+			this->_orderedSceneMutex.lock();
+			vector<Scene*> orderedScenes = this->_orderedScenes;
+			this->_orderedSceneMutex.unlock();
 
-		
+			if(orderedScenes.size()>0){
+
+			}
+		}
 	}
 
 	void MinorityViewport::RefreshScenesSet(){

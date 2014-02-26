@@ -81,19 +81,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="index.html" />
-    <None Include="Data\JSON\json_internalarray.inl">
-      <Filter>Header Files\Data\JSON</Filter>
-    </None>
-    <None Include="Data\JSON\json_internalmap.inl">
-      <Filter>Header Files\Data\JSON</Filter>
-    </None>
-    <None Include="Data\JSON\json_valueiterator.inl">
-      <Filter>Header Files\Data\JSON</Filter>
-    </None>
-    <None Include="Data\JSON\sconscript">
-      <Filter>Header Files\Data\JSON</Filter>
-    </None>
     <None Include="Web\about.html">
       <Filter>Source Files\Web</Filter>
     </None>
@@ -112,9 +99,6 @@
     <None Include="Web\JS\index.js">
       <Filter>Source Files\Web\JS</Filter>
     </None>
-    <None Include="Web\API\clients\calibrate.json">
-      <Filter>Source Files\Web\API\clients</Filter>
-    </None>
     <None Include="Web\API\clients\deregister.json">
       <Filter>Source Files\Web\API\clients</Filter>
     </None>
@@ -132,12 +116,6 @@
     </None>
     <None Include="Web\API\sensors\register.json">
       <Filter>Source Files\Web\API\sensors</Filter>
-    </None>
-    <None Include="Web\API\visualisations\calibrate.json">
-      <Filter>Source Files\Web\API\visualisations</Filter>
-    </None>
-    <None Include="Web\API\visualisations\data.json">
-      <Filter>Source Files\Web\API\visualisations</Filter>
     </None>
     <None Include="Web\CSS\calibration.css">
       <Filter>Source Files\Web\CSS</Filter>
@@ -166,33 +144,6 @@
     <None Include="Web\JS\libraries\three\three.min.js">
       <Filter>Source Files\Web\JS\libraries\three</Filter>
     </None>
-    <None Include="Web\JS\libraries\three\controls\EditorControls.js">
-      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
-    </None>
-    <None Include="Web\JS\libraries\three\controls\FirstPersonControls.js">
-      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
-    </None>
-    <None Include="Web\JS\libraries\three\controls\FlyControls.js">
-      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
-    </None>
-    <None Include="Web\JS\libraries\three\controls\OculusControls.js">
-      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
-    </None>
-    <None Include="Web\JS\libraries\three\controls\OrbitControls.js">
-      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
-    </None>
-    <None Include="Web\JS\libraries\three\controls\PathControls.js">
-      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
-    </None>
-    <None Include="Web\JS\libraries\three\controls\PointerLockControls.js">
-      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
-    </None>
-    <None Include="Web\JS\libraries\three\controls\TrackballControls.js">
-      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
-    </None>
-    <None Include="Web\JS\libraries\three\controls\TransformControls.js">
-      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
-    </None>
     <None Include="Web\CSS\ordering.css">
       <Filter>Source Files\Web\CSS</Filter>
     </None>
@@ -214,6 +165,9 @@
     <None Include="Web\ordering.html">
       <Filter>Source Files\Web</Filter>
     </None>
+    <None Include="Web\JS\libraries\libGlobal.js">
+      <Filter>Source Files\Web\JS\libraries</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Algorithms\MinorityViewport.h">
@@ -232,9 +186,6 @@
       <Filter>Header Files\Data\JSON</Filter>
     </ClInclude>
     <ClInclude Include="Data\JSON\json.h">
-      <Filter>Header Files\Data\JSON</Filter>
-    </ClInclude>
-    <ClInclude Include="Data\JSON\json_batchallocator.h">
       <Filter>Header Files\Data\JSON</Filter>
     </ClInclude>
     <ClInclude Include="Data\JSON\reader.h">

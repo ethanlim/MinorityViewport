@@ -5,7 +5,6 @@
 
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
         
         <!-- Core Stylesheet -->
         
@@ -71,7 +70,7 @@
                 </div>
                 <div class="row">
                       <div id="canvas-container-0-scene-select" class="scene-selection col-md-5">
-                        <span class="label label-primary">Scene A</span>
+                        <span class="label label-primary">Reference Frame</span>
                         <div class="btn-group">
                             <button type="button" class="btn btn-default" disabled="disabled">No Sensor Selected</button>
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -80,7 +79,7 @@
                         </div>
                       </div>
                       <div id="canvas-container-1-scene-select" class="scene-selection col-md-6">
-                        <span class="label label-primary">Scene B</span>
+                        <span class="label label-primary">Body Frame</span>
                         <div class="btn-group">
                             <button type="button" class="btn btn-default" disabled="disabled">No Sensor Selected</button>
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -98,15 +97,16 @@
               </div>
             </div>
             <div id="canvas-container-0">
-                <span class="label label-primary">Scene A</span>
+                <span class="label label-primary">Reference Frame</span>
                 <span id="canvas-container-0-scene-status" class="label label-primary">Sensor Id</span>
             </div>
             <div id="canvas-container-1">
-                <span class="label label-primary">Scene B</span>
+                <span class="label label-primary">Body Frame</span>
                 <span id="canvas-container-1-scene-status" class="label label-primary">Sensor Id</span>
             </div>
         </div>
         <!-- Core JS Libraries -->
+        <script src="/JS/libraries/libGlobal.js"></script>
         <script src="/JS/libraries/jquery-2.0.3.min.js"></script>
         <script src="/JS/libraries/bootstrap.min.js"></script>
         <script src="/JS/libraries/three/three.min.js"></script>

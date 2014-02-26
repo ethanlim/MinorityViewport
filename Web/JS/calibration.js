@@ -17,7 +17,7 @@ var CalibrationPage = {
 
     Init:function(){
         
-        this.networkClient = Network.initClient("localhost", 1626);
+        this.networkClient = Network.initClient(GlobalVar.hostURL,GlobalVar.port);
         this.visualisationCanvas0 = new Visualisation();
         this.visualisationCanvas1 = new Visualisation();
 
@@ -30,16 +30,15 @@ var CalibrationPage = {
         sceneSkeletons[1] = [];
         jQuery.data(document.body, "sceneSkeletons", sceneSkeletons);
 
-       
         this.Diagnostic();
 
         this.clients = this.networkClient.fetchedConnectedClients();
 
         this.visualisationCanvas0.init({ id: "canvas-container-0", height: "600px", width: "550px" }
-                                       ,{ wireFrameColor: 0x3300FF, backgroundColor: 0xB6B6B4 }
+                                       ,{ wireFrameColor: 0x3300FF, backgroundColor: 0xB6B6B4, float:'left'}
                                        ,this.ReconstructFn);
         this.visualisationCanvas1.init({ id: "canvas-container-1", height: "600px", width: "550px" }
-                                       ,{ wireFrameColor: 0x006600, backgroundColor: 0xB6B6B4 }
+                                       , { wireFrameColor: 0x006600, backgroundColor: 0xB6B6B4, float: 'left' }
                                        ,this.ReconstructFn);
         this.visualisationCanvas0.render("canvas-container-0");
         this.visualisationCanvas1.render("canvas-container-1");
@@ -241,16 +240,24 @@ var CalibrationPage = {
         var responseData = event.data.msg;
 
         if (responseType == "data") {
-            
-            var sceneFromServer = JSON.parse(responseData);
 
-            var sensorId = sceneFromServer["sensorId"];
-            var scenes = jQuery.data(document.body,"scenes");
+            var scenes = jQuery.data(document.body, "scenes");
 
-            for (var sceneNo = 0;sceneNo<scenes.length; sceneNo += 1) {
-                if (scenes[sceneNo].sensorId == sensorId) {
-                    scenes[sceneNo].scene = sceneFromServer;
-                    jQuery.data(document.body, "scenes", scenes);
+            if (responseData != "") {
+                var sceneFromServer = JSON.parse(responseData);
+
+                var sensorId = sceneFromServer["sensorId"];
+              
+                for (var sceneNo = 0; sceneNo < scenes.length; sceneNo += 1) {
+                    if (scenes[sceneNo].sensorId == sensorId) {
+                        scenes[sceneNo].scene = sceneFromServer;
+                        jQuery.data(document.body, "scenes", scenes);
+                    }
+                }
+            } else {
+                for (var sceneNo = 0; sceneNo < scenes.length; sceneNo += 1) {
+                        scenes[sceneNo].scene = null;
+                        jQuery.data(document.body, "scenes", scenes);
                 }
             }
         }
@@ -259,6 +266,7 @@ var CalibrationPage = {
     LockBtnHandler: function(event){
         var callingObj = event.data.callingObj;
         var lockBtn = event.currentTarget;
+
 
         if (!callingObj.lockBtnToggle) {
             jQuery(lockBtn).removeClass("btn-default");
@@ -305,6 +313,19 @@ var CalibrationPage = {
         if (lockedSkeletonsA.length > 0  && lockedSkeletonsB.length > 0) {
             if (callingObj.networkClient.calibrateScene(sceneAOrder, lockedSkeletonsA[0], sceneBOrder, lockedSkeletonsB[0])) {
                 callingObj.UpdateCalibrationMenuStatus("Calibration Succeeded", "success");
+                
+                sensorAId = lockedSkeletonsA[0]["sensor_id"];
+                sensorBId = lockedSkeletonsB[0]["sensor_id"];
+
+                jQuery("#sensor-info > tbody > tr").each(function () {
+                    var id = jQuery(this).attr('id');
+                    if (id == sensorAId) {
+                        jQuery(this.cells[4]).text("true");
+                    } else if (id == sensorBId) {
+                        jQuery(this.cells[4]).text("true");
+                    }
+                });
+
             } else {
                 callingObj.UpdateCalibrationMenuStatus("Calibration Failed", "warning");
             }
@@ -322,13 +343,9 @@ var CalibrationPage = {
 
             var lockedScenes = JSON.parse(localStorage.getItem("lockedScenes"));
 
-            if (lockedSkeletonsA.length > 0){
+            if (lockedSkeletonsB.length > 0 && lockedSkeletonsA.length > 0) {
+                
                 lockedScenes[0] = activeScenes[0];
-
-                localStorage.setItem("lockedScenes", JSON.stringify(lockedScenes));
-            }
-
-            if (lockedSkeletonsB.length > 0) {
                 lockedScenes[1] = activeScenes[1];
 
                 localStorage.setItem("lockedScenes", JSON.stringify(lockedScenes));
@@ -344,7 +361,6 @@ var CalibrationPage = {
 
                 clearInterval(callingObj.automaticSkeletonTimeoutVar);
             }
-
         }
     },
     

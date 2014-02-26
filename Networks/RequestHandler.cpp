@@ -240,7 +240,9 @@ namespace http {
 			  scene = this->_viewport->GetLocalSceneBySensorId(sensorId);
 		  }
 
-		  Scene_JSON = scene->ToJSON();
+		  if(scene!=NULL){
+			Scene_JSON = scene->ToJSON();
+		  }
 
 		  outputFile << Scene_JSON;
 	  }

@@ -9,18 +9,19 @@ jQuery(document).ready(function () {
 var IndexPage = {
 
     networkClient: null,
-    visualisationClient:null,
+    visualisationCanvas: null,
 
     Init: function () {
-        this.networkClient = Network.initClient("localhost", 1626),
-        this.visualisation = Visualisation.init("canvas-container");
-
-        if (this.networkClient || this.visualisation) {
-            console.log("Libraries Initialisation Successful");
-        }
+        this.networkClient = Network.initClient(GlobalVar.hostURL,GlobalVar.port),
+        this.visualisationCanvas = new Visualisation();
 
         var clients = this.networkClient.fetchedConnectedClients();
-        this.visualisation.render();
+
+        this.visualisationCanvas.init({ id: "canvas-container", height: "600px", width: "100%" }
+                                       , { wireFrameColor: 0x3300FF, backgroundColor: 0xB6B6B4,float:'none'}
+                                       , this.ReconstructFn);
+        this.visualisationCanvas.render("canvas-container");
+
 
         this.UpdateSensorTable(clients);
     },
@@ -28,11 +29,6 @@ var IndexPage = {
     UpdateSensorTable: function (clients) {
         if (clients.length == 0) {
             $("#sensor-info-count").text("0");
-
-            $("#calibrate-btn").css("display", "none");
-            $("#calibration-progressbar").css("display", "none");
-            $("#calibration-status").css("display", "block");
-            $("#calibration-status").text("No Client Detected - Please check client connection to server");
         } else {
             var numOfClients = clients.length;
 
@@ -41,7 +37,6 @@ var IndexPage = {
             for (var client = 0; client < numOfClients; client += 1) {
 
                 var newClientRow = document.createElement("tr");
-                newClientRow.id = clients[client]["id"];
 
                 var clientIdCell = document.createElement("td");
                 clientIdCell.innerHTML = clients[client]["id"];
@@ -58,8 +53,13 @@ var IndexPage = {
 
                 var sensors = clients[client]["sensors"];
                 var numOfSensors = sensors.length;
+                var sensorIdList = [];
 
                 for (var sensor = 0; sensor < numOfSensors; sensor += 1) {
+
+                    // Add to the sensor list    
+                    sensorIdList.push(sensors[sensor]["id"]);
+                    jQuery.data(document.body, "sensorIdList", sensorIdList);
 
                     var sensorId = document.createElement("td");
                     sensorId.innerHTML = sensors[sensor]["id"];
@@ -71,13 +71,17 @@ var IndexPage = {
                     sensorCalibrated.innerHTML = sensors[sensor]["calibrated"];
 
                     if (sensor == 0) {
+
+                        newClientRow.id = sensors[sensor]["id"];
+
                         newClientRow.appendChild(sensorId);
                         newClientRow.appendChild(sensorCalibrated);
                         newClientRow.appendChild(sensorOrdering);
 
-                        $("#sensor-info tr:last").after(newClientRow.outerHTML);
+                        $("#sensor-info > tbody").append(newClientRow.outerHTML);
                     } else {
                         var additionalClientRow = document.createElement("tr");
+                        additionalClientRow.id = sensors[sensor]["id"];
 
                         var blankCell = document.createElement("td");
                         blankCell.innerHTML = "";
@@ -94,12 +98,13 @@ var IndexPage = {
                         additionalClientRow.appendChild(sensorCalibrated);
                         additionalClientRow.appendChild(sensorOrdering);
 
-                        $("#sensor-info tr:last").after(additionalClientRow.outerHTML);
+                        $("#sensor-info > tbody").append(additionalClientRow.outerHTML);
                     }
                 }
 
             }
         }
-    }
+    },
 
+    ReconstructFn: function (glScene, canvasId) { }
 };

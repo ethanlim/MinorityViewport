@@ -65,7 +65,7 @@ namespace MultipleKinectsPlatformServer{
 			
 				rawJSON = recvJob.GetJobJSON();
 				timeStamp = recvJob.GetTimeStamp();
-
+			
 				this->_jobQueue->pop();
 			}
 			JobQueueMutex.unlock();
