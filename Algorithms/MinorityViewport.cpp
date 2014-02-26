@@ -237,7 +237,7 @@ namespace MultipleKinectsPlatformServer{
 	 * 
 	 */
 	void MinorityViewport::MergeScenes(){
-		while(1){
+		while(true){
 			this->_orderedSceneMutex.lock();
 			vector<Scene*> orderedScenes = this->_orderedScenes;
 			this->_orderedSceneMutex.unlock();
@@ -291,7 +291,7 @@ namespace MultipleKinectsPlatformServer{
 									//check that skeleton id do not clash
 									unsigned short currentSkeletonId = bodyFrameSkeleton->first;
 									while(globalSkeletons.find(currentSkeletonId)!=globalSkeletons.end()){
-										currentSkeletonId = rand()%100;;
+										currentSkeletonId = rand()%100;
 									}
 
 									// Add into the global scene

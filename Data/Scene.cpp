@@ -8,12 +8,12 @@ namespace MultipleKinectsPlatformServer{
 		_dimensionY(0),
 		_dimensionZ(0),
 		_curTime(time),
-		_refreshRate_ms(10000),
+		_refreshRate_ms(30000),
+		_refreshThread(new thread(&MultipleKinectsPlatformServer::Scene::Clear,this)),
 		_firstSkeletonObservedTime_ms(0)
 		,_ordering(0),
 		_calibrated(false)
 	{
-		this->refreshThread = new thread(&MultipleKinectsPlatformServer::Scene::Clear,this);
 	}
 
 	Scene::Scene(unsigned int dim_x, unsigned int dim_y,unsigned int dim_z,Timer *time)
@@ -22,12 +22,12 @@ namespace MultipleKinectsPlatformServer{
 		_dimensionY(dim_y),
 		_dimensionZ(dim_z),
 		_curTime(time),
-		_refreshRate_ms(10000),
+		_refreshRate_ms(30000),
+		_refreshThread(new thread(&MultipleKinectsPlatformServer::Scene::Clear,this)),
 		_firstSkeletonObservedTime_ms(0)
 		,_ordering(0),
 		_calibrated(false)
 	{
-		this->refreshThread = new thread(&MultipleKinectsPlatformServer::Scene::Clear,this);
 	}
 
 	Scene::~Scene(){
@@ -50,9 +50,13 @@ namespace MultipleKinectsPlatformServer{
 
 	void Scene::Clear(){
 
-		long nextLapse = this->_curTime->GetTicks_ms()+this->_refreshRate_ms;
+		long curTime;
+		long nextLapse;
 
 		while(1){
+			curTime = this->_curTime->GetTicks_ms();
+			nextLapse = curTime+this->_refreshRate_ms;
+
 			if(this->_curTime->GetTicks_ms()>nextLapse){
 
 				this->_sceneMutex.lock();

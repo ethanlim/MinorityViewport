@@ -37,9 +37,9 @@ namespace MultipleKinectsPlatformServer{
 
 			Timer *_curTime;
 			
-			unsigned short _refreshRate_ms;
+			unsigned long _refreshRate_ms;
 			mutex _sceneMutex;
-			thread *refreshThread;
+			thread *_refreshThread;
 
 			long _firstSkeletonObservedTime_ms;
 			Skeleton *calibrationSkeleton;

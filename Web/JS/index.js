@@ -15,6 +15,8 @@ var IndexPage = {
         this.networkClient = Network.initClient(GlobalVar.hostURL,GlobalVar.port),
         this.visualisationCanvas = new Visualisation();
 
+        this.Diagnostic();
+
         var clients = this.networkClient.fetchedConnectedClients();
 
         this.visualisationCanvas.init({ id: "canvas-container", height: "600px", width: "100%" }
@@ -22,8 +24,47 @@ var IndexPage = {
                                        , this.ReconstructFn);
         this.visualisationCanvas.render("canvas-container");
 
-
         this.UpdateSensorTable(clients);
+
+        this.StartCommunicationWithScene();
+
+        this.SetupEventHandlers();
+    },
+
+    SetupEventHandlers: function () {
+    },
+
+    StartCommunicationWithScene: function () {
+        return this.networkClient.startCommWorker({ type: "global"}, this.NetworkHandler);
+    },
+
+    NetworkHandler: function (event) {
+
+        var responseType = event.data.type;
+        var responseData = event.data.msg;
+
+        if (responseType == "data") {
+
+            if (responseData != "") {
+                var sceneFromServer = JSON.parse(responseData);
+
+                localStorage.setItem("globalScene", JSON.stringify(sceneFromServer));
+            } else {
+                localStorage.setItem("globalScene", null);
+            }
+        }
+    },
+
+    Diagnostic: function () {
+        if (this.networkClient
+           && this.visualisationCanvas0
+           && this.visualisationCanvas1
+           ) {
+            console.log("Libraries Initialisation Successful");
+            return true;
+        } else {
+            return false;
+        }
     },
 
     UpdateSensorTable: function (clients) {
@@ -106,5 +147,29 @@ var IndexPage = {
         }
     },
 
-    ReconstructFn: function (glScene, canvasId) { }
+    ReconstructFn: function (glScene, canvasId) {
+        
+        // Remove all skeletons previously inserted into scene
+        for (var child = 7; child < glScene.children.length; child++) {
+            glScene.remove(glScene.children[child]);
+        }
+
+        /* Choose the global scene to draw*/
+        var globalScene = JSON.parse(localStorage.getItem("globalScene"));
+
+        if (globalScene != null) {
+            for (var newSkeleton in globalScene["skeletons"]) {
+
+                var skeletonObj = new Skeleton(globalScene["skeletons"][newSkeleton]);
+
+                var skeletonGeometry = skeletonObj.getGeometry();
+
+                glScene.add(skeletonGeometry);
+            }
+
+            return glScene;
+        } else {
+            return null;
+        }
+    }
 };

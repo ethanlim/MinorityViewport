@@ -7,7 +7,7 @@ namespace MultipleKinectsPlatformServer{
 	  {
 		/* Communicate with a centralised time server */
 		this->ReportStatus("Sync with Server Time");
-		NTPClient timeClient("1.asia.pool.ntp.org");
+		NTPClient timeClient("0.asia.pool.ntp.org");
 		long timeFromServer = timeClient.RequestDatetime_UNIX();
 		this->_time = new Timer(timeFromServer);
 		this->_time->Start();
@@ -59,7 +59,9 @@ namespace MultipleKinectsPlatformServer{
 		while(true){
 
 			Job recvJob;
+			JobThreadMutex.lock();
 			recvJob =  this->_jobQueue->get();
+			JobThreadMutex.unlock();
 			
 			rawJSON = recvJob.GetJobJSON();
 			timeStamp = recvJob.GetTimeStamp();
@@ -92,10 +94,14 @@ int main(int argc, char **argv)
 		thread server_thread(&MultipleKinectsPlatformServer::Core::BeginListen,platform);
 
 		// Process Job on a separate thread
-		thread job_thread(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+		thread job_thread1(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+		thread job_thread2(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+		thread job_thread3(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
 
 		server_thread.join();
-		job_thread.join();
+		job_thread1.join();
+		job_thread2.join();
+		job_thread3.join();
 	}catch(exception &error){
 		throw error;
 	}

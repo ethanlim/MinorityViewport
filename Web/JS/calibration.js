@@ -26,9 +26,6 @@ var CalibrationPage = {
         scenes[1] = { sensorId: null, scene: null};
         jQuery.data(document.body, "scenes", scenes);
         var sceneSkeletons = new Array(2);
-        sceneSkeletons[0] = [];
-        sceneSkeletons[1] = [];
-        jQuery.data(document.body, "sceneSkeletons", sceneSkeletons);
 
         this.Diagnostic();
 
@@ -368,23 +365,17 @@ var CalibrationPage = {
 
     ReconstructFn : function(glScene,canvasId){
 
+        // Remove all skeletons previously inserted into scene
+        for (var child = 7; child < glScene.children.length; child++) {
+            glScene.remove(glScene.children[child]);
+        }
+
         /* Choose the right scene from server to draw on the right canvas */
         var scenesFromServer = jQuery.data(document.body, "scenes");
         var sceneIdFromCanvasId =  canvasId.split("-")[2];
         var sceneFromServerToDraw = scenesFromServer[sceneIdFromCanvasId].scene;
 
         if (sceneFromServerToDraw != null) {
-
-            /* Choose the prev skeletons drawn on this scene */
-            var scenesSkeletons = jQuery.data(document.body, "sceneSkeletons");
-            var thisSceneSkeletons = scenesSkeletons[sceneIdFromCanvasId];
-
-            // Remove all skeletons previously inserted into scene
-            for (var oldSkeletonGeometry in thisSceneSkeletons) {
-                glScene.remove(thisSceneSkeletons[oldSkeletonGeometry]);
-                thisSceneSkeletons.pop();
-            }
-
             for (var newSkeleton in sceneFromServerToDraw["skeletons"]) {
 
                 var skeletonObj = new Skeleton(sceneFromServerToDraw["skeletons"][newSkeleton]);
@@ -392,10 +383,6 @@ var CalibrationPage = {
                 var skeletonGeometry = skeletonObj.getGeometry();
 
                 glScene.add(skeletonGeometry);
-
-                thisSceneSkeletons.push(skeletonGeometry);
-                scenesSkeletons[sceneIdFromCanvasId] = thisSceneSkeletons;
-                jQuery.data(document.body, "sceneSkeletons", scenesSkeletons);
             }
 
             return glScene;
