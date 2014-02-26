@@ -7,7 +7,8 @@ namespace MultipleKinectsPlatformServer{
 	MinorityViewport::MinorityViewport(Timer *curTime,ClientsList *clients)
 		:_curTime(curTime),_clients(clients)
 	{
-		
+		//Create the global scene
+		this->_globalScene = new Scene(10,10,10,curTime);
 	}
 
 	MinorityViewport::~MinorityViewport(){
@@ -99,7 +100,7 @@ namespace MultipleKinectsPlatformServer{
 
 	/** 
 	 *   Calibrate the R & T from the two scenes 
-	 *   A = RB+T
+	 *   At = RBt+T
 	 *   A is the reference frame
 	 *   B is the body frame
 	 *   R and T is the rotation and translation from B to A

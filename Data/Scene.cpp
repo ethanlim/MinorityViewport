@@ -3,7 +3,29 @@
 namespace MultipleKinectsPlatformServer{
 
 	Scene::Scene(string sensorId,Timer *time)
-		:_sensorId(sensorId),_dimensionX(0),_dimensionY(0),_dimensionZ(0),_curTime(time),_refreshRate_ms(1000),_firstSkeletonObservedTime_ms(0),_ordering(0),_calibrated(false)
+		:_sensorId(sensorId),
+		_dimensionX(0),
+		_dimensionY(0),
+		_dimensionZ(0),
+		_curTime(time),
+		_refreshRate_ms(1000),
+		_firstSkeletonObservedTime_ms(0)
+		,_ordering(0),
+		_calibrated(false)
+	{
+		this->refreshThread = new thread(&MultipleKinectsPlatformServer::Scene::Clear,this);
+	}
+
+	Scene::Scene(unsigned int dim_x, unsigned int dim_y,unsigned int dim_z,Timer *time)
+		:_sensorId(""),
+		_dimensionX(dim_x),
+		_dimensionY(dim_y),
+		_dimensionZ(dim_z),
+		_curTime(time),
+		_refreshRate_ms(1000),
+		_firstSkeletonObservedTime_ms(0)
+		,_ordering(0),
+		_calibrated(false)
 	{
 		this->refreshThread = new thread(&MultipleKinectsPlatformServer::Scene::Clear,this);
 	}

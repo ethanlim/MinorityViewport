@@ -44,6 +44,7 @@ namespace MultipleKinectsPlatformServer{
 			Skeleton *calibrationSkeleton;
 		public:
 			Scene(string sensorId,Timer *time);
+			Scene(unsigned int dim_x, unsigned int dim_y,unsigned int dim_z,Timer *time);
 			~Scene();
 
 			unsigned int GetOrdering();
