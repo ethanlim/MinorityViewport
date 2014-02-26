@@ -232,10 +232,6 @@ namespace MultipleKinectsPlatformServer{
 		}
 	}
 
-	/**
-	 * Separate thread to merge scenes
-	 * 
-	 */
 	void MinorityViewport::MergeScenes(){
 		while(true){
 			this->_orderedSceneMutex.lock();
