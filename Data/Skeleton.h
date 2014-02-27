@@ -45,6 +45,7 @@ namespace MultipleKinectsPlatformServer{
 
 			Mat ComputeCentroid();
 			Mat GetCompletePointsVectorMatrix();
+			void ConvertVectorMatrixtoSkeletonPoints(Mat vectorMatrix);
 
 			unsigned int GetClientId();
 			string GetSensorId();

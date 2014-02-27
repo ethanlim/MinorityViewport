@@ -261,6 +261,11 @@ namespace MultipleKinectsPlatformServer{
 							for(map<unsigned short,Skeleton>::iterator bodyFrameSkeleton=originalSkeletons.begin(); bodyFrameSkeleton!= originalSkeletons.end();bodyFrameSkeleton++){
 						
 								Mat translatedSkeletonMatrix = this->TransformSkeletonMatrix(bodyFrameSkeleton->second.GetCompletePointsVectorMatrix(),R,T);
+								
+								Mat translatedSkeletonMatrix_transpose;
+								transpose(translatedSkeletonMatrix,translatedSkeletonMatrix_transpose); //21x3
+
+								bodyFrameSkeleton->second.ConvertVectorMatrixtoSkeletonPoints(translatedSkeletonMatrix_transpose);
 
 								/* Do the comparison with reference frame skeletons and discard skeletons as necessary */
 								map<unsigned short,Skeleton> globalSkeletons = this->_globalScene->GetSkeletons();
@@ -291,7 +296,7 @@ namespace MultipleKinectsPlatformServer{
 									}
 
 									// Add into the global scene
-									this->_globalScene->Update(currentSkeletonId,bodyFrameSkeleton->second);
+									//this->_globalScene->Update(currentSkeletonId,bodyFrameSkeleton->second);
 								}
 							}
 						}

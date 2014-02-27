@@ -110,6 +110,24 @@ namespace MultipleKinectsPlatformServer{
 		return vectorMatrix;
 	}
 
+	void Skeleton::ConvertVectorMatrixtoSkeletonPoints(Mat vectorMatrix){
+
+		vectorMatrix.convertTo(vectorMatrix, CV_64F);
+
+		for(unsigned int row=0;row<vectorMatrix.rows;row+=1){
+
+			if(row==0){
+				this->pos_x = vectorMatrix.at<double>(row,0);
+				this->pos_y = vectorMatrix.at<double>(row,1);
+				this->pos_z = vectorMatrix.at<double>(row,2);
+			}else{
+				this->joints.at(row-1).X = vectorMatrix.at<double>(row,0);
+				this->joints.at(row-1).Y = vectorMatrix.at<double>(row,1);
+				this->joints.at(row-1).Z = vectorMatrix.at<double>(row,2);
+			}
+		}
+	}
+
 	void Skeleton::SetJoints(vector<Joint> new_joints){
 		joints.clear();
 		joints = new_joints;
