@@ -122,11 +122,19 @@ namespace MultipleKinectsPlatformServer{
 		Json::Value skeletonARoot; 
 		Json::Value skeletonBRoot; 
 		Json::Reader reader;
+		ofstream testOutputSensorAFile("A_calibration_data.txt");
+		ofstream testOutputSensorBFile("B_calibration_data.txt");
+		ofstream translationData("T_calibration_data.txt");
+		ofstream rotationData("R_calibration_data.txt");
 
 		if (this->_orderedScenes.size()>0&&reader.parse(skeletonA_json,skeletonARoot)&&reader.parse(skeletonB_json,skeletonBRoot))
 		{
 			Skeleton skeletonFromSceneA(skeletonARoot.get("skeleton",NULL),0);
 			Skeleton skeletonFromSceneB(skeletonBRoot.get("skeleton",NULL),0);
+
+			if(!skeletonFromSceneA.checkFullSetOfJoints()||!skeletonFromSceneB.checkFullSetOfJoints()){
+				return false;
+			}
 
 			/* Regardless of Scene A or Scene B, Matrix A must be the reference frame which is the lower order */
 			Mat A,B,centroidA,centroidB;
@@ -135,8 +143,8 @@ namespace MultipleKinectsPlatformServer{
 			//scene A is the reference frame
 			if(sceneAOrder<sceneBOrder){
 				//nx3 vector matrix
-				A = skeletonFromSceneA.GetCompletePointsVectorMatrix(); //A
-				B = skeletonFromSceneB.GetCompletePointsVectorMatrix(); //B
+				A = skeletonFromSceneA.GetCompletePointsVectorMatrix(&testOutputSensorAFile,true); //A
+				B = skeletonFromSceneB.GetCompletePointsVectorMatrix(&testOutputSensorBFile,true); //B
 
 				//3x1 centroid matrix
 				centroidA = skeletonFromSceneA.ComputeCentroid();
@@ -147,8 +155,8 @@ namespace MultipleKinectsPlatformServer{
 			}else{
 			//scene B is the reference frame
 				//nx3 vector matrix
-				A = skeletonFromSceneB.GetCompletePointsVectorMatrix(); //A
-				B = skeletonFromSceneA.GetCompletePointsVectorMatrix(); //B
+				A = skeletonFromSceneB.GetCompletePointsVectorMatrix(&testOutputSensorAFile,true); //A
+				B = skeletonFromSceneA.GetCompletePointsVectorMatrix(&testOutputSensorBFile,true); //B
 
 				//3x1 centroid matrix
 				centroidA = skeletonFromSceneB.ComputeCentroid();
@@ -171,9 +179,9 @@ namespace MultipleKinectsPlatformServer{
 				Mat matrixBCol = Bt.col(col);	//PBi
 
 				Mat subTotalB;
-				subtract(matrixBCol,centroidB,subTotalB);
+				cv::subtract(matrixBCol,centroidB,subTotalB);
 				Mat subTotalA;
-				subtract(matrixACol,centroidA,subTotalA);
+				cv::subtract(matrixACol,centroidA,subTotalA);
 				Mat subTotalA_transpose;
 				transpose(subTotalA,subTotalA_transpose);
 
@@ -205,6 +213,10 @@ namespace MultipleKinectsPlatformServer{
 			/* Assign to the R and T to the B scene */
 			Scene *bodyFrameScene = this->_orderedScenes.at(bodyFrameOrder-1);
 			bodyFrameScene->SetRotationTranslationMatrix(rotationMatrix,translationMatrix);
+
+			/* Output to file for testing */
+			bodyFrameScene->GetRMatrix(&rotationData,true);
+			bodyFrameScene->GetTMatrix(&translationData,true);
 
 			Scene *refFrameScene = this->_orderedScenes.at(refFrameOrder-1);
 
@@ -254,13 +266,13 @@ namespace MultipleKinectsPlatformServer{
 							}
 						}else{
 							/* All body frames skeletons need to be transform to reference frame */
-							Mat R = scenePtr->GetRMatrix(); //3x3
-							Mat T = scenePtr->GetTMatrix(); //3x1
+							Mat R = scenePtr->GetRMatrix(NULL,false); //3x3
+							Mat T = scenePtr->GetTMatrix(NULL,false); //3x1
 					
 							/* Transform all the skeletons within body frame to the reference frame (global scene)*/
 							for(map<unsigned short,Skeleton>::iterator bodyFrameSkeleton=originalSkeletons.begin(); bodyFrameSkeleton!= originalSkeletons.end();bodyFrameSkeleton++){
 						
-								Mat translatedSkeletonMatrix = this->TransformSkeletonMatrix(bodyFrameSkeleton->second.GetCompletePointsVectorMatrix(),R,T);
+								Mat translatedSkeletonMatrix = this->TransformSkeletonMatrix(bodyFrameSkeleton->second.GetCompletePointsVectorMatrix(NULL,false),R,T);
 								
 								Mat translatedSkeletonMatrix_transpose;
 								transpose(translatedSkeletonMatrix,translatedSkeletonMatrix_transpose); //21x3
@@ -273,7 +285,7 @@ namespace MultipleKinectsPlatformServer{
 								for(map<unsigned short,Skeleton>::iterator refFrameSkeleton=globalSkeletons.begin(); refFrameSkeleton!=globalSkeletons.end(); refFrameSkeleton++){
 
 									Mat Areft;
-									transpose(refFrameSkeleton->second.GetCompletePointsVectorMatrix(),Areft); //3x21
+									transpose(refFrameSkeleton->second.GetCompletePointsVectorMatrix(NULL,false),Areft); //3x21
 
 									SVD svd(translatedSkeletonMatrix);
 									Mat pInverse = svd.vt.t()*Mat::diag(1./svd.w)*svd.u.t();	//3x21

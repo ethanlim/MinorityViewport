@@ -4,6 +4,8 @@
 #include <vector>
 #include <mutex>
 #include <thread>
+#include <iostream>
+#include <ostream>
 
 /*********************/
 /*		OPENCV		 */
@@ -32,8 +34,8 @@ namespace MultipleKinectsPlatformServer{
 			Scene *left;
 			Scene *right;
 
-			Mat RotationMatrix;
-			Mat TranslationMatrix;
+			Mat RotationMatrix;		//3x3
+			Mat TranslationMatrix;	//3x1
 
 			Timer *_curTime;
 			
@@ -57,8 +59,8 @@ namespace MultipleKinectsPlatformServer{
 			void SetLeftRightScene(Scene *left, Scene *right);
 			void SetCalibrationSkeleton(Skeleton *skeleton);
 			void SetRotationTranslationMatrix(Mat R,Mat T);
-			Mat GetRMatrix();
-			Mat GetTMatrix();
+			Mat GetRMatrix(ofstream *fileObj,bool writeToFile);
+			Mat GetTMatrix(ofstream *fileObj,bool writeToFile);
 
 			void Update(unsigned short serverSkeletonId, Skeleton newPerson);
 			void Clear();

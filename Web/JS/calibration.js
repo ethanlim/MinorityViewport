@@ -329,7 +329,10 @@ var CalibrationPage = {
         }
     },
 
-    AutomaticSceneLockingHandler : function(callingObj,lockBtn){
+    AutomaticSceneLockingHandler: function (callingObj, lockBtn) {
+
+        var fullSkeletonAJointsCapture=fullSkeletonBJointsCapture=false;
+
         /* Copy a set of locked scenes from active scenes which are constantly updated */
         var activeScenes = jQuery.data(document.body, "scenes");
 
@@ -340,16 +343,22 @@ var CalibrationPage = {
 
             var lockedScenes = JSON.parse(localStorage.getItem("lockedScenes"));
 
-            if (lockedSkeletonsB.length > 0 && lockedSkeletonsA.length > 0) {
+            if (lockedSkeletonsA.length > 0 && lockedSkeletonsB.length > 0) {
                 
-                lockedScenes[0] = activeScenes[0];
-                lockedScenes[1] = activeScenes[1];
+                if (lockedSkeletonsA[0]["joints"].length >= 20 && lockedSkeletonsB[0]["joints"].length >= 20) {
 
-                localStorage.setItem("lockedScenes", JSON.stringify(lockedScenes));
+                    lockedScenes[0] = activeScenes[0];
+                    lockedScenes[1] = activeScenes[1];
+                    lockedScenes[0]["scene"]["skeletons"] = lockedSkeletonsA;
+                    lockedScenes[1]["scene"]["skeletons"] = lockedSkeletonsB;
+
+                    localStorage.setItem("lockedScenes", JSON.stringify(lockedScenes));
+                    fullSkeletonAJointsCapture = fullSkeletonBJointsCapture = true;
+                }
             }
 
             if (lockedScenes[0]["scene"] != null && lockedScenes[1]["scene"] != null &&
-                lockedScenes[0]["scene"]["skeletons"].length >0 && lockedScenes[1]["scene"]["skeletons"].length>0)
+                fullSkeletonAJointsCapture && fullSkeletonBJointsCapture)
             {
                 jQuery(lockBtn).addClass("btn-default");
                 jQuery(lockBtn).removeClass("btn-warning");

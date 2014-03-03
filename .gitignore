@@ -1,5 +1,6 @@
 # Program File
 MKPA
+*.txt
 
 # Compiled Object files
 *.slo

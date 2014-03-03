@@ -8,6 +8,9 @@
 /*********************/
 #include <opencv2/core/core.hpp>
 
+#include <iostream>
+#include <string>
+#include <fstream>
 #include <vector>
 #include <map>
 #include <mutex>
@@ -42,9 +45,10 @@ namespace MultipleKinectsPlatformServer{
 			
 			vector<Joint> joints;
 			void SetJoints(vector<Joint> new_joints);
+			bool checkFullSetOfJoints();
 
 			Mat ComputeCentroid();
-			Mat GetCompletePointsVectorMatrix();
+			Mat GetCompletePointsVectorMatrix(ofstream *fileObj,bool writeToFile=false);
 			void ConvertVectorMatrixtoSkeletonPoints(Mat vectorMatrix);
 
 			unsigned int GetClientId();

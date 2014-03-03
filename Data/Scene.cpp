@@ -70,10 +70,6 @@ namespace MultipleKinectsPlatformServer{
 		}
 	}
 
-	/**
-	 *  GetFirstSkeletonObservedTime_ms
-	 *  Get the time when the first skeleton was observed in the scene
-	 */ 
 	long Scene::GetFirstSkeletonObservedTime_ms(){
 		return this->_firstSkeletonObservedTime_ms;
 	}
@@ -114,11 +110,39 @@ namespace MultipleKinectsPlatformServer{
 		this->calibrationSkeleton = calibrationSkeleton;
 	}
 
-	Mat Scene::GetRMatrix(){
+	Mat Scene::GetRMatrix(ofstream *fileObj,bool writeToFile){
+
+		Mat RotationMatrix = this->RotationMatrix;
+
+		if(writeToFile){
+			RotationMatrix.convertTo(RotationMatrix, CV_64F);
+			for(unsigned int row=0;row<RotationMatrix.rows;row+=1){
+				*fileObj << RotationMatrix.at<double>(row,0) << " ";
+				*fileObj << RotationMatrix.at<double>(row,1) << " ";;
+				*fileObj << RotationMatrix.at<double>(row,2) << " ";;
+				*fileObj << endl;
+			}
+
+			fileObj->close();
+		}
+
 		return this->RotationMatrix;
 	}
 	
-	Mat Scene::GetTMatrix(){
+	Mat Scene::GetTMatrix(ofstream *fileObj,bool writeToFile){
+
+		Mat TranslationMatrix = this->TranslationMatrix;
+
+		if(writeToFile){
+			TranslationMatrix.convertTo(TranslationMatrix, CV_64F);
+			for(unsigned int row=0;row<TranslationMatrix.rows;row+=1){
+				*fileObj << TranslationMatrix.at<double>(row,0);
+				*fileObj << endl;
+			}
+
+			fileObj->close();
+		}
+
 		return this->TranslationMatrix;
 	}
 

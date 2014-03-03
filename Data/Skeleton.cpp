@@ -67,15 +67,25 @@ namespace MultipleKinectsPlatformServer{
 
 	}
 
-	/**
-	 *  Returns a 3x1 matrix
-	 */
+	bool Skeleton::checkFullSetOfJoints(){
+
+		for(unsigned int joints=0;joints<this->joints.size();joints++){
+
+			if(this->joints[joints].X==0||this->joints[joints].Y==0||this->joints[joints].Z==0){
+
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	Mat Skeleton::ComputeCentroid(){
 
 		/* 1x3 matrix*/
 		Mat centroid_transpose(1,3,CV_32F);
 
-		Mat completeVectorMatrix = this->GetCompletePointsVectorMatrix();
+		Mat completeVectorMatrix = this->GetCompletePointsVectorMatrix(NULL,false);
 
 		reduce(completeVectorMatrix,/*Sum into this 1x3 matrix*/centroid_transpose,0,/*CV_REDUCE_SUM*/0);
 
@@ -88,19 +98,30 @@ namespace MultipleKinectsPlatformServer{
 		return centroid_transpose;
 	}
 
-	/**
-	 *	Returns a nx3 matrix that represents all the vector points of the skeleton
-	 */
-	Mat Skeleton::GetCompletePointsVectorMatrix(){
+	Mat Skeleton::GetCompletePointsVectorMatrix(ofstream *fileObj,bool writeToFile){
 
 		/* Create a nx3 matrix n is the number of point vectors */
 		Mat vectorMatrix = (Mat_<double>(1,3) << this->pos_x, this->pos_y,this->pos_z);
+		
+		if(writeToFile){
+			*fileObj << this->pos_x << " ";
+			*fileObj << this->pos_y << " ";
+			*fileObj << this->pos_z << " ";
+			*fileObj << endl;
+		}
 
 		for(int vectorIdx = 0;vectorIdx<this->joints.size();vectorIdx+=1){
 			
 			Mat row = (Mat_<double>(1,3) <<  this->joints.at(vectorIdx).X, 
 											 this->joints.at(vectorIdx).Y,
 											 this->joints.at(vectorIdx).Z);
+
+			if(writeToFile){
+				*fileObj << this->joints.at(vectorIdx).X << " ";
+				*fileObj << this->joints.at(vectorIdx).Y << " ";
+				*fileObj << this->joints.at(vectorIdx).Z << " ";
+				*fileObj << endl;
+			} 
 
 			vectorMatrix.push_back(row);
 		}
