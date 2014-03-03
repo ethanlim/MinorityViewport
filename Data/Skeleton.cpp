@@ -82,7 +82,7 @@ namespace MultipleKinectsPlatformServer{
 
 	Mat Skeleton::ComputeCentroid(){
 
-		/* 1x3 matrix*/
+		
 		Mat centroid_transpose(1,3,CV_32F);
 
 		Mat completeVectorMatrix = this->GetCompletePointsVectorMatrix(NULL,false);
@@ -92,9 +92,7 @@ namespace MultipleKinectsPlatformServer{
 		//divide by N
 		divide(completeVectorMatrix.rows,centroid_transpose,centroid_transpose);
 
-		//Convert to 3x1 matrix
-		transpose(centroid_transpose,centroid_transpose);
-
+		/* 1x3 matrix*/
 		return centroid_transpose;
 	}
 

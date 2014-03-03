@@ -137,7 +137,8 @@ namespace MultipleKinectsPlatformServer{
 			}
 
 			/* Regardless of Scene A or Scene B, Matrix A must be the reference frame which is the lower order */
-			Mat A,B,centroidA,centroidB;
+			Mat A,B;					//nx3
+			Mat centroidA,centroidB;	//1x3
 			unsigned int bodyFrameOrder=0,refFrameOrder=0;
 
 			//scene A is the reference frame
@@ -146,7 +147,6 @@ namespace MultipleKinectsPlatformServer{
 				A = skeletonFromSceneA.GetCompletePointsVectorMatrix(&testOutputSensorAFile,true); //A
 				B = skeletonFromSceneB.GetCompletePointsVectorMatrix(&testOutputSensorBFile,true); //B
 
-				//3x1 centroid matrix
 				centroidA = skeletonFromSceneA.ComputeCentroid();
 				centroidB = skeletonFromSceneB.ComputeCentroid();
 
@@ -158,7 +158,6 @@ namespace MultipleKinectsPlatformServer{
 				A = skeletonFromSceneB.GetCompletePointsVectorMatrix(&testOutputSensorAFile,true); //A
 				B = skeletonFromSceneA.GetCompletePointsVectorMatrix(&testOutputSensorBFile,true); //B
 
-				//3x1 centroid matrix
 				centroidA = skeletonFromSceneB.ComputeCentroid();
 				centroidB = skeletonFromSceneA.ComputeCentroid();
 
@@ -166,49 +165,49 @@ namespace MultipleKinectsPlatformServer{
 				bodyFrameOrder = sceneAOrder;
 			}
 
-			//3xn vector matrix
-			Mat At;
-			transpose(A,At); //A transpose
-			Mat Bt;
-			transpose(B,Bt);
-
 			/* Construct the H matrix */
+			unsigned int N = A.rows;
+			Mat centroidA_row = centroidA;
+			Mat centroidB_row = centroidB;
 			Mat H(3, 3, CV_32F, Scalar(0));
-			for(int col=0;col<At.cols;col+=1){
-				Mat matrixACol = At.col(col);	//PAi
-				Mat matrixBCol = Bt.col(col);	//PBi
 
-				Mat subTotalB;
-				cv::subtract(matrixBCol,centroidB,subTotalB);
-				Mat subTotalA;
-				cv::subtract(matrixACol,centroidA,subTotalA);
-				Mat subTotalA_transpose;
-				transpose(subTotalA,subTotalA_transpose);
-
-				Mat subTotal = subTotalB*subTotalA_transpose;
-
-				add(H,subTotal,H,noArray(),CV_32F);
+			for(int row=0;row<N-1;row++){
+				centroidA.push_back(centroidA_row);
+				centroidB.push_back(centroidB_row);
 			}
+
+			// H = (B - repmat(centroid_B, N, 1))*(A - repmat(centroid_A, N, 1));
+			Mat firstOperand;
+			subtract(B,centroidB,firstOperand,noArray(),CV_32F);
+			transpose(firstOperand,firstOperand);
+
+			Mat secondOperand;
+			subtract(A,centroidA,secondOperand,noArray(),CV_32F);
+
+			H = firstOperand*secondOperand;
 
 			/* Perform SVD on H */
 			Mat W,U,Vt,Ut,V;
 			SVD::compute(H,W,U,Vt);
 
-			transpose(Vt,V);
 			transpose(U,Ut);
 
 			/* Compute the Rotation Matrix (3x3) */
-			Mat rotationMatrix=V*Ut;
+			Mat rotationMatrix=Vt*Ut;
 
 			/* Compute the Translation Matrix (3x1) */
 			Mat translationMatrix;
 			Mat negativeRMatrix = -1*rotationMatrix;
 
 			negativeRMatrix.convertTo(negativeRMatrix, CV_32F);
-			centroidB.convertTo(centroidB,CV_32F);
+			centroidA.convertTo(centroidA,CV_32F);
+			Mat centroidA_transpose;
+			transpose(centroidA,centroidA_transpose);
 
-			Mat temp = negativeRMatrix * centroidB;
- 			add(temp,centroidA,translationMatrix,noArray(),CV_32F);
+			Mat temp = negativeRMatrix * centroidA_transpose;
+			Mat centroidB_transpose;
+			transpose(centroidB,centroidB_transpose);
+ 			add(temp,centroidB_transpose,translationMatrix,noArray(),CV_32F);
 
 			/* Assign to the R and T to the B scene */
 			Scene *bodyFrameScene = this->_orderedScenes.at(bodyFrameOrder-1);
