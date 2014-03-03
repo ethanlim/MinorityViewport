@@ -47,7 +47,7 @@ namespace MultipleKinectsPlatformServer{
 			void SetJoints(vector<Joint> new_joints);
 			bool checkFullSetOfJoints();
 
-			Mat ComputeCentroid();
+			Mat ComputeCentroid(ofstream *fileObj,bool writeToFile=false);
 			Mat GetCompletePointsVectorMatrix(ofstream *fileObj,bool writeToFile=false);
 			void ConvertVectorMatrixtoSkeletonPoints(Mat vectorMatrix);
 

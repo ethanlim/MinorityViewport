@@ -124,6 +124,8 @@ namespace MultipleKinectsPlatformServer{
 		Json::Reader reader;
 		ofstream testOutputSensorAFile("A_calibration_data.txt");
 		ofstream testOutputSensorBFile("B_calibration_data.txt");
+		ofstream centroidAFile("A_centroid.txt");
+		ofstream centroidBFile("B_centroid.txt");
 		ofstream translationData("T_calibration_data.txt");
 		ofstream rotationData("R_calibration_data.txt");
 
@@ -138,7 +140,7 @@ namespace MultipleKinectsPlatformServer{
 
 			/* Regardless of Scene A or Scene B, Matrix A must be the reference frame which is the lower order */
 			Mat A,B;					//nx3
-			Mat centroidA,centroidB;	//1x3
+			Mat centroidA,centroidB;	//1x3 (Verified with Matlab)
 			unsigned int bodyFrameOrder=0,refFrameOrder=0;
 
 			//scene A is the reference frame
@@ -147,8 +149,9 @@ namespace MultipleKinectsPlatformServer{
 				A = skeletonFromSceneA.GetCompletePointsVectorMatrix(&testOutputSensorAFile,true); //A
 				B = skeletonFromSceneB.GetCompletePointsVectorMatrix(&testOutputSensorBFile,true); //B
 
-				centroidA = skeletonFromSceneA.ComputeCentroid();
-				centroidB = skeletonFromSceneB.ComputeCentroid();
+				//1x3
+				centroidA = skeletonFromSceneA.ComputeCentroid(&centroidAFile,true);
+				centroidB = skeletonFromSceneB.ComputeCentroid(&centroidBFile,true);
 
 				refFrameOrder = sceneAOrder;
 				bodyFrameOrder = sceneBOrder;
@@ -158,8 +161,9 @@ namespace MultipleKinectsPlatformServer{
 				A = skeletonFromSceneB.GetCompletePointsVectorMatrix(&testOutputSensorAFile,true); //A
 				B = skeletonFromSceneA.GetCompletePointsVectorMatrix(&testOutputSensorBFile,true); //B
 
-				centroidA = skeletonFromSceneB.ComputeCentroid();
-				centroidB = skeletonFromSceneA.ComputeCentroid();
+				//1x3
+				centroidA = skeletonFromSceneB.ComputeCentroid(&centroidAFile,true);
+				centroidB = skeletonFromSceneA.ComputeCentroid(&centroidBFile,true);
 
 				refFrameOrder = sceneBOrder;
 				bodyFrameOrder = sceneAOrder;
@@ -167,9 +171,9 @@ namespace MultipleKinectsPlatformServer{
 
 			/* Construct the H matrix */
 			unsigned int N = A.rows;
+			Mat H(3, 3, CV_32F, Scalar(0));
 			Mat centroidA_row = centroidA;
 			Mat centroidB_row = centroidB;
-			Mat H(3, 3, CV_32F, Scalar(0));
 
 			for(int row=0;row<N-1;row++){
 				centroidA.push_back(centroidA_row);
@@ -187,27 +191,27 @@ namespace MultipleKinectsPlatformServer{
 			H = firstOperand*secondOperand;
 
 			/* Perform SVD on H */
-			Mat W,U,Vt,Ut,V;
-			SVD::compute(H,W,U,Vt);
+			Mat U,S,Vt,Ut,V;
+			SVD::compute(H,S,U,Vt);
 
 			transpose(U,Ut);
+			transpose(Vt,V);
 
-			/* Compute the Rotation Matrix (3x3) */
-			Mat rotationMatrix=Vt*Ut;
+			/* Compute the Rotation Matrix (3x3) (Verified with Matlab) */
+			Mat rotationMatrix=V*Ut;
 
 			/* Compute the Translation Matrix (3x1) */
 			Mat translationMatrix;
-			Mat negativeRMatrix = -1*rotationMatrix;
 
-			negativeRMatrix.convertTo(negativeRMatrix, CV_32F);
-			centroidA.convertTo(centroidA,CV_32F);
-			Mat centroidA_transpose;
-			transpose(centroidA,centroidA_transpose);
-
-			Mat temp = negativeRMatrix * centroidA_transpose;
+			centroidB_row.convertTo(centroidB_row,CV_32F);
+			rotationMatrix.convertTo(rotationMatrix,CV_32F);
 			Mat centroidB_transpose;
-			transpose(centroidB,centroidB_transpose);
- 			add(temp,centroidB_transpose,translationMatrix,noArray(),CV_32F);
+			transpose(centroidB_row,centroidB_transpose);
+			Mat temp = (-1*rotationMatrix)* centroidB_transpose;
+
+			Mat centroidA_transpose;
+			transpose(centroidA_row,centroidA_transpose);
+ 			add(temp,centroidA_transpose,translationMatrix,noArray(),CV_32F);
 
 			/* Assign to the R and T to the B scene */
 			Scene *bodyFrameScene = this->_orderedScenes.at(bodyFrameOrder-1);

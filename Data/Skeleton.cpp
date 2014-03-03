@@ -80,20 +80,34 @@ namespace MultipleKinectsPlatformServer{
 		return true;
 	}
 
-	Mat Skeleton::ComputeCentroid(){
+	Mat Skeleton::ComputeCentroid(ofstream *fileObj,bool writeToFile){
 
-		
-		Mat centroid_transpose(1,3,CV_32F);
+		double x=this->pos_x,y=this->pos_y,z=this->pos_z;
 
-		Mat completeVectorMatrix = this->GetCompletePointsVectorMatrix(NULL,false);
+		for(int vectorIdx = 0;vectorIdx<this->joints.size();vectorIdx+=1){
+			
+			x += this->joints.at(vectorIdx).X; 
+			y += this->joints.at(vectorIdx).Y;
+			z += this->joints.at(vectorIdx).Z;
 
-		reduce(completeVectorMatrix,/*Sum into this 1x3 matrix*/centroid_transpose,0,/*CV_REDUCE_SUM*/0);
+		}
 
-		//divide by N
-		divide(completeVectorMatrix.rows,centroid_transpose,centroid_transpose);
+		x/=this->joints.size()+1;
+		y/=this->joints.size()+1;
+		z/=this->joints.size()+1;
+		Mat centroid = (Mat_<double>(1,3) << x,y,z);
+
+		if(writeToFile){
+			centroid.convertTo(centroid,CV_64F);
+			*fileObj << centroid.at<double>(0,0) << " ";
+			*fileObj << centroid.at<double>(0,1) << " ";
+			*fileObj << centroid.at<double>(0,2) << " ";
+
+			fileObj->close();
+		}
 
 		/* 1x3 matrix*/
-		return centroid_transpose;
+		return centroid;
 	}
 
 	Mat Skeleton::GetCompletePointsVectorMatrix(ofstream *fileObj,bool writeToFile){
