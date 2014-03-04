@@ -70,6 +70,9 @@
     <Filter Include="Source Files\Web\JS\libraries\workers">
       <UniqueIdentifier>{bf9a215d-a583-4299-ab00-24d7141c5c83}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Web\JS\libraries\three\controls">
+      <UniqueIdentifier>{b3b3e452-dcc4-414d-b6ef-0d82f991569d}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Header Files\Misc">
       <UniqueIdentifier>{268d4a5f-2564-42d2-b08f-2a24d2a42602}</UniqueIdentifier>
     </Filter>
@@ -108,8 +111,20 @@
     <None Include="Web\API\sensors\data.json">
       <Filter>Source Files\Web\API\sensors</Filter>
     </None>
+    <None Include="Web\API\sensors\deregister.json">
+      <Filter>Source Files\Web\API\sensors</Filter>
+    </None>
+    <None Include="Web\API\sensors\register.json">
+      <Filter>Source Files\Web\API\sensors</Filter>
+    </None>
     <None Include="Web\CSS\calibration.css">
       <Filter>Source Files\Web\CSS</Filter>
+    </None>
+    <None Include="Web\CSS\libraries\bootstrap.min.css">
+      <Filter>Source Files\Web\CSS\libraries</Filter>
+    </None>
+    <None Include="Web\CSS\libraries\bootstrap-theme.min.css">
+      <Filter>Source Files\Web\CSS\libraries</Filter>
     </None>
     <None Include="Web\JS\calibration.js">
       <Filter>Source Files\Web\JS</Filter>
@@ -128,6 +143,9 @@
     </None>
     <None Include="Web\JS\libraries\three\three.min.js">
       <Filter>Source Files\Web\JS\libraries\three</Filter>
+    </None>
+    <None Include="Web\CSS\ordering.css">
+      <Filter>Source Files\Web\CSS</Filter>
     </None>
     <None Include="Web\JS\libraries\kinect\joint.js">
       <Filter>Source Files\Web\JS\libraries\kinect</Filter>
@@ -155,6 +173,39 @@
     </None>
     <None Include="Data\JSON\json_valueiterator.inl">
       <Filter>Header Files</Filter>
+    </None>
+    <None Include="Web\API\visualisations\data.json">
+      <Filter>Source Files\Web\API\visualisations</Filter>
+    </None>
+    <None Include="Web\API\visualisations\calibrate.json">
+      <Filter>Source Files\Web\API\visualisations</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\controls\OculusControls.js">
+      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\controls\EditorControls.js">
+      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\controls\FirstPersonControls.js">
+      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\controls\FlyControls.js">
+      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\controls\OrbitControls.js">
+      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\controls\PathControls.js">
+      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\controls\PointerLockControls.js">
+      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\controls\TrackballControls.js">
+      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
+    </None>
+    <None Include="Web\JS\libraries\three\controls\TransformControls.js">
+      <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
