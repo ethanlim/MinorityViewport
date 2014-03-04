@@ -19,9 +19,6 @@
     <Filter Include="Header Files\Data">
       <UniqueIdentifier>{b30e21d3-87fb-4d3a-b7ad-45665466de09}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Networks">
-      <UniqueIdentifier>{ebda5222-f870-4e61-b221-93130829d4da}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Algorithms">
       <UniqueIdentifier>{382d5034-3f08-44a0-b434-18be4effdd9e}</UniqueIdentifier>
     </Filter>
@@ -78,6 +75,9 @@
     </Filter>
     <Filter Include="Source Files\Misc">
       <UniqueIdentifier>{e663e9ed-422f-4ec7-8bc2-a02d302717a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Networks">
+      <UniqueIdentifier>{ebda5222-f870-4e61-b221-93130829d4da}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -165,15 +165,6 @@
     <None Include="Web\ordering.html">
       <Filter>Source Files\Web</Filter>
     </None>
-    <None Include="Data\JSON\json_internalarray.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="Data\JSON\json_internalmap.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="Data\JSON\json_valueiterator.inl">
-      <Filter>Header Files</Filter>
-    </None>
     <None Include="Web\API\visualisations\data.json">
       <Filter>Source Files\Web\API\visualisations</Filter>
     </None>
@@ -206,6 +197,15 @@
     </None>
     <None Include="Web\JS\libraries\three\controls\TransformControls.js">
       <Filter>Source Files\Web\JS\libraries\three\controls</Filter>
+    </None>
+    <None Include="Data\JSON\json_valueiterator.inl">
+      <Filter>Header Files\Data\JSON</Filter>
+    </None>
+    <None Include="Data\JSON\json_internalmap.inl">
+      <Filter>Header Files\Data\JSON</Filter>
+    </None>
+    <None Include="Data\JSON\json_internalarray.inl">
+      <Filter>Header Files\Data\JSON</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -300,7 +300,7 @@
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
     <ClInclude Include="Data\JSON\json_batchallocator.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Data\JSON</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

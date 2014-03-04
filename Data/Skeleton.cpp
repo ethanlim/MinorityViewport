@@ -138,6 +138,8 @@ namespace MultipleKinectsPlatformServer{
 			vectorMatrix.push_back(row);
 		}
 
+		fileObj->close();
+
 		vectorMatrix.convertTo(vectorMatrix,CV_32F);
 
 		return vectorMatrix;

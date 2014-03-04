@@ -207,7 +207,7 @@ namespace MultipleKinectsPlatformServer{
 			rotationMatrix.convertTo(rotationMatrix,CV_32F);
 			Mat centroidB_transpose;
 			transpose(centroidB_row,centroidB_transpose);
-			Mat temp = (-1*rotationMatrix)* centroidB_transpose;
+			Mat temp = (-1*rotationMatrix)*centroidB_transpose;
 
 			Mat centroidA_transpose;
 			transpose(centroidA_row,centroidA_transpose);
