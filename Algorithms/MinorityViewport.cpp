@@ -202,7 +202,6 @@ namespace MultipleKinectsPlatformServer{
 
 			/* Compute the Translation Matrix (3x1) */
 			Mat translationMatrix;
-
 			centroidB_row.convertTo(centroidB_row,CV_32F);
 			rotationMatrix.convertTo(rotationMatrix,CV_32F);
 			Mat centroidB_transpose;
