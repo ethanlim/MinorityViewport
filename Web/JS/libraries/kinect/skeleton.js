@@ -83,7 +83,7 @@ Skeleton.prototype = {
 
     },
 
-    getGeometry: function () {
+    getGeometry: function (nodeColor) {
 
         var skeleton3DObject = new THREE.Object3D();
         var multiplier = 100;
@@ -95,7 +95,7 @@ Skeleton.prototype = {
         for (var joint in this._joints) {
 
             var jointSphere = new THREE.SphereGeometry(5, 10, 10);
-            var jointMaterial = new THREE.MeshPhongMaterial({ color: 0xffff00 });
+            var jointMaterial = new THREE.MeshPhongMaterial({ color: nodeColor});
 
             var jointGeometry = new THREE.Mesh(jointSphere, jointMaterial);
 

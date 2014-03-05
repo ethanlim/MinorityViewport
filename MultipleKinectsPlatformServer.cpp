@@ -6,8 +6,11 @@ namespace MultipleKinectsPlatformServer{
 	  try
 	  {
 		/* Communicate with a centralised time server */
-		this->ReportStatus("Sync with Server Time");
-		NTPClient timeClient("1.asia.pool.ntp.org");
+		default_random_engine generator;
+		uniform_int_distribution<short> distribution(1,4);
+		unsigned short randomTimeServerId = distribution(generator);
+		this->ReportStatus("Sync with Time Server No. "+ std::to_string(randomTimeServerId));
+		NTPClient timeClient(std::to_string(randomTimeServerId)+".asia.pool.ntp.org");
 		long timeFromServer = timeClient.RequestDatetime_UNIX();
 		this->_time = new Timer(timeFromServer);
 		this->_time->Start();
@@ -77,7 +80,7 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	void Core::ReportStatus(string msg){
-		cout << "Status : " << msg << endl;
+		cout << "Core : " << msg << endl;
 	}
 }
 

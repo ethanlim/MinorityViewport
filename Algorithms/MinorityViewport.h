@@ -35,6 +35,7 @@ namespace MultipleKinectsPlatformServer{
 			thread *_mergethread;
 			
 			mutex _orderedSceneMutex;
+
 			vector<Scene*> _orderedScenes;
 			set<Scene*> _scenesSet;
 

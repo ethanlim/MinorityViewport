@@ -8,7 +8,6 @@ namespace MultipleKinectsPlatformServer{
 		_dimensionY(0),
 		_dimensionZ(0),
 		_curTime(time),
-		_refreshRate_ms(30000),
 		_refreshThread(new thread(&MultipleKinectsPlatformServer::Scene::Clear,this)),
 		_firstSkeletonObservedTime_ms(0)
 		,_ordering(0),
@@ -22,7 +21,6 @@ namespace MultipleKinectsPlatformServer{
 		_dimensionY(dim_y),
 		_dimensionZ(dim_z),
 		_curTime(time),
-		_refreshRate_ms(30000),
 		_refreshThread(new thread(&MultipleKinectsPlatformServer::Scene::Clear,this)),
 		_firstSkeletonObservedTime_ms(0)
 		,_ordering(0),
@@ -70,6 +68,10 @@ namespace MultipleKinectsPlatformServer{
 		}
 	}
 
+	void Scene::ManualClear(){
+		this->_skeletons.clear();
+	}
+
 	long Scene::GetFirstSkeletonObservedTime_ms(){
 		return this->_firstSkeletonObservedTime_ms;
 	}
@@ -90,9 +92,9 @@ namespace MultipleKinectsPlatformServer{
 		this->_calibrated = calibrated;
 	}
 
-	void Scene::SetRotationTranslationMatrix(Mat R,Mat T){
-		this->RotationMatrix = R;
-		this->TranslationMatrix = T;
+	void Scene::SetRAndT(Mat R,Mat T){
+		this->RMatrix = R;
+		this->TMatrix = T;
 	}
 
 	void Scene::SetDimensions(unsigned int x, unsigned int y, unsigned int z){
@@ -112,7 +114,7 @@ namespace MultipleKinectsPlatformServer{
 
 	Mat Scene::GetRMatrix(ofstream *fileObj,bool writeToFile){
 
-		Mat RotationMatrix = this->RotationMatrix;
+		Mat RotationMatrix = this->RMatrix;
 
 		if(writeToFile){
 			RotationMatrix.convertTo(RotationMatrix, CV_64F);
@@ -126,12 +128,12 @@ namespace MultipleKinectsPlatformServer{
 			fileObj->close();
 		}
 
-		return this->RotationMatrix;
+		return this->RMatrix;
 	}
 	
 	Mat Scene::GetTMatrix(ofstream *fileObj,bool writeToFile){
 
-		Mat TranslationMatrix = this->TranslationMatrix;
+		Mat TranslationMatrix = this->TMatrix;
 
 		if(writeToFile){
 			TranslationMatrix.convertTo(TranslationMatrix, CV_64F);
@@ -144,11 +146,15 @@ namespace MultipleKinectsPlatformServer{
 			fileObj->close();
 		}
 
-		return this->TranslationMatrix;
+		return this->TMatrix;
 	}
 
-	Scene* Scene::GetReferenceFrame(){
+	Scene* Scene::GetLeftFrame(){
 		return this->left;
+	}
+
+	Scene* Scene::GetRightFrame(){
+		return this->right;
 	}
 
 	map<unsigned short,Skeleton> Scene::GetSkeletons(){

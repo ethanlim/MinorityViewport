@@ -61,10 +61,19 @@ namespace MultipleKinectsPlatformServer{
 		this->skeleton_id = skeleton_id.asUInt();
 		this->sensor_id = sensor_id.asString();
 		this->time_stamp = time_stamp;
+		this->shared = false;
 	}
 
 	Skeleton::~Skeleton(){
 
+	}
+
+	void Skeleton::SetShared(){
+		this->shared = true;
+	}
+
+	void Skeleton::UnsetShared(){
+		this->shared=false;
 	}
 
 	bool Skeleton::checkFullSetOfJoints(){
@@ -222,6 +231,13 @@ namespace MultipleKinectsPlatformServer{
 
 		json+="\"time_stamp\":";
 		json+=to_string(this->time_stamp);
+		json+=",";
+
+		json+="\"shared\":";
+		if(this->shared)
+			json += "\"true\"" ;
+		else
+			json += "\"false\"" ;
 		json+=",";
 
 		json+="\"pos_x\":";

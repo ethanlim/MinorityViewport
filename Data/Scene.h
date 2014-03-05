@@ -34,12 +34,12 @@ namespace MultipleKinectsPlatformServer{
 			Scene *left;
 			Scene *right;
 
-			Mat RotationMatrix;		//3x3
-			Mat TranslationMatrix;	//3x1
+			Mat RMatrix;	//3x3
+			Mat TMatrix;	//3x1
 
 			Timer *_curTime;
 			
-			unsigned long _refreshRate_ms;
+			static const unsigned long _refreshRate_ms=30000;//ms
 			mutex _sceneMutex;
 			thread *_refreshThread;
 
@@ -58,13 +58,16 @@ namespace MultipleKinectsPlatformServer{
 			void SetDimensions(unsigned int x, unsigned int y, unsigned int z);
 			void SetLeftRightScene(Scene *left, Scene *right);
 			void SetCalibrationSkeleton(Skeleton *skeleton);
-			void SetRotationTranslationMatrix(Mat R,Mat T);
+			
 			Mat GetRMatrix(ofstream *fileObj,bool writeToFile);
 			Mat GetTMatrix(ofstream *fileObj,bool writeToFile);
-			Scene* GetReferenceFrame();
+			Scene* GetLeftFrame();
+			Scene* GetRightFrame();
+			void SetRAndT(Mat R,Mat T);
 
 			void Update(unsigned short serverSkeletonId, Skeleton newPerson);
 			void Clear();
+			void ManualClear();
 			long GetFirstSkeletonObservedTime_ms();
 
 			map<unsigned short,Skeleton> GetSkeletons();

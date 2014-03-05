@@ -28,6 +28,8 @@ namespace MultipleKinectsPlatformServer{
 			string sensor_id;
 			long time_stamp;
 
+			bool shared;
+
 		public:
 			double pos_x;
 			double pos_y;
@@ -43,6 +45,8 @@ namespace MultipleKinectsPlatformServer{
 			~Skeleton();
 			Joint GetJoint(Joint::JointType type);
 			
+			void SetShared();
+			void UnsetShared();
 			vector<Joint> joints;
 			void SetJoints(vector<Joint> new_joints);
 			bool checkFullSetOfJoints();

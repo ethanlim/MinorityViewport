@@ -389,7 +389,7 @@ var CalibrationPage = {
 
                 var skeletonObj = new Skeleton(sceneFromServerToDraw["skeletons"][newSkeleton]);
 
-                var skeletonGeometry = skeletonObj.getGeometry();
+                var skeletonGeometry = skeletonObj.getGeometry(0xffff00);
 
                 glScene.add(skeletonGeometry);
             }

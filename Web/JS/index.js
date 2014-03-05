@@ -14,6 +14,7 @@ var IndexPage = {
     Init: function () {
         this.networkClient = Network.initClient(GlobalVar.hostURL,GlobalVar.port),
         this.visualisationCanvas = new Visualisation();
+        localStorage.setItem("globalScene", "");
 
         this.Diagnostic();
 
@@ -50,7 +51,7 @@ var IndexPage = {
 
                 localStorage.setItem("globalScene", JSON.stringify(sceneFromServer));
             } else {
-                localStorage.setItem("globalScene", null);
+                localStorage.setItem("globalScene", "");
             }
         }
     },
@@ -155,14 +156,25 @@ var IndexPage = {
         }
 
         /* Choose the global scene to draw*/
-        var globalScene = JSON.parse(localStorage.getItem("globalScene"));
+        var globalSceneJSON = localStorage.getItem("globalScene");
+        var globalScene;
+        if(globalSceneJSON!=""){
+            globalScene = JSON.parse(globalSceneJSON);
+        }
 
         if (globalScene != null) {
             for (var newSkeleton in globalScene["skeletons"]) {
 
                 var skeletonObj = new Skeleton(globalScene["skeletons"][newSkeleton]);
+                var skeletonGeometry;
 
-                var skeletonGeometry = skeletonObj.getGeometry();
+                if (globalScene["skeletons"][newSkeleton]["shared"] == "true") {
+                    //purple
+                    skeletonGeometry = skeletonObj.getGeometry(0xA30000);
+                } else {
+                    //yellow
+                    skeletonGeometry = skeletonObj.getGeometry(0xffff00);
+                }
 
                 glScene.add(skeletonGeometry);
             }
