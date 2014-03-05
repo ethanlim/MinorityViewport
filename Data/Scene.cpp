@@ -117,9 +117,9 @@ namespace MultipleKinectsPlatformServer{
 		if(writeToFile){
 			RotationMatrix.convertTo(RotationMatrix, CV_64F);
 			for(unsigned int row=0;row<RotationMatrix.rows;row+=1){
-				*fileObj << RotationMatrix.at<double>(row,0) << " ";
-				*fileObj << RotationMatrix.at<double>(row,1) << " ";;
-				*fileObj << RotationMatrix.at<double>(row,2) << " ";;
+				*fileObj << RotationMatrix.at<double>(row,0) << ",";
+				*fileObj << RotationMatrix.at<double>(row,1) << ",";
+				*fileObj << RotationMatrix.at<double>(row,2) ;
 				*fileObj << endl;
 			}
 
@@ -135,15 +135,20 @@ namespace MultipleKinectsPlatformServer{
 
 		if(writeToFile){
 			TranslationMatrix.convertTo(TranslationMatrix, CV_64F);
-			for(unsigned int row=0;row<TranslationMatrix.rows;row+=1){
-				*fileObj << TranslationMatrix.at<double>(row,0);
-				*fileObj << endl;
-			}
+
+			*fileObj << TranslationMatrix.at<double>(0,0) << endl;
+			*fileObj << TranslationMatrix.at<double>(1,0) << endl;
+			*fileObj << TranslationMatrix.at<double>(2,0) << endl;
+			*fileObj << endl;
 
 			fileObj->close();
 		}
 
 		return this->TranslationMatrix;
+	}
+
+	Scene* Scene::GetReferenceFrame(){
+		return this->left;
 	}
 
 	map<unsigned short,Skeleton> Scene::GetSkeletons(){

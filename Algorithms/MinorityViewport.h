@@ -7,6 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include <fstream>
+#include <iostream>
 
 /*********************/
 /*		OPENCV		 */
@@ -40,6 +41,9 @@ namespace MultipleKinectsPlatformServer{
 			void RefreshScenesSet();
 			void MergeScenes();
 			Mat TransformSkeletonMatrix(Mat bodyFramesSkeleton,Mat R, Mat T);
+
+			//Debugging Variables
+			ofstream *mergingLogFile;
 		public:
 			MinorityViewport(Timer *curTime, ClientsList *clients);
 			~MinorityViewport();

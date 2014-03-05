@@ -7,7 +7,7 @@ namespace MultipleKinectsPlatformServer{
 	  {
 		/* Communicate with a centralised time server */
 		this->ReportStatus("Sync with Server Time");
-		NTPClient timeClient("0.asia.pool.ntp.org");
+		NTPClient timeClient("1.asia.pool.ntp.org");
 		long timeFromServer = timeClient.RequestDatetime_UNIX();
 		this->_time = new Timer(timeFromServer);
 		this->_time->Start();

@@ -7,9 +7,13 @@ namespace MultipleKinectsPlatformServer{
 	MinorityViewport::MinorityViewport(Timer *curTime,ClientsList *clients)
 		:_curTime(curTime),_clients(clients)
 	{
+		
+		mergingLogFile = new ofstream();
+
 		//Create the global scene
 		this->_globalScene = new Scene(10,10,10,curTime);
 		this->_mergethread = new thread(&MultipleKinectsPlatformServer::MinorityViewport::MergeScenes,this);
+
 	}
 
 	MinorityViewport::~MinorityViewport(){
@@ -170,17 +174,15 @@ namespace MultipleKinectsPlatformServer{
 			}
 
 			/* Construct the H matrix */
-			unsigned int N = A.rows;
-			Mat H(3, 3, CV_32F, Scalar(0));
 			Mat centroidA_row = centroidA;
 			Mat centroidB_row = centroidB;
 
-			for(int row=0;row<N-1;row++){
+			for(int row=0;row<A.rows-1;row++){
 				centroidA.push_back(centroidA_row);
 				centroidB.push_back(centroidB_row);
 			}
 
-			// H = (B - repmat(centroid_B, N, 1))*(A - repmat(centroid_A, N, 1));
+			// H = (B - repmat(centroid_B, N, 1))'*(A - repmat(centroid_A, N, 1));
 			Mat firstOperand;
 			subtract(B,centroidB,firstOperand,noArray(),CV_32F);
 			transpose(firstOperand,firstOperand);
@@ -188,7 +190,7 @@ namespace MultipleKinectsPlatformServer{
 			Mat secondOperand;
 			subtract(A,centroidA,secondOperand,noArray(),CV_32F);
 
-			H = firstOperand*secondOperand;
+			Mat H = firstOperand*secondOperand;
 
 			/* Perform SVD on H */
 			Mat U,S,Vt,Ut,V;
@@ -210,6 +212,7 @@ namespace MultipleKinectsPlatformServer{
 
 			Mat centroidA_transpose;
 			transpose(centroidA_row,centroidA_transpose);
+
  			add(temp,centroidA_transpose,translationMatrix,noArray(),CV_32F);
 
 			/* Assign to the R and T to the B scene */
@@ -248,6 +251,8 @@ namespace MultipleKinectsPlatformServer{
 
 	void MinorityViewport::MergeScenes(){
 		while(true){
+			this->mergingLogFile->open("MergingLog.txt",ios::app);
+
 			this->_orderedSceneMutex.lock();
 			vector<Scene*> orderedScenes = this->_orderedScenes;
 			this->_orderedSceneMutex.unlock();
@@ -275,31 +280,37 @@ namespace MultipleKinectsPlatformServer{
 							for(map<unsigned short,Skeleton>::iterator bodyFrameSkeleton=originalSkeletons.begin(); bodyFrameSkeleton!= originalSkeletons.end();bodyFrameSkeleton++){
 						
 								Mat translatedSkeletonMatrix = this->TransformSkeletonMatrix(bodyFrameSkeleton->second.GetCompletePointsVectorMatrix(NULL,false),R,T);
-								
-								Mat translatedSkeletonMatrix_transpose;
-								transpose(translatedSkeletonMatrix,translatedSkeletonMatrix_transpose); //21x3
 
-								bodyFrameSkeleton->second.ConvertVectorMatrixtoSkeletonPoints(translatedSkeletonMatrix_transpose);
+								bodyFrameSkeleton->second.ConvertVectorMatrixtoSkeletonPoints(translatedSkeletonMatrix);
 
 								/* Do the comparison with reference frame skeletons and discard skeletons as necessary */
-								map<unsigned short,Skeleton> globalSkeletons = this->_globalScene->GetSkeletons();
 								bool samePerson = false;
-								for(map<unsigned short,Skeleton>::iterator refFrameSkeleton=globalSkeletons.begin(); refFrameSkeleton!=globalSkeletons.end(); refFrameSkeleton++){
+								double threshold = 0.04;
+								Scene *referenceFrame = scenePtr->GetReferenceFrame();
+								map<unsigned short,Skeleton> referenceFrameSkeletons = referenceFrame->GetSkeletons();
+								for(map<unsigned short,Skeleton>::iterator refFrameSkeleton=referenceFrameSkeletons.begin();
+									refFrameSkeleton!=referenceFrameSkeletons.end();
+									refFrameSkeleton++){
+										*this->mergingLogFile << "Reference Skeleton" << endl;
+										*this->mergingLogFile << "X :" << refFrameSkeleton->second.pos_x << endl;
+										*this->mergingLogFile << "Y :" << refFrameSkeleton->second.pos_y << endl;
+										*this->mergingLogFile << "Z :" << refFrameSkeleton->second.pos_z << endl;
 
-									Mat Areft;
-									transpose(refFrameSkeleton->second.GetCompletePointsVectorMatrix(NULL,false),Areft); //3x21
+										*this->mergingLogFile << "Body Skeleton" << endl;
+										*this->mergingLogFile << "X :" << bodyFrameSkeleton->second.pos_x << endl;
+										*this->mergingLogFile << "Y :" << bodyFrameSkeleton->second.pos_y << endl;
+										*this->mergingLogFile << "Z :" << bodyFrameSkeleton->second.pos_z << endl;
 
-									SVD svd(translatedSkeletonMatrix);
-									Mat pInverse = svd.vt.t()*Mat::diag(1./svd.w)*svd.u.t();	//3x21
-									
-									Mat leastSquare = pInverse*Areft;
-
-									transpose(leastSquare,leastSquare);
-
-									Mat disparity;
-									subtract(Areft,translatedSkeletonMatrix,disparity,noArray(),CV_64F);
+										if(abs(refFrameSkeleton->second.pos_x-bodyFrameSkeleton->second.pos_x)>threshold||
+										   abs(refFrameSkeleton->second.pos_y-bodyFrameSkeleton->second.pos_y)>threshold||
+										   abs(refFrameSkeleton->second.pos_z-bodyFrameSkeleton->second.pos_z)>threshold){
+												samePerson=true;
+										}else{
+												samePerson=false;
+										}
 								}
 
+								map<unsigned short,Skeleton> globalSkeletons = this->_globalScene->GetSkeletons();
 								if(samePerson){
 
 								}else{
@@ -310,37 +321,43 @@ namespace MultipleKinectsPlatformServer{
 									}
 
 									// Add into the global scene
-									//this->_globalScene->Update(currentSkeletonId,bodyFrameSkeleton->second);
-								}
+									this->_globalScene->Update(currentSkeletonId,bodyFrameSkeleton->second);
+								}		
 							}
 						}
 					}
 				}
 			}
+
+			this->mergingLogFile->close();
 		}
 	}
 
-	Mat MinorityViewport::TransformSkeletonMatrix(Mat bodyFramesSkeleton,Mat R, Mat T){
-		Mat B = bodyFramesSkeleton;
+
+	/**
+	 *	Implement the formulat 
+	 *	A (3xn) = R(3x3)*B(3xn)+T(3xn)
+	 */
+	Mat MinorityViewport::TransformSkeletonMatrix(Mat bodyFramesSkeleton,Mat R, Mat T)
+	{
 		Mat Bt;		
-		transpose(B,Bt);	//3x21
+		transpose(bodyFramesSkeleton,Bt);							//3x21
 
 		Mat Tt;				
 		transpose(T,Tt);
-		Mat TResized(Tt);	//1x3
-						
+		Mat TResized(Tt);											//1x3
 		for(int col=0;col<Bt.cols-1;col+=1){
-			TResized.push_back(Tt);			//21x3
+			TResized.push_back(Tt);									//21x3
 		}
-
-		transpose(TResized,TResized);	//3x21
-
-		Mat translatedMatrix;	//3x21
+		transpose(TResized,TResized);								//3x21
+					
 		Mat RmulBt;
-		RmulBt = R*Bt;		//3x21
-		add(RmulBt,TResized,translatedMatrix,noArray(),CV_32F);
+		RmulBt = R*Bt;												//3x21
+		Mat transformedMatrix;										//3x21
+		add(RmulBt,TResized,transformedMatrix,noArray(),CV_32F);
+		transpose(transformedMatrix,transformedMatrix);
 
-		return translatedMatrix;	//3x21
+		return transformedMatrix;									//21x3
 	}
 
 	void MinorityViewport::RefreshScenesSet(){

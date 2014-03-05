@@ -99,8 +99,8 @@ namespace MultipleKinectsPlatformServer{
 
 		if(writeToFile){
 			centroid.convertTo(centroid,CV_64F);
-			*fileObj << centroid.at<double>(0,0) << " ";
-			*fileObj << centroid.at<double>(0,1) << " ";
+			*fileObj << centroid.at<double>(0,0) << ",";
+			*fileObj << centroid.at<double>(0,1) << ",";
 			*fileObj << centroid.at<double>(0,2) << " ";
 
 			fileObj->close();
@@ -116,8 +116,8 @@ namespace MultipleKinectsPlatformServer{
 		Mat vectorMatrix = (Mat_<double>(1,3) << this->pos_x, this->pos_y,this->pos_z);
 		
 		if(writeToFile){
-			*fileObj << this->pos_x << " ";
-			*fileObj << this->pos_y << " ";
+			*fileObj << this->pos_x << ",";
+			*fileObj << this->pos_y << ",";
 			*fileObj << this->pos_z << " ";
 			*fileObj << endl;
 		}
@@ -129,8 +129,8 @@ namespace MultipleKinectsPlatformServer{
 											 this->joints.at(vectorIdx).Z);
 
 			if(writeToFile){
-				*fileObj << this->joints.at(vectorIdx).X << " ";
-				*fileObj << this->joints.at(vectorIdx).Y << " ";
+				*fileObj << this->joints.at(vectorIdx).X << ",";
+				*fileObj << this->joints.at(vectorIdx).Y << ",";
 				*fileObj << this->joints.at(vectorIdx).Z << " ";
 				*fileObj << endl;
 			} 
@@ -138,7 +138,9 @@ namespace MultipleKinectsPlatformServer{
 			vectorMatrix.push_back(row);
 		}
 
-		fileObj->close();
+		if(writeToFile){
+			fileObj->close();
+		}
 
 		vectorMatrix.convertTo(vectorMatrix,CV_32F);
 

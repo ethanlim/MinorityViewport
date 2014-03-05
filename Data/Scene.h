@@ -61,6 +61,7 @@ namespace MultipleKinectsPlatformServer{
 			void SetRotationTranslationMatrix(Mat R,Mat T);
 			Mat GetRMatrix(ofstream *fileObj,bool writeToFile);
 			Mat GetTMatrix(ofstream *fileObj,bool writeToFile);
+			Scene* GetReferenceFrame();
 
 			void Update(unsigned short serverSkeletonId, Skeleton newPerson);
 			void Clear();
