@@ -12,6 +12,7 @@ var CalibrationPage = {
     visualisationCanvas1: null,
     commWorkersId: [],
 
+    calibrationMode: false,
     automaticSkeletonTimeoutVar:null,
     lockBtnToggle:false,
 
@@ -39,6 +40,8 @@ var CalibrationPage = {
                                        ,this.ReconstructFn);
         this.visualisationCanvas0.render("canvas-container-0");
         this.visualisationCanvas1.render("canvas-container-1");
+
+        localStorage.setItem("lockingMode", "false");
 
         this.UpdateSensorTable(this.clients);
         this.UpdateSensorDDL(this.clients);
@@ -263,14 +266,14 @@ var CalibrationPage = {
     LockBtnHandler: function(event){
         var callingObj = event.data.callingObj;
         var lockBtn = event.currentTarget;
-
-
+        
         if (!callingObj.lockBtnToggle) {
             jQuery(lockBtn).removeClass("btn-default");
             jQuery(lockBtn).addClass("btn-warning");
             callingObj.lockBtnToggle = true;
 
             callingObj.UpdateCalibrationMenuStatus("Scene Locking In Process","warning");
+            localStorage.setItem("lockingMode", "true");
 
             clearTimeout(callingObj.automaticSkeletonTimeoutVar);
 
@@ -291,6 +294,7 @@ var CalibrationPage = {
             jQuery(lockBtn).removeClass("btn-warning");
             callingObj.lockBtnToggle = false;
             callingObj.UpdateCalibrationMenuStatus("Scene Locking Manually Cancelled", "default");
+            localStorage.setItem("lockingMode", "false");
         }
     },
 
@@ -298,6 +302,7 @@ var CalibrationPage = {
         var callingObj = event.data.callingObj;
         
         callingObj.UpdateCalibrationMenuStatus("Calibration Started", "warning");
+
 
         var lockedScenes = JSON.parse(localStorage.getItem("lockedScenes"));
 
@@ -364,6 +369,7 @@ var CalibrationPage = {
                 jQuery(lockBtn).removeClass("btn-warning");
                 callingObj.lockBtnToggle = false;
                 callingObj.UpdateCalibrationMenuStatus("Scene Successfully Locked", "success");
+                localStorage.setItem("lockingMode", "false");
 
                 clearInterval(callingObj.automaticSkeletonTimeoutVar);
             }
@@ -388,8 +394,13 @@ var CalibrationPage = {
             for (var newSkeleton in sceneFromServerToDraw["skeletons"]) {
 
                 var skeletonObj = new Skeleton(sceneFromServerToDraw["skeletons"][newSkeleton]);
+                var skeletonGeometry;
 
-                var skeletonGeometry = skeletonObj.getGeometry(0xffff00);
+                if (localStorage.getItem("lockingMode") == "true") {
+                    skeletonGeometry = skeletonObj.getGeometry(0xFF0000);
+                } else {
+                    skeletonGeometry = skeletonObj.getGeometry(0xffff00);
+                }                
 
                 glScene.add(skeletonGeometry);
             }
