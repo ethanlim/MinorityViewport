@@ -5,7 +5,8 @@
 #include <string>
 #include <thread>
 #include <mutex>
-#include <random>
+#include <cstdlib>
+#include <ctime>
 
 /*********************/
 /*		BOOST		*/

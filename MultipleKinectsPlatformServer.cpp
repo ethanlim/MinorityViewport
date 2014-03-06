@@ -6,9 +6,7 @@ namespace MultipleKinectsPlatformServer{
 	  try
 	  {
 		/* Communicate with a centralised time server */
-		default_random_engine generator;
-		uniform_int_distribution<short> distribution(1,4);
-		unsigned short randomTimeServerId = distribution(generator);
+		unsigned short randomTimeServerId = rand()%5;
 		this->ReportStatus("Sync with Time Server No. "+ std::to_string(randomTimeServerId));
 		NTPClient timeClient(std::to_string(randomTimeServerId)+".asia.pool.ntp.org");
 		long timeFromServer = timeClient.RequestDatetime_UNIX();
@@ -86,6 +84,8 @@ namespace MultipleKinectsPlatformServer{
 
 int main(int argc, char **argv)
 {
+	srand(time(NULL));
+
 	if(argc==1){
 		throw exception("Program arguments are empty");
 	}
@@ -100,11 +100,13 @@ int main(int argc, char **argv)
 		thread job_thread1(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
 		thread job_thread2(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
 		thread job_thread3(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+		thread job_thread4(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
 
 		server_thread.join();
 		job_thread1.join();
 		job_thread2.join();
 		job_thread3.join();
+		job_thread4.join();
 	}catch(exception &error){
 		throw error;
 	}
