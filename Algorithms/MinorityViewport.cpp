@@ -271,16 +271,19 @@ namespace MultipleKinectsPlatformServer{
 
 					if(scenePtr->GetCalibration()){
 
-						map<unsigned short,Skeleton> originalSkeletons = scenePtr->GetSkeletons();
+						//Get the current scene skeletons
+						map<unsigned short,Skeleton> currentSceneSkeletons = scenePtr->GetSkeletons();
 
 						if(orderedSceneItr==orderedScenes.begin()){
-
+							
 							map<unsigned short,Skeleton> rightFrameSkeletons = scenePtr->GetRightFrame()->GetSkeletons();
 
 							if(rightFrameSkeletons.size()==0){
 								//Right Frame can no longer see the skeletons
 
-								for(map<unsigned short,Skeleton>::iterator firstFrameSkeleton=originalSkeletons.begin(); firstFrameSkeleton!= originalSkeletons.end();firstFrameSkeleton++){
+								for(map<unsigned short,Skeleton>::iterator firstFrameSkeleton=currentSceneSkeletons.begin(); 
+																		   firstFrameSkeleton!= currentSceneSkeletons.end();
+																		   firstFrameSkeleton++){
 									firstFrameSkeleton->second.UnsetShared();
 									this->_globalScene->Update(firstFrameSkeleton->first,firstFrameSkeleton->second);
 								}
@@ -291,7 +294,11 @@ namespace MultipleKinectsPlatformServer{
 								if(leftFrameSkeletons.size()==0){
 									//Left frame can no longer see the skeleton
 
-									for(map<unsigned short,Skeleton>::iterator bodyFrameSkeleton=originalSkeletons.begin(); bodyFrameSkeleton!= originalSkeletons.end();bodyFrameSkeleton++){
+									for(map<unsigned short,Skeleton>::iterator bodyFrameSkeleton=currentSceneSkeletons.begin(); 
+																			   bodyFrameSkeleton!=currentSceneSkeletons.end();
+																			   bodyFrameSkeleton++){
+										
+										//Indicate that they are not shared
 										bodyFrameSkeleton->second.UnsetShared();
 
 										//check that skeleton id do not clash
@@ -303,7 +310,9 @@ namespace MultipleKinectsPlatformServer{
 									}
 								}else{
 									/* In between two sensors */
-									for(map<unsigned short,Skeleton>::iterator bodyFrameSkeleton=originalSkeletons.begin(); bodyFrameSkeleton!= originalSkeletons.end();bodyFrameSkeleton++){
+									for(map<unsigned short,Skeleton>::iterator bodyFrameSkeleton=currentSceneSkeletons.begin();
+										                                       bodyFrameSkeleton!= currentSceneSkeletons.end();
+																			   bodyFrameSkeleton++){
 
 										/* All body frames skeletons need to be transform to left frame coordinates */
 										Mat R = scenePtr->GetRMatrix(NULL,false); //3x3
@@ -324,9 +333,9 @@ namespace MultipleKinectsPlatformServer{
 													abs(refFrameSkeleton->second.pos_z-bodyFrameSkeleton->second.pos_z)>threshold){
 														//human appear on left scene as well
 											   
-														bodyFrameSkeleton->second.SetShared();
+														refFrameSkeleton->second.SetShared();
 
-														this->_globalScene->Update(refFrameSkeleton->second.GetSkeletonId(),bodyFrameSkeleton->second);
+														this->_globalScene->Update(refFrameSkeleton->second.GetSkeletonId(),refFrameSkeleton->second);
 												}
 										}
 									}
