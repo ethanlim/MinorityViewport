@@ -46,6 +46,13 @@ namespace MultipleKinectsPlatformServer{
 		this->_sceneMutex.unlock();
 	}
 
+	void Scene::Remove(unsigned short serverSkeletonId){
+
+		this->_sceneMutex.lock();
+		this->_skeletons.erase(serverSkeletonId);
+		this->_sceneMutex.unlock();
+	}
+
 	void Scene::Clear(){
 
 		long curTime;
