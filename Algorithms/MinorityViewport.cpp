@@ -346,7 +346,6 @@ namespace MultipleKinectsPlatformServer{
 			}
 	}
 
-
 	/**
 	 *	Implement the formulat 
 	 *	A (3xn) = R(3x3)*B(3xn)+T(3xn)
@@ -397,7 +396,6 @@ namespace MultipleKinectsPlatformServer{
 	Scene* MinorityViewport::GetGlobalScene(){
 
 		if(this->_orderedScenes.size()!=0){
-
 			this->MergeScenes();
 			return this->_globalScene;
 		}else{
