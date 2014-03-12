@@ -52,9 +52,7 @@ namespace MultipleKinectsPlatformServer{
 			timeRecv-= 2208988800U;  //Unix time starts from 01/01/1970 == 2208988800U
 
 		}catch (std::exception& e){
-
 			std::cerr << e.what() << std::endl;
-
 		}
 
 		return (long)timeRecv;

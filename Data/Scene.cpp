@@ -21,7 +21,7 @@ namespace MultipleKinectsPlatformServer{
 		_dimensionY(dim_y),
 		_dimensionZ(dim_z),
 		_curTime(time),
-		_refreshThread(new thread(&MultipleKinectsPlatformServer::Scene::Clear,this)),
+		_refreshThread(NULL),
 		_firstSkeletonObservedTime_ms(0)
 		,_ordering(0),
 		_calibrated(false)
@@ -43,6 +43,13 @@ namespace MultipleKinectsPlatformServer{
 		this->_skeletons.erase(serverSkeletonId);
 		this->_skeletons.insert(std::pair<unsigned short,Skeleton>(serverSkeletonId,newPerson));
 		
+		this->_sceneMutex.unlock();
+	}
+
+	void Scene::Remove(unsigned short serverSkeletonId){
+
+		this->_sceneMutex.lock();
+		this->_skeletons.erase(serverSkeletonId);
 		this->_sceneMutex.unlock();
 	}
 
@@ -69,7 +76,9 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	void Scene::ManualClear(){
+		this->_sceneMutex.lock();
 		this->_skeletons.clear();
+		this->_sceneMutex.unlock();
 	}
 
 	long Scene::GetFirstSkeletonObservedTime_ms(){

@@ -7,12 +7,15 @@ namespace MultipleKinectsPlatformServer{
 	  {
 		/* Communicate with a centralised time server */
 		unsigned short randomTimeServerId = rand()%5;
-		this->ReportStatus("Sync with Time Server No. "+ std::to_string(randomTimeServerId));
-		NTPClient timeClient(std::to_string(randomTimeServerId)+".asia.pool.ntp.org");
+		string timeServer = std::to_string(randomTimeServerId)+".asia.pool.ntp.org";
+		this->ReportStatus("Sync with Time Server - "+ timeServer);
+		NTPClient timeClient(timeServer);
 		long timeFromServer = timeClient.RequestDatetime_UNIX();
 		this->_time = new Timer(timeFromServer);
+		this->_time = new Timer(0);
 		this->_time->Start();
-		
+
+
 		this->ReportStatus("Create Key Objects");
 		/* Initialise the Client Machine List */
 		this->_clientList = new MultipleKinectsPlatformServer::ClientsList(this->_time);
@@ -86,27 +89,47 @@ int main(int argc, char **argv)
 {
 	srand(time(NULL));
 
+	MultipleKinectsPlatformServer::Core *platform;
+
 	if(argc==1){
 		throw exception("Program arguments are empty");
 	}
 
 	try{
-		MultipleKinectsPlatformServer::Core platform(argv[1],argv[2]);
+		platform = new MultipleKinectsPlatformServer::Core(argv[1],argv[2]);
 
-		// Start Server on a separate thread
-		thread server_thread(&MultipleKinectsPlatformServer::Core::BeginListen,platform);
+		if(platform!=NULL){
+			// Start Server on a separate thread
+			thread server_thread(&MultipleKinectsPlatformServer::Core::BeginListen,platform);
 
-		// Process Job on a separate thread
-		thread job_thread1(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-		thread job_thread2(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-		thread job_thread3(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-		thread job_thread4(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			// Process Job on a separate thread
+			thread job_thread1(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread2(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread3(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread4(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread5(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread6(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread7(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread8(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread9(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread10(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread11(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread12(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread13(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread14(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread15(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread16(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread17(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread18(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread19(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
+			thread job_thread20(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
 
-		server_thread.join();
-		job_thread1.join();
-		job_thread2.join();
-		job_thread3.join();
-		job_thread4.join();
+			server_thread.join();
+			job_thread1.join();
+			job_thread2.join();
+			job_thread3.join();
+			job_thread4.join();
+		}
 	}catch(exception &error){
 		throw error;
 	}

@@ -34,8 +34,8 @@ namespace MultipleKinectsPlatformServer{
 			Scene *left;
 			Scene *right;
 
-			Mat RMatrix;	//3x3
-			Mat TMatrix;	//3x1
+			Mat RMatrix;	//Rotation Matrix that rotate all vectors here to the prev scene
+			Mat TMatrix;	//Translation Matrix that translate all vectors here to the prev scenen
 
 			Timer *_curTime;
 			
@@ -66,6 +66,7 @@ namespace MultipleKinectsPlatformServer{
 			void SetRAndT(Mat R,Mat T);
 
 			void Update(unsigned short serverSkeletonId, Skeleton newPerson);
+			void Remove(unsigned short serverSkeletonId);
 			void Clear();
 			void ManualClear();
 			long GetFirstSkeletonObservedTime_ms();
