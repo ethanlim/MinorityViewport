@@ -238,6 +238,19 @@ namespace MultipleKinectsPlatformServer{
 		return calibrateSuccess;
 	}
 
+	void MinorityViewport::ProcessSensorData(string timeStamp,string sensorData){
+		Json::Value root;   
+		Json::Reader reader;
+
+		if (!sensorData.empty()&&!timeStamp.empty()&&reader.parse(sensorData,root))
+		{
+			for(unsigned short skeletons=0;skeletons<root.size();skeletons++){
+				MultipleKinectsPlatformServer::Skeleton newSkeleton(root.get(skeletons,NULL),atol(timeStamp.c_str()));
+				this->LoadSkeleton(newSkeleton);
+			}
+		}
+	}
+
 	void MinorityViewport::LoadSkeleton(Skeleton newSkeleton){
 
 		unsigned int clientId = newSkeleton.GetClientId();

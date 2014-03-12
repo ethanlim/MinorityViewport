@@ -58,7 +58,8 @@ namespace http {
 
 		/* Insert it into the Job Queue */
 		if(!sensorData_JSON.empty()&&!time_stamp.empty()){
-			_job_queue->push(sensorData_JSON,time_stamp);
+			//_job_queue->push(sensorData_JSON,time_stamp);
+			this->_viewport->ProcessSensorData(time_stamp,sensorData_JSON);
 		}
 	  }
 

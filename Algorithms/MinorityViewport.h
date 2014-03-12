@@ -51,6 +51,7 @@ namespace MultipleKinectsPlatformServer{
 
 			bool CalibrateSceneOrder();
 			bool CalibrateScenes(unsigned int sceneAOrder,string skeletonA_json,unsigned int sceneBOrder,string skeletonB_json);
+			void ProcessSensorData(string timeStamp,string sensorData);
 			void LoadSkeleton(Skeleton newSkeleton);
 
 			Scene* GetGlobalScene();
