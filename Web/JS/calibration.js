@@ -287,12 +287,13 @@ var CalibrationPage = {
             }, 1);
            
         } else {
-
-            window.clearInterval(callingObj.automaticSkeletonTimeoutVar);
-
             jQuery(lockBtn).addClass("btn-default");
             jQuery(lockBtn).removeClass("btn-warning");
             callingObj.lockBtnToggle = false;
+
+            /* Stop the skeletons collection */
+            window.clearInterval(callingObj.automaticSkeletonTimeoutVar);
+
             callingObj.UpdateCalibrationMenuStatus("Scene Locking Manually Cancelled", "default");
             localStorage.setItem("lockingMode", "false");
         }
