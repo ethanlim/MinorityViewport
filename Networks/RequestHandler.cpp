@@ -52,15 +52,8 @@ namespace http {
 	  /********************************************************/
 	  if(request_path == "/api/sensors/data.json")
 	  {
-		// Get Sensor JSON in the header
-		string sensorData_JSON = this->request_header_val(req,"SENSOR_JSON");
-		string time_stamp = this->request_header_val(req,"TIME_STAMP");
-
-		/* Insert it into the Job Queue */
-		if(!sensorData_JSON.empty()&&!time_stamp.empty()){
-			//_job_queue->push(sensorData_JSON,time_stamp);
-			this->_viewport->ProcessSensorData(time_stamp,sensorData_JSON);
-		}
+		//_job_queue->push(sensorData_JSON,time_stamp);
+		this->_viewport->ProcessSensorData(this->request_header_val(req,"TIME_STAMP"),this->request_header_val(req,"SENSOR_JSON"));
 	  }
 
 	  /********************************************************/

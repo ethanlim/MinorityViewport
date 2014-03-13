@@ -244,7 +244,8 @@ namespace MultipleKinectsPlatformServer{
 
 		if (!sensorData.empty()&&!timeStamp.empty()&&reader.parse(sensorData,root))
 		{
-			for(unsigned short skeletons=0;skeletons<root.size();skeletons++){
+			unsigned int numOfSkeletons = root.size();
+			for(unsigned short skeletons=0;skeletons<numOfSkeletons;skeletons++){
 				MultipleKinectsPlatformServer::Skeleton newSkeleton(root.get(skeletons,NULL),atol(timeStamp.c_str()));
 				this->LoadSkeleton(newSkeleton);
 			}
@@ -266,7 +267,6 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	void MinorityViewport::MergeScenes(){
-			while(1){
 				this->_globalScene->ManualClear();
 				
 				this->_orderedSceneMutex.lock();
@@ -334,7 +334,6 @@ namespace MultipleKinectsPlatformServer{
 						}
 					}
 				}
-			}
 	}
 
 	/**
@@ -386,6 +385,7 @@ namespace MultipleKinectsPlatformServer{
 
 	Scene* MinorityViewport::GetGlobalScene(){
 		if(this->_orderedScenes.size()!=0){
+			this->MergeScenes();
 			return this->_globalScene;
 		}else{
 			return NULL;

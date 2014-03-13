@@ -27,7 +27,7 @@ namespace MultipleKinectsPlatformServer{
 		this->ReportStatus("Server Starting");
 		//Initialise the Server with the number of threads
 		string docRoot = "C:\\Users\\ethanlim\\Documents\\Projects\\School\\MultipleKinectsPlatformServer\\Web";
-		std::size_t num_threads = boost::lexical_cast<std::size_t>(20);
+		std::size_t num_threads = boost::lexical_cast<std::size_t>(30);
 		this->_server = new http::server::server(address, 
 												port, 
 												docRoot, 
@@ -103,32 +103,18 @@ int main(int argc, char **argv)
 			thread server_thread(&MultipleKinectsPlatformServer::Core::BeginListen,platform);
 
 			// Process Job on a separate thread
+			/*
 			thread job_thread1(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
 			thread job_thread2(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
 			thread job_thread3(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
 			thread job_thread4(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread5(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread6(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread7(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread8(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread9(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread10(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread11(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread12(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread13(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread14(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread15(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread16(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread17(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread18(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread19(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread20(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-
-			server_thread.join();
 			job_thread1.join();
 			job_thread2.join();
 			job_thread3.join();
 			job_thread4.join();
+			*/
+
+			server_thread.join();
 		}
 	}catch(exception &error){
 		throw error;
