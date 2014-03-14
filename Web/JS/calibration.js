@@ -271,16 +271,15 @@ var CalibrationPage = {
             jQuery(lockBtn).removeClass("btn-default");
             jQuery(lockBtn).addClass("btn-warning");
             callingObj.lockBtnToggle = true;
-
             callingObj.UpdateCalibrationMenuStatus("Scene Locking In Process","warning");
             localStorage.setItem("lockingMode", "true");
 
             clearTimeout(callingObj.automaticSkeletonTimeoutVar);
 
-            var lockedScenes = new Array(2)
-            lockedScenes[0] = { sensorId: null, scene: null };
-            lockedScenes[1] = { sensorId: null, scene: null };
-            localStorage.setItem("lockedScenes", JSON.stringify(lockedScenes));
+            var lockedSkeletons = new Array(2)
+            lockedSkeletons[0] = new Array();
+            lockedSkeletons[1] = new Array();
+            localStorage.setItem("lockedSkeletons", JSON.stringify(lockedSkeletons));
 
             callingObj.automaticSkeletonTimeoutVar = window.setInterval(function () {
                 callingObj.AutomaticSceneLockingHandler(callingObj,lockBtn);
@@ -290,12 +289,35 @@ var CalibrationPage = {
             jQuery(lockBtn).addClass("btn-default");
             jQuery(lockBtn).removeClass("btn-warning");
             callingObj.lockBtnToggle = false;
+            callingObj.UpdateCalibrationMenuStatus("Scene Locking Stopped", "default");
+            localStorage.setItem("lockingMode", "false");
 
             /* Stop the skeletons collection */
             window.clearInterval(callingObj.automaticSkeletonTimeoutVar);
+        }
+    },
 
-            callingObj.UpdateCalibrationMenuStatus("Scene Locking Manually Cancelled", "default");
-            localStorage.setItem("lockingMode", "false");
+    AutomaticSceneLockingHandler: function (callingObj, lockBtn) {
+
+        /* Copy a set of locked scenes from active scenes which are constantly updated */
+        var activeScenes = jQuery.data(document.body, "scenes");
+
+        if (activeScenes[0]["scene"] != null && activeScenes[1]["scene"] != null) {
+
+            var lockedSkeletonsA = activeScenes[0]["scene"]["skeletons"];
+            var lockedSkeletonsB = activeScenes[1]["scene"]["skeletons"];
+
+            var lockedSkeletons = JSON.parse(localStorage.getItem("lockedSkeletons"));
+
+            if (lockedSkeletonsA.length > 0 && lockedSkeletonsB.length > 0) {
+                if (lockedSkeletonsA[0]["joints"].length >= 20 && lockedSkeletonsB[0]["joints"].length >= 20) {
+
+                    lockedSkeletons[0].push(lockedSkeletonsA[0]);
+                    lockedSkeletons[1].push(lockedSkeletonsB[0]);
+
+                    localStorage.setItem("lockedSkeletons", JSON.stringify(lockedSkeletons));
+                }
+            }
         }
     },
 
@@ -304,22 +326,23 @@ var CalibrationPage = {
         
         callingObj.UpdateCalibrationMenuStatus("Calibration Started", "warning");
 
+        /* Get all the captured skeletons */
+        var lockedSkeletons = JSON.parse(localStorage.getItem("lockedSkeletons"));
+        var activeScenes = jQuery.data(document.body, "scenes");
 
-        var lockedScenes = JSON.parse(localStorage.getItem("lockedScenes"));
+        var sceneAOrder = activeScenes[0]["scene"]["ordering"];
+        var sceneBOrder = activeScenes[1]["scene"]["ordering"];
 
-        var sceneAOrder = lockedScenes[0]["scene"]["ordering"];
-        var sceneBOrder = lockedScenes[1]["scene"]["ordering"];
-
-        var lockedSkeletonsA = lockedScenes[0]["scene"]["skeletons"];
-        var lockedSkeletonsB = lockedScenes[1]["scene"]["skeletons"];
+        var lockedSkeletonsA = lockedSkeletons[0];
+        var lockedSkeletonsB = lockedSkeletons[1];
 
         if (lockedSkeletonsA.length > 0  && lockedSkeletonsB.length > 0) {
-            if (callingObj.networkClient.calibrateScene(sceneAOrder, lockedSkeletonsA[0], sceneBOrder, lockedSkeletonsB[0])) {
+            if (callingObj.networkClient.calibrateScene(sceneAOrder, lockedSkeletonsA, sceneBOrder, lockedSkeletonsB)) {
                 callingObj.UpdateCalibrationMenuStatus("Calibration Succeeded", "success");
                 
+                /* Update sensor calibration status on site*/
                 sensorAId = lockedSkeletonsA[0]["sensor_id"];
                 sensorBId = lockedSkeletonsB[0]["sensor_id"];
-
                 jQuery("#sensor-info > tbody > tr").each(function () {
                     var id = jQuery(this).attr('id');
                     if (id == sensorAId) {
@@ -331,48 +354,6 @@ var CalibrationPage = {
 
             } else {
                 callingObj.UpdateCalibrationMenuStatus("Calibration Failed", "warning");
-            }
-        }
-    },
-
-    AutomaticSceneLockingHandler: function (callingObj, lockBtn) {
-
-        var fullSkeletonAJointsCapture=fullSkeletonBJointsCapture=false;
-
-        /* Copy a set of locked scenes from active scenes which are constantly updated */
-        var activeScenes = jQuery.data(document.body, "scenes");
-
-        if (activeScenes[0]["scene"] != null && activeScenes[1]["scene"] != null) {
-
-            var lockedSkeletonsA = activeScenes[0]["scene"]["skeletons"];
-            var lockedSkeletonsB = activeScenes[1]["scene"]["skeletons"];
-
-            var lockedScenes = JSON.parse(localStorage.getItem("lockedScenes"));
-
-            if (lockedSkeletonsA.length > 0 && lockedSkeletonsB.length > 0) {
-                
-                if (lockedSkeletonsA[0]["joints"].length >= 20 && lockedSkeletonsB[0]["joints"].length >= 20) {
-
-                    lockedScenes[0] = activeScenes[0];
-                    lockedScenes[1] = activeScenes[1];
-                    lockedScenes[0]["scene"]["skeletons"] = lockedSkeletonsA;
-                    lockedScenes[1]["scene"]["skeletons"] = lockedSkeletonsB;
-
-                    localStorage.setItem("lockedScenes", JSON.stringify(lockedScenes));
-                    fullSkeletonAJointsCapture = fullSkeletonBJointsCapture = true;
-                }
-            }
-
-            if (lockedScenes[0]["scene"] != null && lockedScenes[1]["scene"] != null &&
-                fullSkeletonAJointsCapture && fullSkeletonBJointsCapture)
-            {
-                jQuery(lockBtn).addClass("btn-default");
-                jQuery(lockBtn).removeClass("btn-warning");
-                callingObj.lockBtnToggle = false;
-                callingObj.UpdateCalibrationMenuStatus("Scene Successfully Locked", "success");
-                localStorage.setItem("lockingMode", "false");
-
-                clearInterval(callingObj.automaticSkeletonTimeoutVar);
             }
         }
     },
