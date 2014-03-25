@@ -165,6 +165,9 @@
     <None Include="Web\JS\libraries\libGlobal.js">
       <Filter>Source Files\Web\JS\libraries</Filter>
     </None>
+    <None Include="Web\training.html">
+      <Filter>Source Files\Web</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Algorithms\MinorityViewport.h">
