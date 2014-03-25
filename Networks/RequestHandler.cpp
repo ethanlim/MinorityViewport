@@ -41,7 +41,8 @@ namespace http {
 	  }
 
 	  /********************************************************/
-	  /*
+	  /* 
+		 @Depreciated
 		 Endpoint for Sensor Data
 		 @parameters
 		 string SensorData_JSON
@@ -53,7 +54,7 @@ namespace http {
 	  if(request_path == "/api/sensors/data.json")
 	  {
 		//_job_queue->push(sensorData_JSON,time_stamp);
-		this->_viewport->ProcessSensorData(this->request_header_val(req,"TIME_STAMP"),this->request_header_val(req,"SENSOR_JSON"));
+		//this->_viewport->ProcessSensorData(this->request_header_val(req,"TIME_STAMP"),this->request_header_val(req,"SENSOR_JSON"));
 	  }
 
 	  /********************************************************/
@@ -190,9 +191,9 @@ namespace http {
 	  {
 		  ofstream outputFile(_doc_root+request_path);
 		  string sceneAOrder_JSON = this->request_header_val(req,"SCENE_A_ORDER");
-		  string skeletonA_JSON = this->request_header_val(req,"SKELETON_A");
+		  string skeletonsA_JSON = this->request_header_val(req,"SKELETONS_A");
 		  string sceneBOrder_JSON = this->request_header_val(req,"SCENE_B_ORDER");
-		  string skeletonB_JSON = this->request_header_val(req,"SKELETON_B");
+		  string skeletonsB_JSON = this->request_header_val(req,"SKELETONS_B");
 
 		  outputFile << "{";
 		  outputFile << "\"result\":";
@@ -200,9 +201,9 @@ namespace http {
 
 		 
 		  if(this->_viewport->CalibrateScenes(std::stoi(sceneAOrder_JSON),
-											  skeletonA_JSON,
+											  skeletonsA_JSON,
 											  std::stoi(sceneBOrder_JSON),
-											  skeletonB_JSON)){
+											  skeletonsB_JSON)){
 				outputFile << "true";
 	      }else{
 				outputFile << "false";

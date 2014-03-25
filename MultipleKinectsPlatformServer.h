@@ -18,6 +18,7 @@
 /*********************/
 /*	PROJECT CLASSES	 */
 /*********************/
+#include "Networks/UdpServer.h"
 #include "Networks/Server.h"
 #include "Data/JobsQueue.h"
 #include "Data/Job.h"
@@ -38,13 +39,17 @@ namespace MultipleKinectsPlatformServer{
 		private:
 			MultipleKinectsPlatformServer::ClientsList *_clientList;
 			MultipleKinectsPlatformServer::JobsQueue *_jobQueue;
-			http::server::server *_server;
+			
+			http::server::server *_httpServer;
+			MultipleKinectsPlatformServer::UdpServer *_udpServer;
+
 			MinorityViewport *_minorityViewport;
 			Timer *_time;
 			void ReportStatus(string message);
 		public :
-			Core(string address,string port);
-			void BeginListen();			
+			Core(string address,string httpPort,string udpPort);
+			void BeginListen();
+			void BeginUdpListen();
 			void ProcessJobs();
 			void BeginVisualisation(int *argcp, char **argv);
 	};

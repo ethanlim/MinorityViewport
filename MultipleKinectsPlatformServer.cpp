@@ -2,7 +2,7 @@
 
 namespace MultipleKinectsPlatformServer{
 
-	Core::Core(/*Server Address*/string address,/*Server Port*/string port){
+	Core::Core(/*Server Address*/string address,/*Server Port*/string httpPort,string udpPort){
 	  try
 	  {
 		/* Communicate with a centralised time server */
@@ -28,15 +28,19 @@ namespace MultipleKinectsPlatformServer{
 		//Initialise the Server with the number of threads
 		string docRoot = "C:\\Users\\ethanlim\\Documents\\Projects\\School\\MultipleKinectsPlatformServer\\Web";
 		std::size_t num_threads = boost::lexical_cast<std::size_t>(30);
-		this->_server = new http::server::server(address, 
-												port, 
+		this->_httpServer = new http::server::server(
+												address, 
+												httpPort, 
 												docRoot, 
 												this->_jobQueue, 
 												num_threads,
 												this->_clientList,
-												this->_minorityViewport);
+												this->_minorityViewport
+												);
 
 		this->ReportStatus("Server Started");
+
+		this->_udpServer = new MultipleKinectsPlatformServer::UdpServer(address,atoi(udpPort.c_str()),this->_minorityViewport);
 	  }
 	  catch (std::exception& e)
 	  {
@@ -46,7 +50,16 @@ namespace MultipleKinectsPlatformServer{
 	
 	void Core::BeginListen(){
 		try{
-			this->_server->run();			
+			this->_httpServer->run();			
+		}
+		catch(std::exception& e){
+			std::cerr << "exception: " << e.what() << "\n";
+		}
+	}
+
+	void Core::BeginUdpListen(){
+		try{
+			this->_udpServer->Run();			
 		}
 		catch(std::exception& e){
 			std::cerr << "exception: " << e.what() << "\n";
@@ -96,11 +109,12 @@ int main(int argc, char **argv)
 	}
 
 	try{
-		platform = new MultipleKinectsPlatformServer::Core(argv[1],argv[2]);
+		platform = new MultipleKinectsPlatformServer::Core(argv[1],argv[2],argv[3]);
 
 		if(platform!=NULL){
 			// Start Server on a separate thread
 			thread server_thread(&MultipleKinectsPlatformServer::Core::BeginListen,platform);
+			thread udpServer_thread(&MultipleKinectsPlatformServer::Core::BeginUdpListen,platform);
 
 			// Process Job on a separate thread
 			/*
@@ -115,6 +129,7 @@ int main(int argc, char **argv)
 			*/
 
 			server_thread.join();
+			udpServer_thread.join();
 		}
 	}catch(exception &error){
 		throw error;

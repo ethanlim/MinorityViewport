@@ -50,8 +50,8 @@ namespace MultipleKinectsPlatformServer{
 			~MinorityViewport();
 
 			bool CalibrateSceneOrder();
-			bool CalibrateScenes(unsigned int sceneAOrder,string skeletonA_json,unsigned int sceneBOrder,string skeletonB_json);
-			void ProcessSensorData(string timeStamp,string sensorData);
+			bool CalibrateScenes(unsigned int sceneAOrder,string skeletonsA_json,unsigned int sceneBOrder,string skeletonsB_json);
+			void ProcessSensorData(string sensorData);
 			void LoadSkeleton(Skeleton newSkeleton);
 
 			Scene* GetGlobalScene();

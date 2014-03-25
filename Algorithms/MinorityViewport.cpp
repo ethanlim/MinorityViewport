@@ -121,14 +121,14 @@ namespace MultipleKinectsPlatformServer{
 	 *   @return true if computation of R & T matrix is successful
 	 */
 	bool MinorityViewport::CalibrateScenes(unsigned int sceneAOrder,
-										   string skeletonA_json,
+										   string skeletonsA_json,
 										   unsigned int sceneBOrder,
-										   string skeletonB_json)
+										   string skeletonsB_json)
 	{
 		bool calibrateSuccess = false;
 		
-		Json::Value skeletonARoot; 
-		Json::Value skeletonBRoot; 
+		Json::Value skeletonsARoot; 
+		Json::Value skeletonsBRoot; 
 		Json::Reader reader;
 		ofstream testOutputSensorAFile("A_calibration_data.txt");
 		ofstream testOutputSensorBFile("B_calibration_data.txt");
@@ -137,13 +137,23 @@ namespace MultipleKinectsPlatformServer{
 		ofstream translationData("T_calibration_data.txt");
 		ofstream rotationData("R_calibration_data.txt");
 
-		if (this->_orderedScenes.size()>0&&reader.parse(skeletonA_json,skeletonARoot)&&reader.parse(skeletonB_json,skeletonBRoot))
+		if (this->_orderedScenes.size()>0&&reader.parse(skeletonsA_json,skeletonsARoot)&&reader.parse(skeletonsB_json,skeletonsBRoot))
 		{
-			Skeleton skeletonFromSceneA(skeletonARoot.get("skeleton",NULL),0);
-			Skeleton skeletonFromSceneB(skeletonBRoot.get("skeleton",NULL),0);
+			Json::Value skeletonsA_JSON = skeletonsARoot["skeletons"];
+			Json::Value skeletonsB_JSON = skeletonsBRoot["skeletons"];
+			list<Skeleton> skeletonsA;
+			list<Skeleton> skeletonsB;
 
-			if(!skeletonFromSceneA.checkFullSetOfJoints()||!skeletonFromSceneB.checkFullSetOfJoints()){
-				return false;
+			for(unsigned short skeleton=0;skeleton<skeletonsA_JSON.size();skeleton+=1){
+
+				Skeleton skeletonFromSceneA(skeletonsA_JSON[skeleton],0);
+				Skeleton skeletonFromSceneB(skeletonsB_JSON[skeleton],0);
+
+				/* Eliminate vectors which are not full sets of joints */
+				if(skeletonFromSceneA.checkFullSetOfJoints()&&skeletonFromSceneB.checkFullSetOfJoints()){
+					skeletonsA.push_front(skeletonFromSceneA);
+					skeletonsB.push_front(skeletonFromSceneB);
+				}
 			}
 
 			/* Regardless of Scene A or Scene B, Matrix A must be the reference frame which is the lower order */
@@ -153,29 +163,76 @@ namespace MultipleKinectsPlatformServer{
 
 			//scene A is the reference frame
 			if(sceneAOrder<sceneBOrder){
-				//nx3 vector matrix
-				A = skeletonFromSceneA.GetCompletePointsVectorMatrix(&testOutputSensorAFile,true); //A
-				B = skeletonFromSceneB.GetCompletePointsVectorMatrix(&testOutputSensorBFile,true); //B
+				for(list<Skeleton>::iterator skeletonFromA=skeletonsA.begin();skeletonFromA!=skeletonsA.end();++skeletonFromA){
+					//nx3 vector matrix
+					A.push_back((*skeletonFromA).GetCompletePointsVectorMatrix(NULL,false)); //A
+					B.push_back((*skeletonFromA).GetCompletePointsVectorMatrix(NULL,false)); //B
+				}
 
 				//1x3
+				reduce(A,centroidA,0,1);
+				reduce(B,centroidB,0,1);
+
+				/*
 				centroidA = skeletonFromSceneA.ComputeCentroid(&centroidAFile,true);
 				centroidB = skeletonFromSceneB.ComputeCentroid(&centroidBFile,true);
+				*/
 
 				refFrameOrder = sceneAOrder;
 				bodyFrameOrder = sceneBOrder;
 			}else{
 			//scene B is the reference frame
-				//nx3 vector matrix
-				A = skeletonFromSceneB.GetCompletePointsVectorMatrix(&testOutputSensorAFile,true); //A
-				B = skeletonFromSceneA.GetCompletePointsVectorMatrix(&testOutputSensorBFile,true); //B
+				for(list<Skeleton>::iterator skeletonFromA=skeletonsA.begin();skeletonFromA!=skeletonsA.end();++skeletonFromA){
+					//nx3 vector matrix
+					A.push_back((*skeletonFromA).GetCompletePointsVectorMatrix(NULL,false)); //A
+					B.push_back((*skeletonFromA).GetCompletePointsVectorMatrix(NULL,false)); //B
+				}
 
 				//1x3
+				reduce(B,centroidA,0,1);
+				reduce(A,centroidB,0,1);
+
+				/*
 				centroidA = skeletonFromSceneB.ComputeCentroid(&centroidAFile,true);
 				centroidB = skeletonFromSceneA.ComputeCentroid(&centroidBFile,true);
+				*/
 
 				refFrameOrder = sceneBOrder;
 				bodyFrameOrder = sceneAOrder;
 			}
+
+			/* Debugging A,B and centroids */
+
+			A.convertTo(A, CV_64F);
+			B.convertTo(B, CV_64F);
+			for(unsigned int row=0;row<A.rows;row+=1){
+				testOutputSensorAFile<<  A.at<double>(row,0) << ",";
+				testOutputSensorAFile << A.at<double>(row,1) << ",";
+				testOutputSensorAFile << A.at<double>(row,2) ;
+				testOutputSensorAFile << endl;
+
+				testOutputSensorBFile<<  B.at<double>(row,0) << ",";
+				testOutputSensorBFile << B.at<double>(row,1) << ",";
+				testOutputSensorBFile << B.at<double>(row,2) ;
+				testOutputSensorBFile << endl;
+			}
+
+			testOutputSensorAFile.close();
+			testOutputSensorBFile.close();
+
+			centroidA.convertTo(centroidA, CV_64F);
+			centroidB.convertTo(centroidB, CV_64F);
+
+			centroidAFile<<	 centroidA.at<double>(0,0) << ",";
+			centroidAFile << centroidA.at<double>(0,1) << ",";
+			centroidAFile << centroidA.at<double>(0,2) ;
+
+			centroidBFile<<	 centroidB.at<double>(0,0) << ",";
+			centroidBFile << centroidB.at<double>(0,1) << ",";
+			centroidBFile << centroidB.at<double>(0,2) ;
+
+			centroidAFile.close();
+			centroidBFile.close();
 
 			/* Construct the H matrix */
 			Mat centroidA_row = centroidA;
@@ -239,15 +296,18 @@ namespace MultipleKinectsPlatformServer{
 		return calibrateSuccess;
 	}
 
-	void MinorityViewport::ProcessSensorData(string timeStamp,string sensorData){
+	void MinorityViewport::ProcessSensorData(string sensorData){
 		Json::Value root;   
 		Json::Reader reader;
 
-		if (!sensorData.empty()&&!timeStamp.empty()&&reader.parse(sensorData,root))
+		if (!sensorData.empty()&&reader.parse(sensorData,root))
 		{
-			unsigned int numOfSkeletons = root.size();
+			long timeStamp = root.get("TIME_STAMP","0").asDouble();
+			Json::Value skeletons_JSON = root["SENSOR_JSON"];
+
+			unsigned int numOfSkeletons = skeletons_JSON.size();
 			for(unsigned short skeletons=0;skeletons<numOfSkeletons;skeletons++){
-				MultipleKinectsPlatformServer::Skeleton newSkeleton(root.get(skeletons,NULL),atol(timeStamp.c_str()));
+				MultipleKinectsPlatformServer::Skeleton newSkeleton(skeletons_JSON[skeletons],timeStamp);
 				this->LoadSkeleton(newSkeleton);
 			}
 		}

@@ -70,15 +70,15 @@ var Network = {
         return resultObj["result"][0];
     },
 
-    calibrateScene:function(sceneAOrder,skeletonA,sceneBOrder,skeletonB){
+    calibrateScene:function(sceneAOrder,skeletonsA,sceneBOrder,skeletonsB){
         var raw_json = jQuery.ajax({
             url: this.serverEndpt + ":" + this.port + this.clientCalibration_URL,
             headers:
             {
                 SCENE_A_ORDER   : sceneAOrder,
-                SKELETON_A      : JSON.stringify({skeleton:skeletonA}),
+                SKELETONS_A      : JSON.stringify({skeletons:skeletonsA}),
                 SCENE_B_ORDER   : sceneBOrder,
-                SKELETON_B      : JSON.stringify({ skeleton: skeletonB})
+                SKELETONS_B      : JSON.stringify({skeletons:skeletonsB})
             },
             async: false
         }).responseText;
