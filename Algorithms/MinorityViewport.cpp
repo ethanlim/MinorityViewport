@@ -8,7 +8,7 @@ namespace MultipleKinectsPlatformServer{
 		:_curTime(curTime),_clients(clients)
 	{
 		
-		mergingLogFile = new ofstream();
+		mergingLogFile = new ofstream("mergingLogFile.txt");
 
 		//Create the global scene
 		this->_globalScene = new Scene(10,10,10,curTime);
@@ -17,6 +17,7 @@ namespace MultipleKinectsPlatformServer{
 
 	MinorityViewport::~MinorityViewport(){
 		this->_mergethread->join();
+		this->mergingLogFile->close();
 	}
 
 	/**
@@ -328,11 +329,18 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	void MinorityViewport::MergeScenes(){
+
+				long start=0,end=0;
+
 				this->_globalScene->ManualClear();
 				
+				start=this->_curTime->GetTicks_ms();
 				this->_orderedSceneMutex.lock();
 				vector<Scene*> orderedScenes = this->_orderedScenes;
 				this->_orderedSceneMutex.unlock();
+				end=this->_curTime->GetTicks_ms();
+
+				*this->mergingLogFile << to_string(end-start) << ",";
 
 				/* Do the comparison with reference frame skeletons and discard skeletons as necessary */
 				double threshold = 0.04;
@@ -345,6 +353,7 @@ namespace MultipleKinectsPlatformServer{
 							Scene *leftScenePtr = (*orderedSceneItr)->GetLeftFrame();
 							map<unsigned short,Skeleton> currentSceneSkeletons = (*orderedSceneItr)->GetSkeletons();
 
+							start=this->_curTime->GetTicks_ms();
 							if(leftScenePtr==NULL||leftScenePtr->GetSkeletons().size()==0){
 								for(map<unsigned short,Skeleton>::iterator	bodyFrameSkeleton=currentSceneSkeletons.begin(); 
 																			bodyFrameSkeleton!=currentSceneSkeletons.end();
@@ -392,9 +401,12 @@ namespace MultipleKinectsPlatformServer{
 									}
 								}
 							}
+							end=this->_curTime->GetTicks_ms();
+							*this->mergingLogFile << to_string(end-start) << ",";
 						}
 					}
 				}
+				*this->mergingLogFile << endl;
 	}
 
 	/**

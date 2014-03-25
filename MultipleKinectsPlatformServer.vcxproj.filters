@@ -168,6 +168,12 @@
     <None Include="Web\training.html">
       <Filter>Source Files\Web</Filter>
     </None>
+    <None Include="Web\CSS\training.css">
+      <Filter>Source Files\Web\CSS</Filter>
+    </None>
+    <None Include="Web\JS\training.js">
+      <Filter>Source Files\Web\JS</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Algorithms\MinorityViewport.h">
