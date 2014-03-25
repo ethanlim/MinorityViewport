@@ -113,7 +113,7 @@ var Network = {
             'sensorId'      : cmd.sensorId
         });
 
-        //Return a random number
+        //Generate a random id for this worker
         var randomId = Math.random() * (99999999 - 1) + 1;
         this.commWorkersId[randomId]=this.commWorker;
 
