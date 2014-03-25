@@ -13,7 +13,6 @@ namespace MultipleKinectsPlatformServer{
 		//Create the global scene
 		this->_globalScene = new Scene(10,10,10,curTime);
 		this->_mergethread = new thread(&MultipleKinectsPlatformServer::MinorityViewport::MergeScenes,this);
-
 	}
 
 	MinorityViewport::~MinorityViewport(){
@@ -108,6 +107,8 @@ namespace MultipleKinectsPlatformServer{
 			}
 		}
 		
+		this->_scenesSet.clear();
+
 		return true;
 	}
 
@@ -279,7 +280,7 @@ namespace MultipleKinectsPlatformServer{
 
 				if(orderedScenes.size()>0){
 					for(vector<Scene*>::reverse_iterator orderedSceneItr = orderedScenes.rbegin();orderedSceneItr!=orderedScenes.rend();orderedSceneItr++){
-						if((*orderedSceneItr)->GetCalibration()){
+						if((*orderedSceneItr)!=NULL&&(*orderedSceneItr)->GetCalibration()){
 
 							Scene *leftScenePtr = (*orderedSceneItr)->GetLeftFrame();
 							map<unsigned short,Skeleton> currentSceneSkeletons = (*orderedSceneItr)->GetSkeletons();
@@ -369,6 +370,8 @@ namespace MultipleKinectsPlatformServer{
 
 		Client *clientPtr;
 		
+		/* Load all sensors from clients into the unordered sceneset */
+
 		for(unsigned int client=0;client<this->_clients->Size();client+=1){
 
 			clientPtr = this->_clients->AtIdx(client);

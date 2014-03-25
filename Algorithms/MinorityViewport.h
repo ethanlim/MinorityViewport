@@ -36,8 +36,8 @@ namespace MultipleKinectsPlatformServer{
 			
 			mutex _orderedSceneMutex;
 
-			vector<Scene*> _orderedScenes;
-			set<Scene*> _scenesSet;
+			vector<Scene*>	_orderedScenes;
+			set<Scene*>		_scenesSet;
 
 			void RefreshScenesSet();
 			void MergeScenes();
