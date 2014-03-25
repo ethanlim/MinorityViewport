@@ -147,14 +147,23 @@
     <None Include="Web\ordering.html">
       <Filter>Source Files\Web</Filter>
     </None>
-    <None Include="Data\JSON\json_valueiterator.inl">
-      <Filter>Header Files\Data\JSON</Filter>
+    <None Include="Web\API\sensors\deregister.json">
+      <Filter>Source Files\Web\API\visualisations</Filter>
     </None>
-    <None Include="Data\JSON\json_internalmap.inl">
-      <Filter>Header Files\Data\JSON</Filter>
+    <None Include="Web\API\sensors\register.json">
+      <Filter>Source Files\Web\API\visualisations</Filter>
     </None>
-    <None Include="Data\JSON\json_internalarray.inl">
-      <Filter>Header Files\Data\JSON</Filter>
+    <None Include="Web\CSS\ordering.css">
+      <Filter>Source Files\Web\CSS</Filter>
+    </None>
+    <None Include="Web\CSS\libraries\bootstrap-theme.min.css">
+      <Filter>Source Files\Web\CSS\libraries</Filter>
+    </None>
+    <None Include="Web\CSS\libraries\bootstrap.min.css">
+      <Filter>Source Files\Web\CSS\libraries</Filter>
+    </None>
+    <None Include="Web\JS\libraries\libGlobal.js">
+      <Filter>Source Files\Web\JS\libraries</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -247,9 +256,6 @@
     </ClInclude>
     <ClInclude Include="Misc\Timer.h">
       <Filter>Header Files\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="Data\JSON\json_batchallocator.h">
-      <Filter>Header Files\Data\JSON</Filter>
     </ClInclude>
     <ClInclude Include="Networks\UdpServer.h">
       <Filter>Header Files\Networks</Filter>
