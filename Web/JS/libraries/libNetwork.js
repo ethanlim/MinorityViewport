@@ -87,10 +87,6 @@ var Network = {
 
         return resultObj["result"][0];
     },
-
-    sendTrainedSkeletons:function(name,skeletons){
-
-    },
     
     commError:function(error){
         throw new Error(error.message + " (" + error.filename + ":" + error.lineno + ")");
