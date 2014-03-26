@@ -12,7 +12,7 @@ var OrderingPage = {
 
     Init: function () {
 
-        this.networkClient = Network.initClient("localhost", 1626);
+        this.networkClient = Network.initClient(GlobalVar.hostURL,GlobalVar.port);
 
         if (this.networkClient) {
             console.log("Libraries Initialisation Successful");

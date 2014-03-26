@@ -1,6 +1,6 @@
 
 
 var GlobalVar = {
-    hostURL: "localhost",
+    hostURL: "d6xhjv1s.d1.comp.nus.edu.sg",
     port : 1626
 }
