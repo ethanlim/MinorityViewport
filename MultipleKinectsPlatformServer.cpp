@@ -27,7 +27,7 @@ namespace MultipleKinectsPlatformServer{
 		this->ReportStatus("Server Starting");
 		//Initialise the Server with the number of threads
 		string docRoot = "C:\\Users\\ethanlim\\Documents\\Projects\\School\\MultipleKinectsPlatformServer\\Web";
-		std::size_t num_threads = boost::lexical_cast<std::size_t>(30);
+		std::size_t num_threads = boost::lexical_cast<std::size_t>(5);
 		this->_httpServer = new http::server::server(
 												address, 
 												httpPort, 
@@ -112,21 +112,9 @@ int main(int argc, char **argv)
 		platform = new MultipleKinectsPlatformServer::Core(argv[1],argv[2],argv[3]);
 
 		if(platform!=NULL){
-			// Start Server on a separate thread
+
 			thread server_thread(&MultipleKinectsPlatformServer::Core::BeginListen,platform);
 			thread udpServer_thread(&MultipleKinectsPlatformServer::Core::BeginUdpListen,platform);
-
-			// Process Job on a separate thread
-			/*
-			thread job_thread1(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread2(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread3(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			thread job_thread4(&MultipleKinectsPlatformServer::Core::ProcessJobs,platform);
-			job_thread1.join();
-			job_thread2.join();
-			job_thread3.join();
-			job_thread4.join();
-			*/
 
 			server_thread.join();
 			udpServer_thread.join();
