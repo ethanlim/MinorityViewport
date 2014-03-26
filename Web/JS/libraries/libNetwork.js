@@ -87,6 +87,10 @@ var Network = {
 
         return resultObj["result"][0];
     },
+
+    sendTrainedSkeletons:function(name,skeletons){
+
+    },
     
     commError:function(error){
         throw new Error(error.message + " (" + error.filename + ":" + error.lineno + ")");
@@ -113,7 +117,7 @@ var Network = {
             'sensorId'      : cmd.sensorId
         });
 
-        //Return a random number
+        //Generate a random id for this worker
         var randomId = Math.random() * (99999999 - 1) + 1;
         this.commWorkersId[randomId]=this.commWorker;
 

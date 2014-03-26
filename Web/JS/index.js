@@ -1,9 +1,6 @@
 
-jQuery(document).ready(function () {
-
+jQuery(document).ready(function (){
     IndexPage.Init();
-  
-
 });
 
 var IndexPage = {
@@ -28,11 +25,6 @@ var IndexPage = {
         this.UpdateSensorTable(clients);
 
         this.StartCommunicationWithScene();
-
-        this.SetupEventHandlers();
-    },
-
-    SetupEventHandlers: function () {
     },
 
     StartCommunicationWithScene: function () {
@@ -40,15 +32,12 @@ var IndexPage = {
     },
 
     NetworkHandler: function (event) {
-
         var responseType = event.data.type;
         var responseData = event.data.msg;
 
         if (responseType == "data") {
-
             if (responseData != "") {
                 var sceneFromServer = JSON.parse(responseData);
-
                 localStorage.setItem("globalScene", JSON.stringify(sceneFromServer));
             } else {
                 localStorage.setItem("globalScene", "");

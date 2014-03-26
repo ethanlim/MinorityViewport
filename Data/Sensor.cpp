@@ -10,7 +10,7 @@ namespace MultipleKinectsPlatformServer{
 
 	Sensor::~Sensor()
 	{
-
+		delete this->_scene;
 	}
 
 	string Sensor::GetId(){

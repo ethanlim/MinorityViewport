@@ -1,0 +1,46 @@
+body {
+    padding-top: 50px;
+}
+
+.starter-template {
+    padding: 40px 15px;
+    text-align: center;
+}
+
+#sensors {
+    margin-top:20px;
+}
+
+#status-msg {
+    color:white;
+}
+
+#canvas-container-0 > canvas,
+#canvas-container-1 > canvas{
+    border:1px solid black;
+}
+
+#canvas-container-1 {
+    margin-left: 10px;
+}
+
+#canvas0-scene-select,
+#canvas1-scene-select {
+    float:left;
+}
+
+#lock-btn{
+    margin-right:10px;
+}
+
+.scene-selection > div.btn-group > ul {
+    cursor:pointer;
+}
+
+#stats {
+    position: relative; 
+    top: 10%;
+}
+
+#subject-name {
+}

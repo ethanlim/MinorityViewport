@@ -9,6 +9,15 @@ namespace MultipleKinectsPlatformServer{
 
 	Client::~Client(){
 
+		/* Delete all sensors under the control of the client */
+
+		for(map<string,Sensor*>::iterator sensor= _sensors.begin(); sensor!= _sensors.end();sensor++){
+			Sensor *curSensor = sensor->second;
+
+			delete curSensor;
+		}
+
+		this->_sensors.clear();
 	}
 
 	unsigned int Client::GetId(){
@@ -114,7 +123,7 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	map<string,Sensor*> Client::GetSensorsList(){
-		return this->_sensors;
+			return this->_sensors;
 	}
 
 
