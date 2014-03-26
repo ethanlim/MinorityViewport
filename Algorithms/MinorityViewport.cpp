@@ -12,7 +12,7 @@ namespace MultipleKinectsPlatformServer{
 
 		//Create the global scene
 		this->_globalScene = new Scene(10,10,10,curTime);
-		this->_mergethread = new thread(&MultipleKinectsPlatformServer::MinorityViewport::MergeScenes,this);
+		//this->_mergethread = new thread(&MultipleKinectsPlatformServer::MinorityViewport::MergeScenes,this);
 	}
 
 	MinorityViewport::~MinorityViewport(){
@@ -329,80 +329,81 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	void MinorityViewport::MergeScenes(){
-				long start=0,end=0;
 
-				this->_globalScene->ManualClear();
+		long start=0,end=0;
+
+		this->_globalScene->ManualClear();
 				
-				this->_orderedSceneMutex.lock();
-				vector<Scene*> orderedScenes = this->_orderedScenes;
-				this->_orderedSceneMutex.unlock();
+		this->_orderedSceneMutex.lock();
+		vector<Scene*> orderedScenes = this->_orderedScenes;
+		this->_orderedSceneMutex.unlock();
 
-				/* Do the comparison with reference frame skeletons and discard skeletons as necessary */
-				double threshold = 0.04;
-				unsigned int randomSkeletonId;
+		/* Do the comparison with reference frame skeletons and discard skeletons as necessary */
+		double threshold = 0.04;
+		unsigned int randomSkeletonId;
 
-				if(orderedScenes.size()>0){
-					for(vector<Scene*>::reverse_iterator orderedSceneItr = orderedScenes.rbegin();orderedSceneItr!=orderedScenes.rend();orderedSceneItr++){
-						if((*orderedSceneItr)!=NULL&&(*orderedSceneItr)->GetCalibration()){
+		if(orderedScenes.size()>0){
+			for(vector<Scene*>::reverse_iterator orderedSceneItr = orderedScenes.rbegin();orderedSceneItr!=orderedScenes.rend();orderedSceneItr++){
+				if((*orderedSceneItr)!=NULL&&(*orderedSceneItr)->GetCalibration()){
 
-							Scene *leftScenePtr = (*orderedSceneItr)->GetLeftFrame();
-							map<unsigned short,Skeleton> currentSceneSkeletons = (*orderedSceneItr)->GetSkeletons();
+					Scene *leftScenePtr = (*orderedSceneItr)->GetLeftFrame();
+					map<unsigned short,Skeleton> currentSceneSkeletons = (*orderedSceneItr)->GetSkeletons();
 
-							start=this->_curTime->GetTicks_ms();
+					start=this->_curTime->GetTicks_ms();
 
-							if(leftScenePtr==NULL||leftScenePtr->GetSkeletons().size()==0){
-								for(map<unsigned short,Skeleton>::iterator	bodyFrameSkeleton=currentSceneSkeletons.begin(); 
-																			bodyFrameSkeleton!=currentSceneSkeletons.end();
-																			bodyFrameSkeleton++){
-									bodyFrameSkeleton->second.UnsetShared();
+					if(leftScenePtr==NULL||leftScenePtr->GetSkeletons().size()==0){
+						for(map<unsigned short,Skeleton>::iterator	bodyFrameSkeleton=currentSceneSkeletons.begin(); 
+																	bodyFrameSkeleton!=currentSceneSkeletons.end();
+																	bodyFrameSkeleton++){
+							bodyFrameSkeleton->second.UnsetShared();
 
-									randomSkeletonId  = rand()%100;
+							randomSkeletonId  = rand()%100;
 
-									this->_globalScene->Update(randomSkeletonId,bodyFrameSkeleton->second);
-								}
-							}else{
-								for(map<unsigned short,Skeleton>::iterator  bodyFrameSkeleton=currentSceneSkeletons.begin();
-																			bodyFrameSkeleton!=currentSceneSkeletons.end();
-																			bodyFrameSkeleton++){
+							this->_globalScene->Update(randomSkeletonId,bodyFrameSkeleton->second);
+						}
+					}else{
+						for(map<unsigned short,Skeleton>::iterator  bodyFrameSkeleton=currentSceneSkeletons.begin();
+																	bodyFrameSkeleton!=currentSceneSkeletons.end();
+																	bodyFrameSkeleton++){
 
-									/* Transform all the skeletons within body frame to the left frame coordinates*/
-									Mat R = (*orderedSceneItr)->GetRMatrix(NULL,false); //3x3
-									Mat T = (*orderedSceneItr)->GetTMatrix(NULL,false); //3x1
-									Mat translatedSkeletonMatrix = this->TransformSkeletonMatrix(bodyFrameSkeleton->second.GetCompletePointsVectorMatrix(NULL,false),R,T);
+							/* Transform all the skeletons within body frame to the left frame coordinates*/
+							Mat R = (*orderedSceneItr)->GetRMatrix(NULL,false); //3x3
+							Mat T = (*orderedSceneItr)->GetTMatrix(NULL,false); //3x1
+							Mat translatedSkeletonMatrix = this->TransformSkeletonMatrix(bodyFrameSkeleton->second.GetCompletePointsVectorMatrix(NULL,false),R,T);
 
-									bodyFrameSkeleton->second.ConvertVectorMatrixtoSkeletonPoints(translatedSkeletonMatrix);
+							bodyFrameSkeleton->second.ConvertVectorMatrixtoSkeletonPoints(translatedSkeletonMatrix);
 									
-									map<unsigned short,Skeleton> leftFrameSkeletons = leftScenePtr->GetSkeletons();
+							map<unsigned short,Skeleton> leftFrameSkeletons = leftScenePtr->GetSkeletons();
 
-									/* Do comparison with the left scene skeletons */
-									for(map<unsigned short,Skeleton>::iterator  refFrameSkeleton=leftFrameSkeletons.begin();
-																				refFrameSkeleton!=leftFrameSkeletons.end();
-																				refFrameSkeleton++){
-											/* Comparison */
-											if( abs(refFrameSkeleton->second.pos_x-bodyFrameSkeleton->second.pos_x)>threshold||
-												abs(refFrameSkeleton->second.pos_y-bodyFrameSkeleton->second.pos_y)>threshold||
-												abs(refFrameSkeleton->second.pos_z-bodyFrameSkeleton->second.pos_z)>threshold){
-													//Deemed the same human appear in both left and right scene
+							/* Do comparison with the left scene skeletons */
+							for(map<unsigned short,Skeleton>::iterator  refFrameSkeleton=leftFrameSkeletons.begin();
+																		refFrameSkeleton!=leftFrameSkeletons.end();
+																		refFrameSkeleton++){
+									/* Comparison */
+									if( abs(refFrameSkeleton->second.pos_x-bodyFrameSkeleton->second.pos_x)>threshold||
+										abs(refFrameSkeleton->second.pos_y-bodyFrameSkeleton->second.pos_y)>threshold||
+										abs(refFrameSkeleton->second.pos_z-bodyFrameSkeleton->second.pos_z)>threshold){
+											//Deemed the same human appear in both left and right scene
 											   
-													//Eliminate the skeleton on the left scene that has the same coordinates as the cur scene skeleton's translated coordinates
-													leftScenePtr->Remove(refFrameSkeleton->first);
+											//Eliminate the skeleton on the left scene that has the same coordinates as the cur scene skeleton's translated coordinates
+											leftScenePtr->Remove(refFrameSkeleton->first);
 
-													randomSkeletonId  = rand()%100;
+											randomSkeletonId  = rand()%100;
 
-													bodyFrameSkeleton->second.SetShared();
-													this->_globalScene->Update(randomSkeletonId,bodyFrameSkeleton->second);
-													break;
-											}
+											bodyFrameSkeleton->second.SetShared();
+											this->_globalScene->Update(randomSkeletonId,bodyFrameSkeleton->second);
+											break;
 									}
-								}
 							}
-
-							end=this->_curTime->GetTicks_ms();
-							*this->mergingLogFile << to_string(end-start);
-							*this->mergingLogFile << endl;
 						}
 					}
+
+					end=this->_curTime->GetTicks_ms();
+					*this->mergingLogFile << to_string(end-start);
+					*this->mergingLogFile << endl;
 				}
+			}
+		}
 	}
 
 	/**
