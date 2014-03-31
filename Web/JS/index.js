@@ -3,6 +3,41 @@ jQuery(document).ready(function (){
     IndexPage.Init();
 });
 
+/* Timer */
+var d = new Date;
+var timeSent = 0;
+var timeTaken_s;
+var timeTaken_ms;
+
+function onInitFs(fs) {
+    fs.root.getFile("streaming.txt", { create: true }, function (DataFile) {
+        DataFile.createWriter(function (DataContent) {
+
+            DataContent.seek(DataContent.length);
+
+            var blob = new Blob([timeTaken_ms +"\n"], { type: "text/plain" });
+            DataContent.write(blob);
+        });
+    });
+}
+
+function getByteLen(normal_val) {
+    // Force string type
+    normal_val = String(normal_val);
+
+    var byteLen = 0;
+    for (var i = 0; i < normal_val.length; i++) {
+        var c = normal_val.charCodeAt(i);
+        byteLen += c < (1 << 7) ? 1 :
+                   c < (1 << 11) ? 2 :
+                   c < (1 << 16) ? 3 :
+                   c < (1 << 21) ? 4 :
+                   c < (1 << 26) ? 5 :
+                   c < (1 << 31) ? 6 : Number.NaN;
+    }
+    return byteLen;
+}
+
 var IndexPage = {
 
     networkClient: null,
@@ -28,6 +63,7 @@ var IndexPage = {
     },
 
     StartCommunicationWithScene: function () {
+        timeSent = d.getTime()
         return this.networkClient.startCommWorker({ type: "global"}, this.NetworkHandler);
     },
 
@@ -167,6 +203,13 @@ var IndexPage = {
 
                 glScene.add(skeletonGeometry);
             }
+
+            var d = new Date;
+            timeTaken_ms = Math.round((d.getTime() - timeSent) / 10);
+            timeTaken_s = timeTaken_ms / 1000;
+            timeSent += timeTaken_ms;
+
+            window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024, onInitFs)
 
             return glScene;
         } else {

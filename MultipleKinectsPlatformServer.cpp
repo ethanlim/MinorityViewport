@@ -5,6 +5,17 @@ namespace MultipleKinectsPlatformServer{
 	Core::Core(/*Server Address*/string address,/*Server Port*/string httpPort,string udpPort){
 	  try
 	  {
+		/*Upgraded the Priority Class*/
+		DWORD dwPriClass;
+		dwPriClass = GetPriorityClass(GetCurrentProcess());
+		cout << "Current priority class is " << std::hex << dwPriClass << endl;
+		if(!SetPriorityClass(GetCurrentProcess(),HIGH_PRIORITY_CLASS)){
+			cout << "Failed to upgrade priority class" << GetLastError() << endl;
+		}else{
+			dwPriClass = GetPriorityClass(GetCurrentProcess());
+			cout << "Upgraded priority class is " << std::hex << dwPriClass << endl;
+		}
+
 		/* Communicate with a centralised time server */
 		unsigned short randomTimeServerId = rand()%5;
 		string timeServer = std::to_string(randomTimeServerId)+".asia.pool.ntp.org";
@@ -66,6 +77,7 @@ namespace MultipleKinectsPlatformServer{
 		}
 	}
 
+	/** Depreciated 
 	void Core::ProcessJobs(){
 
 		Json::Value root;   
@@ -92,6 +104,7 @@ namespace MultipleKinectsPlatformServer{
 			}
 		}
 	}
+	*/
 
 	void Core::ReportStatus(string msg){
 		cout << "Core : " << msg << endl;
@@ -112,12 +125,11 @@ int main(int argc, char **argv)
 		platform = new MultipleKinectsPlatformServer::Core(argv[1],argv[2],argv[3]);
 
 		if(platform!=NULL){
-
 			thread server_thread(&MultipleKinectsPlatformServer::Core::BeginListen,platform);
-			thread udpServer_thread(&MultipleKinectsPlatformServer::Core::BeginUdpListen,platform);
+			thread udp_thread(&MultipleKinectsPlatformServer::Core::BeginUdpListen,platform);
 
 			server_thread.join();
-			udpServer_thread.join();
+			udp_thread.join();
 		}
 	}catch(exception &error){
 		throw error;

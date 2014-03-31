@@ -333,10 +333,11 @@ namespace MultipleKinectsPlatformServer{
 		long start=0,end=0;
 
 		this->_globalScene->ManualClear();
-				
-		this->_orderedSceneMutex.lock();
+		
+		//* Optimisation - remove mutex locks since only read and would affect real-time performance */
+		//this->_orderedSceneMutex.lock();
 		vector<Scene*> orderedScenes = this->_orderedScenes;
-		this->_orderedSceneMutex.unlock();
+		//this->_orderedSceneMutex.unlock();
 
 		/* Do the comparison with reference frame skeletons and discard skeletons as necessary */
 		double threshold = 0.04;
