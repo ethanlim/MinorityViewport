@@ -286,6 +286,25 @@ var CalibrationPage = {
                         jQuery.data(document.body, "scenes", scenes);
                     }
                 }
+
+                if (localStorage.getItem("lockingMode") == "true") {
+                    if (scenes[0]["scene"] != null && scenes[1]["scene"] != null) {
+
+                        var lockedSkeletonsA = scenes[0]["scene"]["skeletons"];
+                        var lockedSkeletonsB = scenes[1]["scene"]["skeletons"];
+
+                        var lockedSkeletons = JSON.parse(localStorage.getItem("lockedSkeletons"));
+
+                        if (lockedSkeletonsA.length > 0 && lockedSkeletonsB.length > 0) {
+                            if (lockedSkeletonsA[0]["joints"].length >= 20 && lockedSkeletonsB[0]["joints"].length >= 20) {
+                                lockedSkeletons[0].push(lockedSkeletonsA[0]);
+                                lockedSkeletons[1].push(lockedSkeletonsB[0]);
+
+                                localStorage.setItem("lockedSkeletons", JSON.stringify(lockedSkeletons));
+                            }
+                        }
+                    }
+                }
             } else {
                 for (var sceneNo = 0; sceneNo < scenes.length; sceneNo += 1) {
                         scenes[sceneNo].scene = null;
@@ -332,32 +351,14 @@ var CalibrationPage = {
 
     AutomaticSceneLockingHandler: function (callingObj, lockBtn) {
 
-        /* Copy a set of locked scenes from active scenes which are constantly updated */
-        var activeScenes = jQuery.data(document.body, "scenes");
+        var lockedSkeletons = JSON.parse(localStorage.getItem("lockedSkeletons"));
 
-        if (activeScenes[0]["scene"] != null && activeScenes[1]["scene"] != null) {
+        if (lockedSkeletons == null) {
+            callingObj.numOfSkeletonsScanned = lockedSkeletons[0].length;
+            jQuery("#numOfSkeletonScanned").text(callingObj.numOfSkeletonsScanned);
 
-            var lockedSkeletonsA = activeScenes[0]["scene"]["skeletons"];
-            var lockedSkeletonsB = activeScenes[1]["scene"]["skeletons"];
-
-            var lockedSkeletons = JSON.parse(localStorage.getItem("lockedSkeletons"));
-
-            if (lockedSkeletonsA.length > 0 && lockedSkeletonsB.length > 0) {
-                if (lockedSkeletonsA[0]["joints"].length >= 20 && lockedSkeletonsB[0]["joints"].length >= 20) {
-
-                    if (callingObj.numOfSkeletonsScanned == callingObj.numOfSkeletonsRequired) {
-
-                        lockedSkeletons[0].push(lockedSkeletonsA[0]);
-                        lockedSkeletons[1].push(lockedSkeletonsB[0]);
-
-                        callingObj.numOfSkeletonsScanned += 1;
-                        jQuery("#numOfSkeletonScanned").text(callingObj.numOfSkeletonsScanned);
-
-                        localStorage.setItem("lockedSkeletons", JSON.stringify(lockedSkeletons));
-                    } else {
-                        callingObj.UpdateCalibrationMenuStatus("Joint Points Collection Completed", "default");
-                    }
-                }
+            if (callingObj.numOfSkeletonsScanned == callingObj.numOfSkeletonsRequired) {
+                callingObj.UpdateCalibrationMenuStatus("Joint Points Collection Completed", "default");
             }
         }
     },
