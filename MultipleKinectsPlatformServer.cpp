@@ -17,15 +17,16 @@ namespace MultipleKinectsPlatformServer{
 		}
 
 		/* Communicate with a centralised time server */
+		/*
 		unsigned short randomTimeServerId = rand()%5;
 		string timeServer = std::to_string(randomTimeServerId)+".asia.pool.ntp.org";
 		this->ReportStatus("Sync with Time Server - "+ timeServer);
 		NTPClient timeClient(timeServer);
 		long timeFromServer = timeClient.RequestDatetime_UNIX();
-		this->_time = new Timer(timeFromServer);
-		this->_time = new Timer(0);
+		*/
+		time_t ltime;
+		this->_time = new Timer(time(&ltime));
 		this->_time->Start();
-
 
 		this->ReportStatus("Create Key Objects");
 		/* Initialise the Client Machine List */
@@ -123,7 +124,7 @@ int main(int argc, char **argv)
 
 	try{
 		platform = new MultipleKinectsPlatformServer::Core(argv[1],argv[2],argv[3]);
-
+	
 		if(platform!=NULL){
 			thread server_thread(&MultipleKinectsPlatformServer::Core::BeginListen,platform);
 			thread udp_thread(&MultipleKinectsPlatformServer::Core::BeginUdpListen,platform);
