@@ -13,6 +13,9 @@ var CalibrationPage = {
     commWorkersId: [],
 
     calibrationMode: false,
+    numOfSkeletonsScanned:0,
+    numOfSkeletonsRequired: 0,
+    numOfJointPoints:0,
     automaticSkeletonTimeoutVar:null,
     lockBtnToggle:false,
 
@@ -22,13 +25,19 @@ var CalibrationPage = {
         this.visualisationCanvas0 = new Visualisation();
         this.visualisationCanvas1 = new Visualisation();
 
+        this.Diagnostic();
+
         var scenes = new Array(2)
         scenes[0] = { sensorId: null, scene: null};
         scenes[1] = { sensorId: null, scene: null};
         jQuery.data(document.body, "scenes", scenes);
         var sceneSkeletons = new Array(2);
 
-        this.Diagnostic();
+        this.numOfSkeletonsRequired = 35;
+        this.numOfJointPoints = this.numOfSkeletonsRequired * 21;
+        jQuery("#numOfSkeletonsRequired").val(this.numOfSkeletonsRequired);
+        jQuery("#numOfJointPts").text(this.numOfJointPoints);
+        jQuery("#numOfSkeletonsScanned").text(this.numOfSkeletonsScanned);
 
         this.clients = this.networkClient.fetchedConnectedClients();
 
@@ -65,6 +74,16 @@ var CalibrationPage = {
             console.log("Libraries Initialisation Successful");
             return true;
         } else {
+
+            if (!this.networkClient) {
+
+                this.networkClient = Network.initClient("localhost", GlobalVar.port);
+
+                console.log("Network Connection Failed : Default to Localhost");
+            } else {
+                console.log("Visualisation Lib Failed");
+            }
+
             return false;
         }
     },
@@ -159,7 +178,6 @@ var CalibrationPage = {
         ul.setAttribute("role", "menu");
         ul.setAttribute("class", "dropdown-menu");
        
-
         for (var client = 0; client < clients.length; client += 1) {
             var sensors = clients[client]["sensors"];
             for (var sensor = 0; sensor < sensors.length; sensor += 1) {
@@ -191,6 +209,7 @@ var CalibrationPage = {
         jQuery(".scene-selection > div > button.dropdown-toggle").on('click', { callingObj: this }, this.RemoveCommWorker);
         jQuery("#lock-btn").on('click', { callingObj: this }, this.LockBtnHandler);
         jQuery("#calibrate-btn").on('click', { callingObj: this }, this.CalibrateBtnHandler);
+        jQuery("#numOfSkeletonsRequired").on('change', { callingObj: this },this.SkeletonRequiredHandler);
     },
 
     RemoveCommWorker:function(event){
@@ -232,6 +251,19 @@ var CalibrationPage = {
         jQuery("#canvas-container-" + sceneId + "-scene-status").text(text);
 
         callingObj.commWorkersId[sceneSelectionId] = workerId;
+    },
+
+    SkeletonRequiredHandler: function (event) {
+        var callingObj = event.data.callingObj;
+        var skeletonsRequiredInput = event.currentTarget;
+
+        if (!isNaN(parseInt(skeletonsRequiredInput.value))) {
+            callingObj.numOfSkeletonsRequired = skeletonsRequiredInput.value;
+            callingObj.numOfJointPoints = callingObj.numOfSkeletonsRequired * 21;
+            jQuery("#numOfJointPts").text(callingObj.numOfJointPoints);
+        } else {
+            callingObj.UpdateCalibrationMenuStatus("Please enter a number into the Skeleton Required Input", "warning");
+        }
     },
 
     NetworkHandler: function(event){
@@ -280,11 +312,12 @@ var CalibrationPage = {
             lockedSkeletons[0] = new Array();
             lockedSkeletons[1] = new Array();
             localStorage.setItem("lockedSkeletons", JSON.stringify(lockedSkeletons));
+            callingObj.numOfSkeletonsScanned = 0;
+            jQuery("#numOfSkeletonsScanned").text(this.numOfSkeletonsScanned);
 
             callingObj.automaticSkeletonTimeoutVar = window.setInterval(function () {
                 callingObj.AutomaticSceneLockingHandler(callingObj,lockBtn);
-            }, 1);
-           
+            }, 1);  
         } else {
             jQuery(lockBtn).addClass("btn-default");
             jQuery(lockBtn).removeClass("btn-warning");
@@ -312,10 +345,18 @@ var CalibrationPage = {
             if (lockedSkeletonsA.length > 0 && lockedSkeletonsB.length > 0) {
                 if (lockedSkeletonsA[0]["joints"].length >= 20 && lockedSkeletonsB[0]["joints"].length >= 20) {
 
-                    lockedSkeletons[0].push(lockedSkeletonsA[0]);
-                    lockedSkeletons[1].push(lockedSkeletonsB[0]);
+                    if (callingObj.numOfSkeletonsScanned == callingObj.numOfSkeletonsRequired) {
 
-                    localStorage.setItem("lockedSkeletons", JSON.stringify(lockedSkeletons));
+                        lockedSkeletons[0].push(lockedSkeletonsA[0]);
+                        lockedSkeletons[1].push(lockedSkeletonsB[0]);
+
+                        callingObj.numOfSkeletonsScanned += 1;
+                        jQuery("#numOfSkeletonScanned").text(callingObj.numOfSkeletonsScanned);
+
+                        localStorage.setItem("lockedSkeletons", JSON.stringify(lockedSkeletons));
+                    } else {
+                        callingObj.UpdateCalibrationMenuStatus("Joint Points Collection Completed", "default");
+                    }
                 }
             }
         }

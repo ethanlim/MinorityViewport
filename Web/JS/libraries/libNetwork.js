@@ -19,7 +19,7 @@ var Network = {
         this.serverEndpt = "http://"+server_endpoint;
         this.port = port;
 
-        if (this.testConnection()) {
+        if (!this.testConnection()) {
             return false;
         }
 
@@ -31,13 +31,23 @@ var Network = {
     * @return bool
     */
     testConnection: function () {
-        jQuery.ajax(this.serverEndpt+":"+this.port)
-        .done(function () {
-            return true;
-        })
-        .fail(function () {
-            return false;
-        })
+
+        var serverAlive = false;
+        jQuery.ajax({
+                type:"POST",
+                url:this.serverEndpt + ":" + this.port,
+                async: false,
+                cache: false,
+                global:false,
+                success:function () {
+                    serverAlive = true;
+                },
+                error:function () {
+                    serverAlive = false;
+                }
+        });
+
+        return serverAlive;
     },
 
     /**
@@ -46,8 +56,8 @@ var Network = {
     */
     fetchedConnectedClients : function(){
         var raw_json = jQuery.ajax({
-                                    url: this.serverEndpt + ":" + this.port + this.clientListing_URL,
-                                    async:false
+                url: this.serverEndpt + ":" + this.port + this.clientListing_URL,
+                async:false
         }).responseText;
 
         var clientObj = JSON.parse(raw_json);
