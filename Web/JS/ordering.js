@@ -12,11 +12,9 @@ var OrderingPage = {
 
     Init: function () {
 
-        this.networkClient = Network.initClient(GlobalVar.hostURL,GlobalVar.port);
+        this.networkClient = Network.initClient(GlobalVar.hostURL, GlobalVar.port);
 
-        if (this.networkClient) {
-            console.log("Libraries Initialisation Successful");
-        }
+        this.Diagnostic();
 
         this.clients = this.networkClient.fetchedConnectedClients();
 
@@ -25,6 +23,24 @@ var OrderingPage = {
         /* Establish the Event Handlers */
 
         this.SetupEventHandlers();
+    },
+
+    Diagnostic: function () {
+        if (this.networkClient) {
+            console.log("Libraries Initialisation Successful");
+            return true;
+        } else {
+            if (!this.networkClient) {
+
+                this.networkClient = Network.initClient("localhost", GlobalVar.port);
+
+                console.log("Network Connection Failed : Default to Localhost");
+            } else {
+                console.log("Network Connection Failed : Fail Safe failed");
+            }
+
+            return false;
+        }
     },
 
     UpdateSensorTable: function (clients) {

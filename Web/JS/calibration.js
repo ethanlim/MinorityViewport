@@ -423,7 +423,7 @@ var CalibrationPage = {
                 if (localStorage.getItem("lockingMode") == "true") {
                     skeletonGeometry = skeletonObj.getGeometry(0xFF0000);
                 } else {
-                    skeletonGeometry = skeletonObj.getGeometry(0xffff00);
+                    skeletonGeometry = skeletonObj.getGeometry(0xFF9933);
                 }                
 
                 glScene.add(skeletonGeometry);

@@ -62,6 +62,25 @@ var IndexPage = {
         this.StartCommunicationWithScene();
     },
 
+    Diagnostic: function () {
+        if (this.networkClient
+            && this.visualisationCanvas) {
+            console.log("Libraries Initialisation Successful");
+            return true;
+        } else {
+            if (!this.networkClient) {
+
+                this.networkClient = Network.initClient("localhost", GlobalVar.port);
+
+                console.log("Network Connection Failed : Default to Localhost");
+            } else {
+                console.log("Network Connection Failed : Fail Safe failed");
+            }
+
+            return false;
+        }
+    },
+
     StartCommunicationWithScene: function () {
         timeSent = d.getTime()
         return this.networkClient.startCommWorker({ type: "global"}, this.NetworkHandler);
@@ -78,18 +97,6 @@ var IndexPage = {
             } else {
                 localStorage.setItem("globalScene", "");
             }
-        }
-    },
-
-    Diagnostic: function () {
-        if (this.networkClient
-           && this.visualisationCanvas0
-           && this.visualisationCanvas1
-           ) {
-            console.log("Libraries Initialisation Successful");
-            return true;
-        } else {
-            return false;
         }
     },
 
@@ -197,8 +204,8 @@ var IndexPage = {
                     //purple
                     skeletonGeometry = skeletonObj.getGeometry(0xA30000);
                 } else {
-                    //yellow
-                    skeletonGeometry = skeletonObj.getGeometry(0xffff00);
+                    //orange
+                    skeletonGeometry = skeletonObj.getGeometry(0xFF9933);
                 }
 
                 glScene.add(skeletonGeometry);
