@@ -39,7 +39,7 @@ namespace MultipleKinectsPlatformServer{
 
 		double seconds_passed = clock() - this->_internal_counter;
 
-		return this->_startedAt+seconds_passed*1000;
+		return (this->_startedAt+seconds_passed);
 	}
 
 }
