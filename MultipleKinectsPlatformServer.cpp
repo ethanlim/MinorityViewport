@@ -44,9 +44,7 @@ namespace MultipleKinectsPlatformServer{
 												address, 
 												httpPort, 
 												docRoot, 
-												this->_jobQueue, 
 												num_threads,
-												this->_clientList,
 												this->_minorityViewport
 												);
 

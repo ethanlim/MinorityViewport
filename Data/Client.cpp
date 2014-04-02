@@ -125,6 +125,4 @@ namespace MultipleKinectsPlatformServer{
 	map<string,Sensor*> Client::GetSensorsList(){
 			return this->_sensors;
 	}
-
-
 }

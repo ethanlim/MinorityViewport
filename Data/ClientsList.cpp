@@ -29,13 +29,21 @@ namespace MultipleKinectsPlatformServer{
 
 	void ClientsList::RemoveClient(unsigned int id){
 
-		this->avaliableIDs.push(id);
+		unsigned int removedIdx=-1;
 
-		for(unsigned int client=0; client<this->_raw_client_list.size(); client+=1){
-			if(this->_raw_client_list.at(client)->GetId()==id){
-				this->_raw_client_list.erase(this->_raw_client_list.begin()+client);
+		for(vector<Client*>::iterator clientItr=this->_raw_client_list.begin();clientItr!=this->_raw_client_list.end();clientItr++){
+			if((*clientItr)->GetId()==id){
+				delete *clientItr;
+				removedIdx+=1;
+				break;
 			}
+
+			removedIdx+=1;
 		}
+
+		this->_raw_client_list.erase(this->_raw_client_list.begin() + removedIdx);
+
+		this->avaliableIDs.push(id);
 	}
 
 	unsigned int ClientsList::GenerateNextClientId(){

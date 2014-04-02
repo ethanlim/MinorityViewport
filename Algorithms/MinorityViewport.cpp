@@ -20,6 +20,78 @@ namespace MultipleKinectsPlatformServer{
 		this->mergingLogFile->close();
 	}
 
+	unsigned int MinorityViewport::RegisterClient(string phyLocation, string ipAddr){
+		
+		unsigned int clientId = this->_clients->AddClient(phyLocation,ipAddr);
+
+		this->ReportStatus("client id assigned - " + std::to_string(clientId));
+
+		return clientId;
+	}
+
+	string MinorityViewport::GetClientListing(){
+
+		string clientListing="";
+
+		clientListing += "{";
+		clientListing += "\"clients\":";
+		clientListing += "[";
+
+		for(unsigned int clientIdx=0;clientIdx<this->_clients->Size();clientIdx++){
+			MultipleKinectsPlatformServer::Client *extractedClient = this->_clients->AtIdx(clientIdx);
+			  
+			clientListing += extractedClient->ToJSON();
+
+			if(clientIdx!=this->_clients->Size()-1){
+				clientListing+=",";
+			}
+		}
+		
+
+		clientListing += "]";
+		clientListing += "}";
+
+		return clientListing;
+	}
+
+	void MinorityViewport::DeregisterClient(unsigned int clientId){
+		this->ReportStatus("client id deregistered - " + std::to_string(clientId));
+
+		Client *clientToBeRm = this->_clients->At(clientId);
+
+		map<string,Sensor*> allSensorsForClient = clientToBeRm->GetSensorsList();
+
+		this->_orderedSceneMutex.lock();
+
+		for(map<string,Sensor*>::iterator	sensorToBeRm=allSensorsForClient.begin(); 
+											sensorToBeRm!=allSensorsForClient.end();
+											sensorToBeRm++){
+				
+				Scene *scenePtr = sensorToBeRm->second->GetScene();
+
+				for(vector<Scene*>::iterator orderedSceneItr = this->_orderedScenes.begin();orderedSceneItr!=this->_orderedScenes.end();orderedSceneItr++){
+					if(*orderedSceneItr==scenePtr){
+						this->_orderedScenes.erase(orderedSceneItr);
+					}
+				}
+				for(set<Scene*>::iterator sceneItr = this->_scenesSet.begin();sceneItr!=this->_scenesSet.end();sceneItr++){
+					if(*sceneItr==scenePtr){
+						this->_scenesSet.erase(sceneItr);
+					}
+				}
+		}
+		
+		this->_orderedSceneMutex.unlock();
+
+		this->_clients->RemoveClient(clientId);
+	}
+
+	void MinorityViewport::RegisterSensors(unsigned int clientId,string rawSensorsList){
+		MultipleKinectsPlatformServer::Client *extractedClient = this->_clients->At(clientId);
+
+		extractedClient->InitialSensorsList(rawSensorsList);
+	}
+
 	/**
 	 *   CalibrateSceneOrder
 	 *   Determine the order of scene based on their last skeleton observed time
@@ -489,4 +561,7 @@ namespace MultipleKinectsPlatformServer{
 		return NULL;
 	}
 
+	void MinorityViewport::ReportStatus(string msg){
+		cout << "Viewport : " << msg << endl;
+	}
 }

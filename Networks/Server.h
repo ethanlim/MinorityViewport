@@ -27,9 +27,7 @@ namespace http {
 			  explicit server(const std::string& address, 
 							  const std::string& port, 
 							  const std::string& doc_root, 
-							  MultipleKinectsPlatformServer::JobsQueue *cur_jobs_queue, 
 							  std::size_t io_service_pool_size,
-							  MultipleKinectsPlatformServer::ClientsList *client_list,
 							  MultipleKinectsPlatformServer::MinorityViewport *viewport);
 
 			  /// Run the server's io_service loop.

@@ -4,12 +4,8 @@ namespace http {
 	namespace server {
 
 	request_handler::request_handler(const std::string& doc_root,
-									 MultipleKinectsPlatformServer::JobsQueue *cur_jobs_queue, 
-									 MultipleKinectsPlatformServer::ClientsList *client_list,
 									 MultipleKinectsPlatformServer::MinorityViewport *viewport)
 									:_doc_root(doc_root),
-									 _job_queue(cur_jobs_queue),
-									 _client_list(client_list),
 									 _viewport(viewport)
 	{
 	}
@@ -41,23 +37,6 @@ namespace http {
 	  }
 
 	  /********************************************************/
-	  /* 
-		 @Depreciated
-		 Endpoint for Sensor Data
-		 @parameters
-		 string SensorData_JSON
-		 string time_stamp
-		 @return
-		 nil
-	  */
-	  /********************************************************/
-	  if(request_path == "/api/sensors/data.json")
-	  {
-		//_job_queue->push(sensorData_JSON,time_stamp);
-		//this->_viewport->ProcessSensorData(this->request_header_val(req,"TIME_STAMP"),this->request_header_val(req,"SENSOR_JSON"));
-	  }
-
-	  /********************************************************/
 	  /*
 		 Endpoint for Client Registration
 		 @parameters
@@ -74,7 +53,7 @@ namespace http {
 		string physical_location = this->request_header_val(req,"PHYSICAL_LOC");
 		string ip_addr = this->request_header_val(req,"IP_ADDR");
 		  
-		unsigned int client_id = this->_client_list->AddClient(physical_location,ip_addr);
+		unsigned int client_id = this->_viewport->RegisterClient(physical_location,ip_addr);
 
 		outputFile << "{";
 		outputFile << "\"client_id\":";
@@ -97,7 +76,7 @@ namespace http {
 	  {
 		string deregisterClientId = this->request_header_val(req,"CLIENT_ID");
 
-		this->_client_list->RemoveClient(std::stoi(deregisterClientId));
+		this->_viewport->DeregisterClient(std::stoi(deregisterClientId));
 	  }
 
 	  /********************************************************/
@@ -113,9 +92,7 @@ namespace http {
 		string sensorsList_JSON = this->request_header_val(req,"SENSOR_LIST");
 		unsigned int clientId = std::stoi(this->request_header_val(req,"CLIENT_ID"));
 
-		MultipleKinectsPlatformServer::Client *extractedClient = this->_client_list->At(clientId);
-
-		extractedClient->InitialSensorsList(sensorsList_JSON);
+		this->_viewport->RegisterSensors(clientId,sensorsList_JSON);
 	  }
 
 	  /********************************************************/
@@ -131,19 +108,9 @@ namespace http {
 	  {
 		ofstream outputFile(_doc_root+request_path);
 
-		outputFile << "{";
-		outputFile << "\"clients\":";
-		outputFile << "[";
+		string clientListing_JSON = this->_viewport->GetClientListing();
 
-		for(unsigned int clientIdx=0;clientIdx<this->_client_list->Size();clientIdx++){
-
-			MultipleKinectsPlatformServer::Client *extractedClient = this->_client_list->AtIdx(clientIdx);
-			  
-			outputFile << extractedClient->ToJSON();
-		}
-
-		outputFile << "]";
-		outputFile << "}";
+		outputFile << clientListing_JSON;
 
 		outputFile.close();
 	  }

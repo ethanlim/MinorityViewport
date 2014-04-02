@@ -6,15 +6,13 @@ namespace http {
 		server::server(const std::string& address, 
 					   const std::string& port, 
 					   const std::string& doc_root, 
-					   MultipleKinectsPlatformServer::JobsQueue *cur_jobs_queue, 
 					   std::size_t io_service_pool_size,
-					   MultipleKinectsPlatformServer::ClientsList *client_list,
 					   MultipleKinectsPlatformServer::MinorityViewport *viewport)
 		  : io_service_pool_(io_service_pool_size),
 			signals_(io_service_pool_.get_io_service()),
 			acceptor_(io_service_pool_.get_io_service()),
 			new_connection_(),
-			request_handler_(doc_root,cur_jobs_queue,client_list,viewport)
+			request_handler_(doc_root,viewport)
 		{
 			// Register to handle the signals that indicate when the server should exit.
 			// It is safe to register for the same signal multiple times in a program,

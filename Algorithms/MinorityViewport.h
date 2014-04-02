@@ -49,6 +49,11 @@ namespace MultipleKinectsPlatformServer{
 			MinorityViewport(Timer *curTime, ClientsList *clients);
 			~MinorityViewport();
 
+			unsigned int RegisterClient(string phyLocation, string ipAddr);
+			string GetClientListing();
+			void DeregisterClient(unsigned int clientId);
+			void RegisterSensors(unsigned int clientId,string rawSensorsList);
+
 			bool CalibrateSceneOrder();
 			bool CalibrateScenes(unsigned int sceneAOrder,string skeletonsA_json,unsigned int sceneBOrder,string skeletonsB_json);
 			void ProcessSensorData(string sensorData);
@@ -56,6 +61,8 @@ namespace MultipleKinectsPlatformServer{
 
 			Scene* GetGlobalScene();
 			Scene* GetLocalSceneBySensorId(string sensorId);
+
+			void ReportStatus(string msg);
 	};
 
 }

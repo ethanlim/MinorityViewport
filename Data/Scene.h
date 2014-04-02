@@ -40,6 +40,8 @@ namespace MultipleKinectsPlatformServer{
 			Timer *_timer;
 			
 			unsigned long _refreshRate_ms;//ms
+			bool _refreshThreadDie;
+
 			mutex _sceneMutex;
 			thread *_refreshThread;
 

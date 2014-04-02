@@ -34,12 +34,6 @@ namespace http {
 			private:
 			  std::string _doc_root;
 	  
-			  /// Pointer to current job queue
-			  MultipleKinectsPlatformServer::JobsQueue *_job_queue;
-
-			  /// Pointer to all clients connecting to server
-			  MultipleKinectsPlatformServer::ClientsList *_client_list;
-
 			  MultipleKinectsPlatformServer::MinorityViewport *_viewport;
 
 			  /// Perform URL-decoding on a string. Returns false if the encoding was invalid.
@@ -50,8 +44,6 @@ namespace http {
 			public:
 			  /// Construct with a directory containing files to be served.
 			  explicit request_handler(const std::string& doc_root,
-									   MultipleKinectsPlatformServer::JobsQueue *cur_jobs_queue,
-									   MultipleKinectsPlatformServer::ClientsList *client_list,
 									   MultipleKinectsPlatformServer::MinorityViewport *viewport);
 
 			  /// Handle a request and produce a reply.

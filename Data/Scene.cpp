@@ -11,7 +11,8 @@ namespace MultipleKinectsPlatformServer{
 		_refreshThread(new thread(&MultipleKinectsPlatformServer::Scene::Clear,this)),
 		_firstSkeletonObservedTime_ms(0)
 		,_ordering(0),
-		_calibrated(false)
+		_calibrated(false),
+		_refreshThreadDie(false)
 	{
 		this->_refreshRate_ms=3000;
 	}
@@ -25,12 +26,15 @@ namespace MultipleKinectsPlatformServer{
 		_refreshThread(NULL),
 		_firstSkeletonObservedTime_ms(0)
 		,_ordering(0),
-		_calibrated(false)
+		_calibrated(false),
+		_refreshThreadDie(false)
 	{
 		this->_refreshRate_ms=3000;
 	}
 
 	Scene::~Scene(){
+		this->_refreshThreadDie=true;
+		this->_refreshThread->join();
 	}
 
 	void Scene::Update(unsigned short serverSkeletonId, Skeleton newPerson){
@@ -64,6 +68,10 @@ namespace MultipleKinectsPlatformServer{
 		long nextLapse=0;
 
 		while(1){
+			if(this->_refreshThreadDie){
+				break;
+			}
+
 			curTime = this->_timer->GetTicks_ms();
 
 			if(this->_timer->GetTicks_ms()>nextLapse){
