@@ -78,35 +78,6 @@ namespace MultipleKinectsPlatformServer{
 		}
 	}
 
-	/** Depreciated 
-	void Core::ProcessJobs(){
-
-		Json::Value root;   
-		Json::Reader reader;
-		string rawJSON;
-		string timeStamp;
-
-		while(true){
-
-			Job recvJob;
-			JobThreadMutex.lock();
-			recvJob =  this->_jobQueue->get();
-			JobThreadMutex.unlock();
-			
-			rawJSON = recvJob.GetJobJSON();
-			timeStamp = recvJob.GetTimeStamp();
-			
-			if (!rawJSON.empty()&&!timeStamp.empty()&&reader.parse(rawJSON,root))
-			{
-				for(unsigned short skeletons=0;skeletons<root.size();skeletons++){
-					MultipleKinectsPlatformServer::Skeleton newSkeleton(root.get(skeletons,NULL),atol(timeStamp.c_str()));
-					this->_minorityViewport->LoadSkeleton(newSkeleton);
-				}
-			}
-		}
-	}
-	*/
-
 	void Core::ReportStatus(string msg){
 		cout << "Core : " << msg << endl;
 	}
