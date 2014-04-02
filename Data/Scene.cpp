@@ -7,12 +7,13 @@ namespace MultipleKinectsPlatformServer{
 		_dimensionX(0),
 		_dimensionY(0),
 		_dimensionZ(0),
-		_curTime(time),
+		_timer(time),
 		_refreshThread(new thread(&MultipleKinectsPlatformServer::Scene::Clear,this)),
 		_firstSkeletonObservedTime_ms(0)
 		,_ordering(0),
 		_calibrated(false)
 	{
+		this->_refreshRate_ms=3000;
 	}
 
 	Scene::Scene(unsigned int dim_x, unsigned int dim_y,unsigned int dim_z,Timer *time)
@@ -20,12 +21,13 @@ namespace MultipleKinectsPlatformServer{
 		_dimensionX(dim_x),
 		_dimensionY(dim_y),
 		_dimensionZ(dim_z),
-		_curTime(time),
+		_timer(time),
 		_refreshThread(NULL),
 		_firstSkeletonObservedTime_ms(0)
 		,_ordering(0),
 		_calibrated(false)
 	{
+		this->_refreshRate_ms=3000;
 	}
 
 	Scene::~Scene(){
@@ -35,13 +37,16 @@ namespace MultipleKinectsPlatformServer{
 		
 		// Tracked the 1st time sensor observe a skeleton, used for ordering sensors
 		if(this->_firstSkeletonObservedTime_ms==0&&this->_skeletons.size()==0){
-			this->_firstSkeletonObservedTime_ms = this->_curTime->GetTicks_ms();
+			this->_firstSkeletonObservedTime_ms = this->_timer->GetTicks_ms();
 		}
 
 		this->_sceneMutex.lock();
 
 		this->_skeletons.erase(serverSkeletonId);
-		this->_skeletons.insert(std::pair<unsigned short,Skeleton>(serverSkeletonId,newPerson));
+
+		if(this->_skeletons.size()<3){
+			this->_skeletons.insert(std::pair<unsigned short,Skeleton>(serverSkeletonId,newPerson));
+		}
 		
 		this->_sceneMutex.unlock();
 	}
@@ -55,22 +60,21 @@ namespace MultipleKinectsPlatformServer{
 
 	void Scene::Clear(){
 
-		long curTime;
-		long nextLapse;
+		long curTime=0;
+		long nextLapse=0;
 
 		while(1){
-			curTime = this->_curTime->GetTicks_ms();
-			nextLapse = curTime+this->_refreshRate_ms;
+			curTime = this->_timer->GetTicks_ms();
 
-			if(this->_curTime->GetTicks_ms()>nextLapse){
-
+			if(this->_timer->GetTicks_ms()>nextLapse){
+				
 				this->_sceneMutex.lock();
+
+				nextLapse = curTime+this->_refreshRate_ms;
 
 				this->_skeletons.clear();
 
 				this->_sceneMutex.unlock();
-
-				nextLapse = this->_curTime->GetTicks_ms()+this->_refreshRate_ms;
 			}
 		}
 	}

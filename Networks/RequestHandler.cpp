@@ -148,8 +148,6 @@ namespace http {
 		outputFile.close();
 	  }
 
-
-	  
 	  /********************************************************/
 	  /*
 		 Endpoint for Browser to Get the Order the Sensors

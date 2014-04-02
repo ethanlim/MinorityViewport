@@ -37,9 +37,9 @@ namespace MultipleKinectsPlatformServer{
 			Mat RMatrix;	//Rotation Matrix that rotate all vectors here to the prev scene
 			Mat TMatrix;	//Translation Matrix that translate all vectors here to the prev scenen
 
-			Timer *_curTime;
+			Timer *_timer;
 			
-			static const unsigned long _refreshRate_ms=30000;//ms
+			unsigned long _refreshRate_ms;//ms
 			mutex _sceneMutex;
 			thread *_refreshThread;
 

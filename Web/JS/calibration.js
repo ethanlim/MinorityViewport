@@ -29,8 +29,9 @@ var CalibrationPage = {
 
         var scenes = new Array(2)
         scenes[0] = { sensorId: null, scene: null};
-        scenes[1] = { sensorId: null, scene: null};
-        jQuery.data(document.body, "scenes", scenes);
+        scenes[1] = { sensorId: null, scene: null };
+        localStorage.setItem("scenes", JSON.stringify(scenes));
+
         var sceneSkeletons = new Array(2);
 
         this.numOfSkeletonsRequired = 35;
@@ -243,9 +244,9 @@ var CalibrationPage = {
         var sceneSelectionId = jQuery(li).closest(".scene-selection").attr("id");
         var sceneId = sceneSelectionId.split("-")[2];
 
-        var scenes = jQuery.data(document.body, "scenes");
+        var scenes = JSON.parse(localStorage.getItem("scenes"));
         scenes[sceneId].sensorId = text;
-        jQuery.data(document.body, "scenes", scenes);
+        localStorage.setItem("scenes", JSON.stringify(scenes));
 
         //Set the canvas sensor id status
         jQuery("#canvas-container-" + sceneId + "-scene-status").text(text);
@@ -273,7 +274,7 @@ var CalibrationPage = {
 
         if (responseType == "data") {
 
-            var scenes = jQuery.data(document.body, "scenes");
+            var scenes = JSON.parse(localStorage.getItem("scenes"));
 
             if (responseData != "") {
                 var sceneFromServer = JSON.parse(responseData);
@@ -283,7 +284,7 @@ var CalibrationPage = {
                 for (var sceneNo = 0; sceneNo < scenes.length; sceneNo += 1) {
                     if (scenes[sceneNo].sensorId == sensorId) {
                         scenes[sceneNo].scene = sceneFromServer;
-                        jQuery.data(document.body, "scenes", scenes);
+                        localStorage.setItem("scenes", JSON.stringify(scenes));
                     }
                 }
 
@@ -308,7 +309,7 @@ var CalibrationPage = {
             } else {
                 for (var sceneNo = 0; sceneNo < scenes.length; sceneNo += 1) {
                         scenes[sceneNo].scene = null;
-                        jQuery.data(document.body, "scenes", scenes);
+                        localStorage.setItem("scenes", JSON.stringify(scenes));
                 }
             }
         }
@@ -353,12 +354,13 @@ var CalibrationPage = {
 
         var lockedSkeletons = JSON.parse(localStorage.getItem("lockedSkeletons"));
 
-        if (lockedSkeletons == null) {
+        if (lockedSkeletons != null) {
             callingObj.numOfSkeletonsScanned = lockedSkeletons[0].length;
-            jQuery("#numOfSkeletonScanned").text(callingObj.numOfSkeletonsScanned);
+            jQuery("#numOfSkeletonsScanned").text(callingObj.numOfSkeletonsScanned);
 
             if (callingObj.numOfSkeletonsScanned == callingObj.numOfSkeletonsRequired) {
                 callingObj.UpdateCalibrationMenuStatus("Joint Points Collection Completed", "default");
+                localStorage.setItem("lockingMode","false")
             }
         }
     },
@@ -370,7 +372,7 @@ var CalibrationPage = {
 
         /* Get all the captured skeletons */
         var lockedSkeletons = JSON.parse(localStorage.getItem("lockedSkeletons"));
-        var activeScenes = jQuery.data(document.body, "scenes");
+        var activeScenes = JSON.parse(localStorage.getItem("scenes"));
 
         var sceneAOrder = activeScenes[0]["scene"]["ordering"];
         var sceneBOrder = activeScenes[1]["scene"]["ordering"];
@@ -378,7 +380,12 @@ var CalibrationPage = {
         var lockedSkeletonsA = lockedSkeletons[0];
         var lockedSkeletonsB = lockedSkeletons[1];
 
-        if (lockedSkeletonsA.length > 0  && lockedSkeletonsB.length > 0) {
+        if (lockedSkeletonsA.length > 0 && lockedSkeletonsB.length > 0) {
+
+            /* Only send required number of skeletons */
+            lockedSkeletonsA.splice(callingObj.numOfSkeletonsRequired,lockedSkeletonsA.length-callingObj.numOfSkeletonsRequired);
+            lockedSkeletonsB.splice(callingObj.numOfSkeletonsRequired,lockedSkeletonsB.length-callingObj.numOfSkeletonsRequired);
+
             if (callingObj.networkClient.calibrateScene(sceneAOrder, lockedSkeletonsA, sceneBOrder, lockedSkeletonsB)) {
                 callingObj.UpdateCalibrationMenuStatus("Calibration Succeeded", "success");
                 
@@ -405,12 +412,14 @@ var CalibrationPage = {
     ReconstructFn : function(glScene,canvasId){
 
         // Remove all skeletons previously inserted into scene
-        for (var child = 7; child < glScene.children.length; child++) {
+        var allGlSceneChildren = glScene.children.length;
+
+        for (var child = 7; child < allGlSceneChildren; child++) {
             glScene.remove(glScene.children[child]);
         }
 
         /* Choose the right scene from server to draw on the right canvas */
-        var scenesFromServer = jQuery.data(document.body, "scenes");
+        var scenesFromServer = JSON.parse(localStorage.getItem("scenes"));
         var sceneIdFromCanvasId =  canvasId.split("-")[2];
         var sceneFromServerToDraw = scenesFromServer[sceneIdFromCanvasId].scene;
 
