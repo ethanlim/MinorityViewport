@@ -207,8 +207,8 @@ namespace MultipleKinectsPlatformServer{
 		ofstream testOutputSensorBFile("B_calibration_data.txt");
 		ofstream centroidAFile("A_centroid.txt");
 		ofstream centroidBFile("B_centroid.txt");
-		ofstream translationData("T_calibration_data.txt");
-		ofstream rotationData("R_calibration_data.txt");
+		ofstream translationDataFile("T_calibration_data.txt");
+		ofstream rotationDataFile("R_calibration_data.txt");
 
 		if (this->_orderedScenes.size()>0&&reader.parse(skeletonsA_json,skeletonsARoot)&&reader.parse(skeletonsB_json,skeletonsBRoot))
 		{
@@ -229,67 +229,61 @@ namespace MultipleKinectsPlatformServer{
 				}
 			}
 
-			/* Regardless of Scene A or Scene B, Matrix A must be the reference frame which is the lower order */
+			/* Regardless of Scene A or Scene B, Matrix A must be the reference frame here*/
 			Mat A,B;					//nx3
 			Mat centroidA,centroidB;	//1x3 (Verified with Matlab)
 			unsigned int bodyFrameOrder=0,refFrameOrder=0;
 
-			//scene A is the reference frame
+			// A must always be the reference frame and B the body frame after this if condition
 			if(sceneAOrder<sceneBOrder){
+			//scene A is the reference frame
 				for(list<Skeleton>::iterator skeletonFromA=skeletonsA.begin();skeletonFromA!=skeletonsA.end();++skeletonFromA){
 					//nx3 vector matrix
 					A.push_back((*skeletonFromA).GetCompletePointsVectorMatrix(NULL,false)); //A
-					B.push_back((*skeletonFromA).GetCompletePointsVectorMatrix(NULL,false)); //B
 				}
 
-				//1x3
-				reduce(A,centroidA,0,1);
-				reduce(B,centroidB,0,1);
+				for(list<Skeleton>::iterator skeletonFromB=skeletonsB.begin();skeletonFromB!=skeletonsB.end();++skeletonFromB){
+					//nx3 vector matrix
+					B.push_back((*skeletonFromB).GetCompletePointsVectorMatrix(NULL,false)); //B
+				}
 
-				/*
-				centroidA = skeletonFromSceneA.ComputeCentroid(&centroidAFile,true);
-				centroidB = skeletonFromSceneB.ComputeCentroid(&centroidBFile,true);
-				*/
-
-				refFrameOrder = sceneAOrder;
-				bodyFrameOrder = sceneBOrder;
+				refFrameOrder	= sceneAOrder;
+				bodyFrameOrder	= sceneBOrder;
 			}else{
 			//scene B is the reference frame
+				for(list<Skeleton>::iterator skeletonFromB=skeletonsB.begin();skeletonFromB!=skeletonsB.end();++skeletonFromB){
+					//nx3 vector matrix
+					A.push_back((*skeletonFromB).GetCompletePointsVectorMatrix(NULL,false)); //A
+				}
+
 				for(list<Skeleton>::iterator skeletonFromA=skeletonsA.begin();skeletonFromA!=skeletonsA.end();++skeletonFromA){
 					//nx3 vector matrix
-					A.push_back((*skeletonFromA).GetCompletePointsVectorMatrix(NULL,false)); //A
 					B.push_back((*skeletonFromA).GetCompletePointsVectorMatrix(NULL,false)); //B
 				}
 
-				//1x3
-				reduce(B,centroidA,0,1);
-				reduce(A,centroidB,0,1);
-
-				/*
-				centroidA = skeletonFromSceneB.ComputeCentroid(&centroidAFile,true);
-				centroidB = skeletonFromSceneA.ComputeCentroid(&centroidBFile,true);
-				*/
-
-				refFrameOrder = sceneBOrder;
-				bodyFrameOrder = sceneAOrder;
+				refFrameOrder	= sceneBOrder;
+				bodyFrameOrder	= sceneAOrder;
 			}
 
-			/* Debugging A,B and centroids */
+			//1x3
+			reduce(A,centroidA,0,1);
+			reduce(B,centroidB,0,1);
+
+			/* Log A,B and centroids */
 
 			A.convertTo(A, CV_64F);
 			B.convertTo(B, CV_64F);
 			for(unsigned int row=0;row<A.rows;row+=1){
-				testOutputSensorAFile<<  A.at<double>(row,0) << ",";
+				testOutputSensorAFile << A.at<double>(row,0) << ",";
 				testOutputSensorAFile << A.at<double>(row,1) << ",";
 				testOutputSensorAFile << A.at<double>(row,2) ;
 				testOutputSensorAFile << endl;
 
-				testOutputSensorBFile<<  B.at<double>(row,0) << ",";
+				testOutputSensorBFile << B.at<double>(row,0) << ",";
 				testOutputSensorBFile << B.at<double>(row,1) << ",";
 				testOutputSensorBFile << B.at<double>(row,2) ;
 				testOutputSensorBFile << endl;
 			}
-
 			testOutputSensorAFile.close();
 			testOutputSensorBFile.close();
 
@@ -307,6 +301,8 @@ namespace MultipleKinectsPlatformServer{
 			centroidAFile.close();
 			centroidBFile.close();
 
+			/* End of Logging */
+
 			/* Construct the H matrix */
 			Mat centroidA_row = centroidA;
 			Mat centroidB_row = centroidB;
@@ -316,6 +312,7 @@ namespace MultipleKinectsPlatformServer{
 				centroidB.push_back(centroidB_row);
 			}
 
+			// A is the reference B is the body
 			// H = (B - repmat(centroid_B, N, 1))'*(A - repmat(centroid_A, N, 1));
 			Mat firstOperand;
 			subtract(B,centroidB,firstOperand,noArray(),CV_32F);
@@ -354,13 +351,14 @@ namespace MultipleKinectsPlatformServer{
 			bodyFrameScene->SetRAndT(rotationMatrix,translationMatrix);
 
 			/* Output to file for testing */
-			bodyFrameScene->GetRMatrix(&rotationData,true);
-			bodyFrameScene->GetTMatrix(&translationData,true);
+			bodyFrameScene->GetRMatrix(&rotationDataFile,true);
+			bodyFrameScene->GetTMatrix(&translationDataFile,true);
 
 			Scene *refFrameScene = this->_orderedScenes.at(refFrameOrder-1);
 
 			bodyFrameScene->SetCalibration(true);
 			refFrameScene->SetCalibration(true);
+
 			calibrateSuccess = true;
 		}else{
 			calibrateSuccess = false;
