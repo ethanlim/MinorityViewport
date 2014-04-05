@@ -147,9 +147,6 @@
     <None Include="Web\ordering.html">
       <Filter>Source Files\Web</Filter>
     </None>
-    <None Include="Web\JS\libraries\libGlobal.js">
-      <Filter>Source Files\Web\JS\libraries</Filter>
-    </None>
     <None Include="Data\JSON\json_valueiterator.inl">
       <Filter>Header Files\Data\JSON</Filter>
     </None>
@@ -159,6 +156,22 @@
     <None Include="Data\JSON\json_internalarray.inl">
       <Filter>Header Files\Data\JSON</Filter>
     </None>
+    <None Include="Web\API\sensors\deregister.json" />
+    <None Include="Web\API\sensors\register.json" />
+    <None Include="Web\API\visualisations\calibrate.json" />
+    <None Include="Web\API\visualisations\data.json" />
+    <None Include="Web\CSS\libraries\bootstrap-theme.min.css" />
+    <None Include="Web\CSS\libraries\bootstrap.min.css" />
+    <None Include="Web\CSS\ordering.css" />
+    <None Include="Web\JS\libraries\three\controls\EditorControls.js" />
+    <None Include="Web\JS\libraries\three\controls\FirstPersonControls.js" />
+    <None Include="Web\JS\libraries\three\controls\FlyControls.js" />
+    <None Include="Web\JS\libraries\three\controls\OculusControls.js" />
+    <None Include="Web\JS\libraries\three\controls\OrbitControls.js" />
+    <None Include="Web\JS\libraries\three\controls\PathControls.js" />
+    <None Include="Web\JS\libraries\three\controls\PointerLockControls.js" />
+    <None Include="Web\JS\libraries\three\controls\TrackballControls.js" />
+    <None Include="Web\JS\libraries\three\controls\TransformControls.js" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Algorithms\MinorityViewport.h">
@@ -251,11 +264,11 @@
     <ClInclude Include="Misc\Timer.h">
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="Networks\UdpServer.h">
-      <Filter>Header Files\Networks</Filter>
-    </ClInclude>
     <ClInclude Include="Data\JSON\json_batchallocator.h">
       <Filter>Header Files\Data\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Networks\UdpServer.h">
+      <Filter>Header Files\Networks</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
