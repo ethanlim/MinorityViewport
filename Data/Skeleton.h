@@ -19,7 +19,7 @@
 using namespace cv;
 using namespace std;
 
-namespace MultipleKinectsPlatformServer{
+namespace MultipleDepthSensorsPlatformServer{
 	
 	class Skeleton{
 		private:

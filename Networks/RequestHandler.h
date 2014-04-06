@@ -34,7 +34,7 @@ namespace http {
 			private:
 			  std::string _doc_root;
 	  
-			  MultipleKinectsPlatformServer::MinorityViewport *_viewport;
+			  MultipleDepthSensorsPlatformServer::MinorityViewport *_viewport;
 
 			  /// Perform URL-decoding on a string. Returns false if the encoding was invalid.
 			  static bool url_decode(const std::string& in, std::string& out);
@@ -44,7 +44,7 @@ namespace http {
 			public:
 			  /// Construct with a directory containing files to be served.
 			  explicit request_handler(const std::string& doc_root,
-									   MultipleKinectsPlatformServer::MinorityViewport *viewport);
+									   MultipleDepthSensorsPlatformServer::MinorityViewport *viewport);
 
 			  /// Handle a request and produce a reply.
 			  void handle_request(const request& req, reply& rep);

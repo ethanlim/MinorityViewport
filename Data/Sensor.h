@@ -11,7 +11,7 @@
 
 using namespace std;
 
-namespace MultipleKinectsPlatformServer{
+namespace MultipleDepthSensorsPlatformServer{
 	class Sensor{
 		private:
 			Scene *_scene;

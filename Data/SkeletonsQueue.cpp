@@ -1,6 +1,6 @@
 #include "SkeletonsQueue.h"
 
-namespace MultipleKinectsPlatformServer{
+namespace MultipleDepthSensorsPlatformServer{
 	
 	SkeletonsQueue::SkeletonsQueue(){
 		this->skeleton_queue = new std::queue<Skeleton>();

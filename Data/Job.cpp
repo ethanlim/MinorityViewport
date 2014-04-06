@@ -1,6 +1,6 @@
 #include "Job.h"
 
-namespace MultipleKinectsPlatformServer{
+namespace MultipleDepthSensorsPlatformServer{
 
 	Job::Job(){
 

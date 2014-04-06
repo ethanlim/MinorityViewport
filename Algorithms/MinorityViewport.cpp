@@ -2,7 +2,7 @@
 
 using namespace std;
 
-namespace MultipleKinectsPlatformServer{
+namespace MultipleDepthSensorsPlatformServer{
 
 	MinorityViewport::MinorityViewport(Timer *curTime,ClientsList *clients)
 		:_curTime(curTime),_clients(clients)
@@ -12,7 +12,7 @@ namespace MultipleKinectsPlatformServer{
 
 		//Create the global scene
 		this->_globalScene = new Scene(10,10,10,curTime);
-		//this->_mergethread = new thread(&MultipleKinectsPlatformServer::MinorityViewport::MergeScenes,this);
+		//this->_mergethread = new thread(&MultipleDepthSensorsPlatformServer::MinorityViewport::MergeScenes,this);
 	}
 
 	MinorityViewport::~MinorityViewport(){
@@ -38,7 +38,7 @@ namespace MultipleKinectsPlatformServer{
 		clientListing += "[";
 
 		for(unsigned int clientIdx=0;clientIdx<this->_clients->Size();clientIdx++){
-			MultipleKinectsPlatformServer::Client *extractedClient = this->_clients->AtIdx(clientIdx);
+			MultipleDepthSensorsPlatformServer::Client *extractedClient = this->_clients->AtIdx(clientIdx);
 			  
 			clientListing += extractedClient->ToJSON();
 
@@ -87,7 +87,7 @@ namespace MultipleKinectsPlatformServer{
 	}
 
 	void MinorityViewport::RegisterSensors(unsigned int clientId,string rawSensorsList){
-		MultipleKinectsPlatformServer::Client *extractedClient = this->_clients->At(clientId);
+		MultipleDepthSensorsPlatformServer::Client *extractedClient = this->_clients->At(clientId);
 
 		extractedClient->InitialSensorsList(rawSensorsList);
 	}
@@ -378,7 +378,7 @@ namespace MultipleKinectsPlatformServer{
 
 			unsigned int numOfSkeletons = skeletons_JSON.size();
 			for(unsigned short skeletons=0;skeletons<numOfSkeletons;skeletons++){
-				MultipleKinectsPlatformServer::Skeleton newSkeleton(skeletons_JSON[skeletons],timeStamp);
+				MultipleDepthSensorsPlatformServer::Skeleton newSkeleton(skeletons_JSON[skeletons],timeStamp);
 				this->LoadSkeleton(newSkeleton);
 			}
 		}

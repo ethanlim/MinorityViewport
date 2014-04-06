@@ -1,6 +1,6 @@
 #include "Joint.h"
 
-namespace MultipleKinectsPlatformServer{
+namespace MultipleDepthSensorsPlatformServer{
 
 	Joint::Joint():Type(JointType::None),X(0),Y(0),Z(0){
 	}

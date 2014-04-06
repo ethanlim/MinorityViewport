@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-namespace MultipleKinectsPlatformServer{
+namespace MultipleDepthSensorsPlatformServer{
 
 	Scene::Scene(string sensorId,Timer *time)
 		:_sensorId(sensorId),
@@ -8,7 +8,7 @@ namespace MultipleKinectsPlatformServer{
 		_dimensionY(0),
 		_dimensionZ(0),
 		_timer(time),
-		_refreshThread(new thread(&MultipleKinectsPlatformServer::Scene::Clear,this)),
+		_refreshThread(new thread(&MultipleDepthSensorsPlatformServer::Scene::Clear,this)),
 		_firstSkeletonObservedTime_ms(0)
 		,_ordering(0),
 		_calibrated(false),

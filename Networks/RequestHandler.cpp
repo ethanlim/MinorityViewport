@@ -4,7 +4,7 @@ namespace http {
 	namespace server {
 
 	request_handler::request_handler(const std::string& doc_root,
-									 MultipleKinectsPlatformServer::MinorityViewport *viewport)
+									 MultipleDepthSensorsPlatformServer::MinorityViewport *viewport)
 									:_doc_root(doc_root),
 									 _viewport(viewport)
 	{
@@ -190,7 +190,7 @@ namespace http {
 	  {
 		  string type = this->request_header_val(req,"Request-Type");
 		  ofstream outputFile(_doc_root+request_path);
-		  MultipleKinectsPlatformServer::Scene *scene;
+		  MultipleDepthSensorsPlatformServer::Scene *scene;
 		  string Scene_JSON;
 
 		  if(type=="global"){

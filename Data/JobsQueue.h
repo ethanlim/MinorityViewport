@@ -9,7 +9,7 @@
 
 using namespace std;
 
-namespace MultipleKinectsPlatformServer{
+namespace MultipleDepthSensorsPlatformServer{
 
 	class JobsQueue{
 		private:

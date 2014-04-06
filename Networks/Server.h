@@ -28,7 +28,7 @@ namespace http {
 							  const std::string& port, 
 							  const std::string& doc_root, 
 							  std::size_t io_service_pool_size,
-							  MultipleKinectsPlatformServer::MinorityViewport *viewport);
+							  MultipleDepthSensorsPlatformServer::MinorityViewport *viewport);
 
 			  /// Run the server's io_service loop.
 			  void run();
