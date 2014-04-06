@@ -417,10 +417,11 @@ namespace MultipleKinectsPlatformServer{
 				if((*orderedSceneItr)!=NULL&&(*orderedSceneItr)->GetCalibration()){
 
 					Combi_R = Mat::eye(3,3, CV_32F);
-					Combi_T = Mat::eye(3,1, CV_32F);
+					Combi_T = Mat(3,1, CV_32F,double(0));
 
 					Scene *leftScenePtr = (*orderedSceneItr)->GetLeftFrame();
 					map<unsigned short,Skeleton> currentSceneSkeletons = (*orderedSceneItr)->GetSkeletons();
+					randomSkeletonId  = rand()%100;
 
 					for(vector<Scene*>::reverse_iterator prevSceneItr = orderedSceneItr;prevSceneItr!=orderedScenes.rend();prevSceneItr++){
 						if((*prevSceneItr)->GetLeftFrame()!=NULL){
@@ -441,8 +442,6 @@ namespace MultipleKinectsPlatformServer{
 																	bodyFrameSkeleton++){
 							bodyFrameSkeleton->second.UnsetShared();
 
-							randomSkeletonId  = rand()%100;
-
 							this->_globalScene->Update(randomSkeletonId,bodyFrameSkeleton->second);
 						}
 					}else {
@@ -453,8 +452,6 @@ namespace MultipleKinectsPlatformServer{
 																		bodyFrameSkeleton!=currentSceneSkeletons.end();
 																		bodyFrameSkeleton++){
 								bodyFrameSkeleton->second.UnsetShared();
-
-								randomSkeletonId  = rand()%100;
 
 								transformedSkeletonMatrix = this->TransformSkeletonMatrix(bodyFrameSkeleton->second.GetCompletePointsVectorMatrix(NULL,false),Combi_R,Combi_T);
 								bodyFrameSkeleton->second.ConvertVectorMatrixtoSkeletonPoints(transformedSkeletonMatrix);
@@ -487,18 +484,15 @@ namespace MultipleKinectsPlatformServer{
 											   
 												//Eliminate the skeleton on the left scene that has the same coordinates as the cur scene skeleton's translated coordinates
 												leftScenePtr->Remove(refFrameSkeleton->first);
+												
+												bodyFrameSkeleton->second.SetShared();
+												
+												transformedSkeletonMatrix = this->TransformSkeletonMatrix(bodyFrameSkeleton->second.GetCompletePointsVectorMatrix(NULL,false),Combi_R,Combi_T);
+												bodyFrameSkeleton->second.ConvertVectorMatrixtoSkeletonPoints(transformedSkeletonMatrix);
+
+												this->_globalScene->Update(randomSkeletonId,bodyFrameSkeleton->second);
+												break;
 										}
-
-										randomSkeletonId  = rand()%100;
-
-										bodyFrameSkeleton->second.SetShared();
-
-										transformedSkeletonMatrix = this->TransformSkeletonMatrix(bodyFrameSkeleton->second.GetCompletePointsVectorMatrix(NULL,false),Combi_R,Combi_T);
-										bodyFrameSkeleton->second.ConvertVectorMatrixtoSkeletonPoints(transformedSkeletonMatrix);
-
-										this->_globalScene->Update(randomSkeletonId,bodyFrameSkeleton->second);
-
-										break;
 								}
 							}
 						}
