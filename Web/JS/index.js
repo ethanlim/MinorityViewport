@@ -82,7 +82,6 @@ var IndexPage = {
     },
 
     StartCommunicationWithScene: function () {
-        timeSent = d.getTime()
         return this.networkClient.startCommWorker({ type: "global"}, this.NetworkHandler);
     },
 
@@ -181,17 +180,17 @@ var IndexPage = {
     },
 
     ReconstructFn: function (glScene, canvasId) {
-        
+        timeSent = d.getTime();
+
         // Remove all skeletons previously inserted into scene
-        for (var child = 7; child < glScene.children.length; child++) {
+        var sceneChildrenNum = glScene.children.length;
+        for (var child = 7; child < sceneChildrenNum; child++) {
             glScene.remove(glScene.children[child]);
         }
 
         /* Choose the global scene to draw*/
-        var globalSceneJSON = localStorage.getItem("globalScene");
-        var globalScene;
-        if(globalSceneJSON!=""){
-            globalScene = JSON.parse(globalSceneJSON);
+        if(localStorage.getItem("globalScene")!=""){
+            var globalScene = JSON.parse(globalSceneJSON);
         }
 
         if (globalScene != null) {
@@ -213,14 +212,11 @@ var IndexPage = {
 
             var d = new Date;
             timeTaken_ms = Math.round((d.getTime() - timeSent) / 10);
-            timeTaken_s = timeTaken_ms / 1000;
             timeSent += timeTaken_ms;
 
             window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024, onInitFs)
-
-            return glScene;
-        } else {
-            return null;
         }
+
+        return null;
     }
 };
