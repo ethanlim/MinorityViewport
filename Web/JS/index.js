@@ -3,12 +3,6 @@ jQuery(document).ready(function (){
     IndexPage.Init();
 });
 
-/* Timer */
-var d = new Date;
-var timeSent = 0;
-var timeTaken_s;
-var timeTaken_ms;
-
 function onInitFs(fs) {
     fs.root.getFile("streaming.txt", { create: true }, function (DataFile) {
         DataFile.createWriter(function (DataContent) {
@@ -180,8 +174,11 @@ var IndexPage = {
     },
 
     ReconstructFn: function (glScene, canvasId) {
-        timeSent = d.getTime();
-
+        /* Timer */
+        var d = new Date;
+        var timeSent = d.getTime();
+        var timeTaken_ms=0;
+       
         // Remove all skeletons previously inserted into scene
         var sceneChildrenNum = glScene.children.length;
         for (var child = 7; child < sceneChildrenNum; child++) {
@@ -210,9 +207,8 @@ var IndexPage = {
                 glScene.add(skeletonGeometry);
             }
 
-            var d = new Date;
+            d = new Date;
             timeTaken_ms = Math.round((d.getTime() - timeSent) / 10);
-            timeSent += timeTaken_ms;
 
             window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024, onInitFs)
         }
