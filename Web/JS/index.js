@@ -49,7 +49,7 @@ var IndexPage = {
         this.visualisationCanvas.init({ id: "canvas-container", height: "600px", width: "100%" }
                                        , { wireFrameColor: 0x3300FF, backgroundColor: 0xB6B6B4,float:'none'}
                                        , this.ReconstructFn);
-        this.visualisationCanvas.render("canvas-container");
+        this.visualisationCanvas.render(this.visualisationCanvas,"canvas-container");
 
         this.UpdateSensorTable(clients);
 
@@ -173,24 +173,21 @@ var IndexPage = {
         }
     },
 
-    ReconstructFn: function (glScene, canvasId) {
-        /* Timer */
-        var d = new Date;
-        var timeSent = d.getTime();
-        var timeTaken_ms=0;
-       
-        // Remove all skeletons previously inserted into scene
-        var sceneChildrenNum = glScene.children.length;
-        for (var child = 7; child < sceneChildrenNum; child++) {
-            glScene.remove(glScene.children[child]);
-        }
 
+    ReconstructFn: function (glScene, canvasId) {
         /* Choose the global scene to draw*/
-        if(localStorage.getItem("globalScene")!=""){
+        var globalSceneJSON = localStorage.getItem("globalScene");
+        if (globalSceneJSON != "") {
             var globalScene = JSON.parse(globalSceneJSON);
         }
 
         if (globalScene != null) {
+            // Remove all skeletons previously inserted into scene
+            var sceneChildrenNum = glScene.children.length;
+            for (var child = 7; child < sceneChildrenNum; child++) {
+                glScene.remove(glScene.children[child]);
+            }
+
             for (var newSkeleton in globalScene["skeletons"]) {
 
                 var skeletonObj = new Skeleton(globalScene["skeletons"][newSkeleton]);
@@ -203,14 +200,8 @@ var IndexPage = {
                     //orange
                     skeletonGeometry = skeletonObj.getGeometry(0xFF9933);
                 }
-
                 glScene.add(skeletonGeometry);
             }
-
-            d = new Date;
-            timeTaken_ms = Math.round((d.getTime() - timeSent) / 10);
-
-            window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024, onInitFs)
         }
 
         return null;

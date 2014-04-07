@@ -103,24 +103,26 @@ var Visualisation = function Visualisation() {
         this.scene.add(arrowZ);
 
         canvas_container.appendChild(this.renderer.domElement);
-        jQuery.data(document.body, this.canvasContainer.id, this);
     },
 
-    this.render =  function (canvas_id) {
-        var visualisation = jQuery.data(document.body, canvas_id);
+    this.render =  function (visualisation,canvas_id) {
+        /* Timer
+        d = new Date();
+        timeSent = d.getTime();
+        */
 
-        /* Reconstruct the scene here */
-        var newScene = visualisation.reconstructFn(visualisation.scene,canvas_id);
+        visualisation.reconstructFn(visualisation.scene, canvas_id);
 
-        if (newScene == null) {
-            visualisation.renderer.render(visualisation.scene, visualisation.camera);
-        } else {
-            visualisation.renderer.render(newScene, visualisation.camera);
-        }
+        /*
+        d = new Date();
+        timeTaken_ms = d.getTime() - timeSent;
+        window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024, onInitFs);
+        */
 
-        // Loop using this special function
+        visualisation.renderer.render(visualisation.scene, visualisation.camera);
+
         requestAnimationFrame(function(){
-            visualisation.render(canvas_id);
+            visualisation.render(visualisation,canvas_id);
         });
 
         visualisation.stats.update();

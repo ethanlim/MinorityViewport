@@ -48,8 +48,8 @@ var CalibrationPage = {
         this.visualisationCanvas1.init({ id: "canvas-container-1", height: "600px", width: "550px" }
                                        , { wireFrameColor: 0x006600, backgroundColor: 0xB6B6B4, float: 'left' }
                                        ,this.ReconstructFn);
-        this.visualisationCanvas0.render("canvas-container-0");
-        this.visualisationCanvas1.render("canvas-container-1");
+        this.visualisationCanvas0.render(this.visualisationCanvas0,"canvas-container-0");
+        this.visualisationCanvas1.render(this.visualisationCanvas1,"canvas-container-1");
 
         localStorage.setItem("lockingMode", "false");
 
