@@ -1,6 +1,6 @@
 #include "JobsQueue.h"
 
-namespace MultipleDepthSensorsPlatformServer{
+namespace MultipleDepthSensorsServer{
 
 	JobsQueue::JobsQueue(){
 		_jsonQueue = new std::queue<Job>();

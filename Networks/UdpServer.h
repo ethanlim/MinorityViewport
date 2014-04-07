@@ -16,7 +16,7 @@
 
 using namespace std;
 
-namespace MultipleDepthSensorsPlatformServer{
+namespace MultipleDepthSensorsServer{
 	class UdpServer{
 		private:
 			int				_socket;

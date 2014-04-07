@@ -5,7 +5,7 @@ using namespace std;
 
 #include <string>
 
-namespace MultipleDepthSensorsPlatformServer{
+namespace MultipleDepthSensorsServer{
 
 	class Job{
 		private:

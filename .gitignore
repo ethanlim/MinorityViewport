@@ -18,7 +18,7 @@ MKPA
 
 # Visual Studio Files
 /Debug
-MultipleDepthSensorsPlatformServer.*
+MultipleDepthSensorsServer.*
 
 # Eclipse Files
 .cproject

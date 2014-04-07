@@ -1,6 +1,6 @@
 #include "Skeleton.h"
 
-namespace MultipleDepthSensorsPlatformServer{
+namespace MultipleDepthSensorsServer{
 
 	Skeleton::Skeleton(Json::Value raw_skeleton_json,long time_stamp){
 

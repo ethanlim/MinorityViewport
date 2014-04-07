@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace MultipleDepthSensorsPlatformServer{
+namespace MultipleDepthSensorsServer{
 	
 	/**
 	*  A Network Time Protocol Client that queries the DateTime from the Time Server located at hostname

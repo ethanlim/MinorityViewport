@@ -1,6 +1,6 @@
 #include "Client.h"
 
-namespace MultipleDepthSensorsPlatformServer{
+namespace MultipleDepthSensorsServer{
 
 	Client::Client(Timer *time, unsigned int id, string loc,string ip_addr)
 	:_id(id),_location(loc),_ip_addr(ip_addr),_curTime(time)

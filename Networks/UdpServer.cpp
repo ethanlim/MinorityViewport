@@ -1,6 +1,6 @@
 #include "UdpServer.h"
 
-namespace MultipleDepthSensorsPlatformServer{
+namespace MultipleDepthSensorsServer{
 
 	UdpServer::UdpServer(const string address, const unsigned short port,MinorityViewport *viewport):
 		_address(address),_port(port)

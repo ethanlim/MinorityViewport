@@ -25,7 +25,7 @@
 using namespace cv;
 using namespace std;
 
-namespace MultipleDepthSensorsPlatformServer{
+namespace MultipleDepthSensorsServer{
 
 	class MinorityViewport{
 		private:

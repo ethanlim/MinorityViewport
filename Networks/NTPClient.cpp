@@ -1,6 +1,6 @@
 #include "NTPClient.h"
 
-namespace MultipleDepthSensorsPlatformServer{
+namespace MultipleDepthSensorsServer{
 	
 	/**
 	 *  NTPClient

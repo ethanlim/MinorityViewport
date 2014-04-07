@@ -1,6 +1,6 @@
 #include "Timer.h"
 
-namespace MultipleDepthSensorsPlatformServer{
+namespace MultipleDepthSensorsServer{
 	
 	Timer::Timer(clock_t startAt){
 		this->_startedAt = startAt;

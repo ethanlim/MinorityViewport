@@ -7,7 +7,7 @@ namespace http {
 					   const std::string& port, 
 					   const std::string& doc_root, 
 					   std::size_t io_service_pool_size,
-					   MultipleDepthSensorsPlatformServer::MinorityViewport *viewport)
+					   MultipleDepthSensorsServer::MinorityViewport *viewport)
 		  : io_service_pool_(io_service_pool_size),
 			signals_(io_service_pool_.get_io_service()),
 			acceptor_(io_service_pool_.get_io_service()),

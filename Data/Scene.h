@@ -17,7 +17,7 @@
 
 using namespace std;
 
-namespace MultipleDepthSensorsPlatformServer{
+namespace MultipleDepthSensorsServer{
 
 	class Scene{
 		private:
