@@ -1,6 +1,6 @@
 # Program File
-MKPA
 *.txt
+!LICENSE.txt
 
 # Compiled Object files
 *.slo
