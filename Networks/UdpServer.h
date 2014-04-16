@@ -12,11 +12,11 @@
  
 #pragma comment(lib, "Ws2_32.lib")
 
-#include "../Algorithms/MinorityViewport.h"
+#include "../Algorithms/MinorityViewportAlgo.h"
 
 using namespace std;
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 	class UdpServer{
 		private:
 			int				_socket;
@@ -24,9 +24,9 @@ namespace MultipleDepthSensorsServer{
 			string			_address;
 			struct addrinfo	_addressInfo;
 
-			MinorityViewport *_viewport;
+			MinorityViewportAlgo *_viewport;
 		public:
-			UdpServer(const string address, const unsigned short port,MinorityViewport* viewport);
+			UdpServer(const string address, const unsigned short port,MinorityViewportAlgo* viewport);
 			~UdpServer();
 			void Run();
 

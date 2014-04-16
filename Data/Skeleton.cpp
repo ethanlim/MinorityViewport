@@ -1,6 +1,6 @@
 #include "Skeleton.h"
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 
 	Skeleton::Skeleton(Json::Value raw_skeleton_json,long time_stamp){
 

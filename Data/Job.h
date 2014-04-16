@@ -5,7 +5,7 @@ using namespace std;
 
 #include <string>
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 
 	class Job{
 		private:

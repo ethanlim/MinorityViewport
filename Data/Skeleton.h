@@ -19,7 +19,7 @@
 using namespace cv;
 using namespace std;
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 	
 	class Skeleton{
 		private:

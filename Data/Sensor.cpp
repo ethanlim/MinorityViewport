@@ -1,6 +1,6 @@
 #include "Sensor.h"
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 	
 	Sensor::Sensor(Timer *time, string id)
 	:_id(id),_curTime(time)

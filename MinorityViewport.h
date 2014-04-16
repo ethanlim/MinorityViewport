@@ -25,25 +25,25 @@
 #include "Data/JSON/json.h"
 #include "Data/Skeleton.h"
 #include "Data/ClientsList.h"
-#include "Algorithms/MinorityViewport.h"
+#include "Algorithms/MinorityViewportAlgo.h"
 #include "Networks/NTPClient.h"
 #include "Misc/Timer.h"
 
 using namespace std;
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 	
 	mutex JobThreadMutex;	
 
 	class Core{
 		private:
-			MultipleDepthSensorsServer::ClientsList *_clientList;
-			MultipleDepthSensorsServer::JobsQueue *_jobQueue;
+			MinorityViewport::ClientsList *_clientList;
+			MinorityViewport::JobsQueue *_jobQueue;
 			
 			http::server::server *_httpServer;
-			MultipleDepthSensorsServer::UdpServer *_udpServer;
+			MinorityViewport::UdpServer *_udpServer;
 
-			MinorityViewport *_minorityViewport;
+			MinorityViewportAlgo *_minorityViewport;
 			Timer *_time;
 			void ReportStatus(string message);
 		public :

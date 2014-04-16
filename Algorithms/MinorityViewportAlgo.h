@@ -1,5 +1,5 @@
-#ifndef MINORITYVIEWPORT_H
-#define MINORITYVIEWPORT_H
+#ifndef MINORITYVIEWPORTALGO_H
+#define MINORITYVIEWPORTALGO_H
 
 #include <set>
 #include <mutex>
@@ -25,9 +25,9 @@
 using namespace cv;
 using namespace std;
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 
-	class MinorityViewport{
+	class MinorityViewportAlgo{
 		private:
 			Timer *_curTime;
 			ClientsList *_clients;
@@ -46,8 +46,8 @@ namespace MultipleDepthSensorsServer{
 			//Debugging Variables
 			ofstream *mergingLogFile;
 		public:
-			MinorityViewport(Timer *curTime, ClientsList *clients);
-			~MinorityViewport();
+			MinorityViewportAlgo(Timer *curTime, ClientsList *clients);
+			~MinorityViewportAlgo();
 
 			unsigned int RegisterClient(string phyLocation, string ipAddr);
 			string GetClientListing();
@@ -67,4 +67,4 @@ namespace MultipleDepthSensorsServer{
 
 }
 
-#endif MINORITYVIEWPORT_H
+#endif MINORITYVIEWPORTALGO_H

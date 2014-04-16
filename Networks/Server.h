@@ -13,7 +13,7 @@
 
 #include "../Data/JobsQueue.h"
 #include "../Data/ClientsList.h"
-#include "../Algorithms/MinorityViewport.h"
+#include "../Algorithms/MinorityViewportAlgo.h"
 
 namespace http {
 	namespace server {
@@ -28,7 +28,7 @@ namespace http {
 							  const std::string& port, 
 							  const std::string& doc_root, 
 							  std::size_t io_service_pool_size,
-							  MultipleDepthSensorsServer::MinorityViewport *viewport);
+							  MinorityViewport::MinorityViewportAlgo *viewport);
 
 			  /// Run the server's io_service loop.
 			  void run();

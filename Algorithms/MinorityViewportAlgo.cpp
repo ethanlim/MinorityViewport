@@ -1,10 +1,10 @@
-#include "MinorityViewport.h"
+#include "MinorityViewportAlgo.h"
 
 using namespace std;
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 
-	MinorityViewport::MinorityViewport(Timer *curTime,ClientsList *clients)
+	MinorityViewportAlgo::MinorityViewportAlgo(Timer *curTime,ClientsList *clients)
 		:_curTime(curTime),_clients(clients)
 	{
 		
@@ -12,15 +12,15 @@ namespace MultipleDepthSensorsServer{
 
 		//Create the global scene
 		this->_globalScene = new Scene(10,10,10,curTime);
-		//this->_mergethread = new thread(&MultipleDepthSensorsServer::MinorityViewport::MergeScenes,this);
+		//this->_mergethread = new thread(&MinorityViewportAlgo::MinorityViewportAlgo::MergeScenes,this);
 	}
 
-	MinorityViewport::~MinorityViewport(){
+	MinorityViewportAlgo::~MinorityViewportAlgo(){
 		this->_mergethread->join();
 		this->mergingLogFile->close();
 	}
 
-	unsigned int MinorityViewport::RegisterClient(string phyLocation, string ipAddr){
+	unsigned int MinorityViewportAlgo::RegisterClient(string phyLocation, string ipAddr){
 		
 		unsigned int clientId = this->_clients->AddClient(phyLocation,ipAddr);
 
@@ -29,7 +29,7 @@ namespace MultipleDepthSensorsServer{
 		return clientId;
 	}
 
-	string MinorityViewport::GetClientListing(){
+	string MinorityViewportAlgo::GetClientListing(){
 
 		string clientListing="";
 
@@ -38,7 +38,7 @@ namespace MultipleDepthSensorsServer{
 		clientListing += "[";
 
 		for(unsigned int clientIdx=0;clientIdx<this->_clients->Size();clientIdx++){
-			MultipleDepthSensorsServer::Client *extractedClient = this->_clients->AtIdx(clientIdx);
+			MinorityViewport::Client *extractedClient = this->_clients->AtIdx(clientIdx);
 			  
 			clientListing += extractedClient->ToJSON();
 
@@ -54,7 +54,7 @@ namespace MultipleDepthSensorsServer{
 		return clientListing;
 	}
 
-	void MinorityViewport::DeregisterClient(unsigned int clientId){
+	void MinorityViewportAlgo::DeregisterClient(unsigned int clientId){
 		this->ReportStatus("client id deregistered - " + std::to_string(clientId));
 
 		Client *clientToBeRm = this->_clients->At(clientId);
@@ -86,8 +86,8 @@ namespace MultipleDepthSensorsServer{
 		this->_clients->RemoveClient(clientId);
 	}
 
-	void MinorityViewport::RegisterSensors(unsigned int clientId,string rawSensorsList){
-		MultipleDepthSensorsServer::Client *extractedClient = this->_clients->At(clientId);
+	void MinorityViewportAlgo::RegisterSensors(unsigned int clientId,string rawSensorsList){
+		MinorityViewport::Client *extractedClient = this->_clients->At(clientId);
 
 		extractedClient->InitialSensorsList(rawSensorsList);
 	}
@@ -97,7 +97,7 @@ namespace MultipleDepthSensorsServer{
 	 *   Determine the order of scene based on their last skeleton observed time
 	 *   @return - true if scenes have been assigned with order
 	 */
-	bool MinorityViewport::CalibrateSceneOrder(){
+	bool MinorityViewportAlgo::CalibrateSceneOrder(){
 		
 		this->RefreshScenesSet();
 
@@ -193,7 +193,7 @@ namespace MultipleDepthSensorsServer{
 	 *   R and T is the rotation and translation from B to A
 	 *   @return true if computation of R & T matrix is successful
 	 */
-	bool MinorityViewport::CalibrateScenes(unsigned int sceneAOrder,
+	bool MinorityViewportAlgo::CalibrateScenes(unsigned int sceneAOrder,
 										   string skeletonsA_json,
 										   unsigned int sceneBOrder,
 										   string skeletonsB_json)
@@ -367,7 +367,7 @@ namespace MultipleDepthSensorsServer{
 		return calibrateSuccess;
 	}
 
-	void MinorityViewport::ProcessSensorData(string sensorData){
+	void MinorityViewportAlgo::ProcessSensorData(string sensorData){
 		Json::Value root;   
 		Json::Reader reader;
 
@@ -378,13 +378,13 @@ namespace MultipleDepthSensorsServer{
 
 			unsigned int numOfSkeletons = skeletons_JSON.size();
 			for(unsigned short skeletons=0;skeletons<numOfSkeletons;skeletons++){
-				MultipleDepthSensorsServer::Skeleton newSkeleton(skeletons_JSON[skeletons],timeStamp);
+				MinorityViewport::Skeleton newSkeleton(skeletons_JSON[skeletons],timeStamp);
 				this->LoadSkeleton(newSkeleton);
 			}
 		}
 	}
 
-	void MinorityViewport::LoadSkeleton(Skeleton newSkeleton){
+	void MinorityViewportAlgo::LoadSkeleton(Skeleton newSkeleton){
 
 		unsigned int clientId = newSkeleton.GetClientId();
 		string sensorId = newSkeleton.GetSensorId();
@@ -398,7 +398,7 @@ namespace MultipleDepthSensorsServer{
 		}
 	}
 
-	void MinorityViewport::MergeScenes(){
+	void MinorityViewportAlgo::MergeScenes(){
 
 		Mat R,T,Combi_R,Combi_T,transformedSkeletonMatrix;
 		long start=0,end=0;
@@ -510,7 +510,7 @@ namespace MultipleDepthSensorsServer{
 	 *	Implement the formulat 
 	 *	A (3xn) = R(3x3)*B(3xn)+T(3xn)
 	 */
-	Mat MinorityViewport::TransformSkeletonMatrix(Mat bodyFramesSkeleton,Mat R, Mat T)
+	Mat MinorityViewportAlgo::TransformSkeletonMatrix(Mat bodyFramesSkeleton,Mat R, Mat T)
 	{
 		Mat Bt;		
 		transpose(bodyFramesSkeleton,Bt);							//3x21
@@ -533,7 +533,7 @@ namespace MultipleDepthSensorsServer{
 		return transformedMatrix;									//21x3
 	}
 
-	void MinorityViewport::RefreshScenesSet(){
+	void MinorityViewportAlgo::RefreshScenesSet(){
 
 		this->_scenesSet.clear();
 
@@ -555,7 +555,7 @@ namespace MultipleDepthSensorsServer{
 		}
 	}
 
-	Scene* MinorityViewport::GetGlobalScene(){
+	Scene* MinorityViewportAlgo::GetGlobalScene(){
 		if(this->_orderedScenes.size()!=0){
 			this->MergeScenes();
 			return this->_globalScene;
@@ -564,7 +564,7 @@ namespace MultipleDepthSensorsServer{
 		}
 	}
 
-	Scene* MinorityViewport::GetLocalSceneBySensorId(string sensorId){
+	Scene* MinorityViewportAlgo::GetLocalSceneBySensorId(string sensorId){
 
 		if(this->_clients->Size()>0){
 		
@@ -588,7 +588,7 @@ namespace MultipleDepthSensorsServer{
 		return NULL;
 	}
 
-	void MinorityViewport::ReportStatus(string msg){
+	void MinorityViewportAlgo::ReportStatus(string msg){
 		cout << "Viewport : " << msg << endl;
 	}
 }

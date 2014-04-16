@@ -1,6 +1,6 @@
 #include "Job.h"
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 
 	Job::Job(){
 

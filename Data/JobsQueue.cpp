@@ -1,6 +1,6 @@
 #include "JobsQueue.h"
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 
 	JobsQueue::JobsQueue(){
 		_jsonQueue = new std::queue<Job>();

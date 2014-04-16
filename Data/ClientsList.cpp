@@ -1,6 +1,6 @@
 #include "ClientsList.h"
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 
 	ClientsList::ClientsList(Timer *time)
 	:_min_id_num(1),_max_id_num(1000),_curTime(time)

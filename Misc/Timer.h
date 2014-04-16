@@ -5,7 +5,7 @@
 
 using namespace std;
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 
 	class Timer
 	{

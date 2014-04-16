@@ -11,7 +11,7 @@
 
 using namespace std;
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 	class Sensor{
 		private:
 			Scene *_scene;

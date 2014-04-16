@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 	
 	/**
 	*  A Network Time Protocol Client that queries the DateTime from the Time Server located at hostname

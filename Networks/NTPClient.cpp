@@ -1,6 +1,6 @@
 #include "NTPClient.h"
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 	
 	/**
 	 *  NTPClient

@@ -1,6 +1,6 @@
 #include "Timer.h"
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 	
 	Timer::Timer(clock_t startAt){
 		this->_startedAt = startAt;

@@ -1,6 +1,6 @@
-#include "MultipleDepthSensorsServer.h"
+#include "MinorityViewport.h"
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 
 	Core::Core(/*Server Address*/string address,/*Server Port*/string httpPort,string udpPort){
 	  try
@@ -30,15 +30,15 @@ namespace MultipleDepthSensorsServer{
 
 		this->ReportStatus("Create Key Objects");
 		/* Initialise the Client Machine List */
-		this->_clientList = new MultipleDepthSensorsServer::ClientsList(this->_time);
+		this->_clientList = new MinorityViewport::ClientsList(this->_time);
 		/* Create the jobs queue that process each incoming data from client machines */
-		this->_jobQueue = new MultipleDepthSensorsServer::JobsQueue();
+		this->_jobQueue = new MinorityViewport::JobsQueue();
 		/* Create algorithm that merge the scenes */
-		this->_minorityViewport = new MinorityViewport(this->_time,this->_clientList);
+		this->_minorityViewport = new MinorityViewportAlgo(this->_time,this->_clientList);
 
 		this->ReportStatus("Server Starting");
 		//Initialise the Server with the number of threads
-		string docRoot = "C:\\Users\\ethanlim\\Documents\\Projects\\School\\MultipleDepthSensorsServer\\Web";
+		string docRoot = "C:\\Users\\ethanlim\\Documents\\Projects\\School\\MinorityViewport\\Web";
 		std::size_t num_threads = boost::lexical_cast<std::size_t>(5);
 		this->_httpServer = new http::server::server(
 												address, 
@@ -50,7 +50,7 @@ namespace MultipleDepthSensorsServer{
 
 		this->ReportStatus("Server Started");
 
-		this->_udpServer = new MultipleDepthSensorsServer::UdpServer(address,atoi(udpPort.c_str()),this->_minorityViewport);
+		this->_udpServer = new MinorityViewport::UdpServer(address,atoi(udpPort.c_str()),this->_minorityViewport);
 	  }
 	  catch (std::exception& e)
 	  {
@@ -85,18 +85,18 @@ int main(int argc, char **argv)
 {
 	srand(time(NULL));
 
-	MultipleDepthSensorsServer::Core *platform;
+	MinorityViewport::Core *platform;
 
 	if(argc==1){
 		throw exception("Program arguments are empty");
 	}
 
 	try{
-		platform = new MultipleDepthSensorsServer::Core(argv[1],argv[2],argv[3]);
+		platform = new MinorityViewport::Core(argv[1],argv[2],argv[3]);
 	
 		if(platform!=NULL){
-			thread server_thread(&MultipleDepthSensorsServer::Core::BeginListen,platform);
-			thread udp_thread(&MultipleDepthSensorsServer::Core::BeginUdpListen,platform);
+			thread server_thread(&MinorityViewport::Core::BeginListen,platform);
+			thread udp_thread(&MinorityViewport::Core::BeginUdpListen,platform);
 
 			server_thread.join();
 			udp_thread.join();

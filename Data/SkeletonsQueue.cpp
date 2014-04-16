@@ -1,6 +1,6 @@
 #include "SkeletonsQueue.h"
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 	
 	SkeletonsQueue::SkeletonsQueue(){
 		this->skeleton_queue = new std::queue<Skeleton>();

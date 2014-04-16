@@ -1,6 +1,6 @@
 #include "Joint.h"
 
-namespace MultipleDepthSensorsServer{
+namespace MinorityViewport{
 
 	Joint::Joint():Type(JointType::None),X(0),Y(0),Z(0){
 	}
