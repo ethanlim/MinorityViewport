@@ -18,9 +18,9 @@
 
 # Visual Studio Files
 /Debug
-MultipleDepthSensorsServer.*
-!MultipleDepthSensorsServer.h
-!MultipleDepthSensorsServer.cpp
+MinorityViewport.*
+!MinorityViewport.h
+!MinorityViewport.cpp
 
 # Eclipse Files
 .cproject
