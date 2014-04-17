@@ -358,7 +358,7 @@ var CalibrationPage = {
             callingObj.numOfSkeletonsScanned = lockedSkeletons[0].length;
             jQuery("#numOfSkeletonsScanned").text(callingObj.numOfSkeletonsScanned);
 
-            if (callingObj.numOfSkeletonsScanned == callingObj.numOfSkeletonsRequired) {
+            if (callingObj.numOfSkeletonsScanned >= callingObj.numOfSkeletonsRequired) {
                 callingObj.UpdateCalibrationMenuStatus("Joint Points Collection Completed", "default");
                 localStorage.setItem("lockingMode","false")
             }
