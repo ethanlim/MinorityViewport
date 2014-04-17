@@ -7,17 +7,12 @@ namespace MinorityViewport{
 	MinorityViewportAlgo::MinorityViewportAlgo(Timer *curTime,ClientsList *clients)
 		:_curTime(curTime),_clients(clients)
 	{
-		
-		mergingLogFile = new ofstream("mergingLogFile.txt");
-
 		//Create the global scene
 		this->_globalScene = new Scene(10,10,10,curTime);
-		//this->_mergethread = new thread(&MinorityViewportAlgo::MinorityViewportAlgo::MergeScenes,this);
 	}
 
 	MinorityViewportAlgo::~MinorityViewportAlgo(){
 		this->_mergethread->join();
-		this->mergingLogFile->close();
 	}
 
 	unsigned int MinorityViewportAlgo::RegisterClient(string phyLocation, string ipAddr){
@@ -69,14 +64,19 @@ namespace MinorityViewport{
 				
 				Scene *scenePtr = sensorToBeRm->second->GetScene();
 
-				for(vector<Scene*>::iterator orderedSceneItr = this->_orderedScenes.begin();orderedSceneItr!=this->_orderedScenes.end();orderedSceneItr++){
+				for(vector<Scene*>::iterator orderedSceneItr = this->_orderedScenes.begin();orderedSceneItr!=this->_orderedScenes.end();){
 					if(*orderedSceneItr==scenePtr){
-						this->_orderedScenes.erase(orderedSceneItr);
+						orderedSceneItr = this->_orderedScenes.erase(orderedSceneItr);
+					}else{
+						++orderedSceneItr;
 					}
 				}
-				for(set<Scene*>::iterator sceneItr = this->_scenesSet.begin();sceneItr!=this->_scenesSet.end();sceneItr++){
+
+				for(set<Scene*>::iterator sceneItr = this->_scenesSet.begin();sceneItr!=this->_scenesSet.end();){
 					if(*sceneItr==scenePtr){
-						this->_scenesSet.erase(sceneItr);
+						sceneItr = this->_scenesSet.erase(sceneItr);
+					}else{
+						++sceneItr;
 					}
 				}
 		}
@@ -408,7 +408,9 @@ namespace MinorityViewport{
 		this->_globalScene->ManualClear();
 		
 		//* Optimisation - remove mutex locks since only read and would affect real-time performance */
+		this->_orderedSceneMutex.lock();
 		vector<Scene*> orderedScenes = this->_orderedScenes;
+		this->_orderedSceneMutex.unlock();
 
 		/* Do the comparison with reference frame skeletons and discard skeletons as necessary */
 		if(orderedScenes.size()>0){
@@ -499,8 +501,6 @@ namespace MinorityViewport{
 					}
 
 					end=this->_curTime->GetTicks_ms();
-					*this->mergingLogFile << to_string(end-start);
-					*this->mergingLogFile << endl;
 				}
 			}
 		}
