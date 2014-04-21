@@ -45,7 +45,7 @@ Windows 7/Linux OS
 	opencv_legacy248d.lib;opencv_flann248d.lib;
 
 ### Authors and Contributors
-Lim Zhi Hao (Ethan) @ethanlim
+Lim Zhi Hao (Ethan) (@ethanlim)
 
 ### Support
 
